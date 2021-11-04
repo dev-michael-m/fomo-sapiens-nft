@@ -1,0 +1,38 @@
+.footer-container {
+    background-color: #1f2324;
+    color: rgb(255,255,255);
+}
+
+.inner-footer-container {
+    display: flex;
+}
+
+.link-list-container {
+    text-align: left;
+    padding: 0px 26px;
+}
+
+.link-list-container li {
+    list-style: none;
+    padding: 4px 0px;
+}
+
+.link-list-container a {
+    color: rgba(255,255,255,0.82);
+    text-decoration: none;
+    transition: color .33s;
+}
+
+.link-list-container a:hover {
+    color: rgb(255,255,255);
+}
+
+.link-list-container ul {
+    margin: 0;
+    padding: 0;
+}
+
+.footer-copyright {
+    font-size: 0.8rem;
+    padding: 16px 0px;
+}

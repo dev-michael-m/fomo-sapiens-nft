@@ -13,6 +13,40 @@
   }
 }
 
+.parallax-container {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  perspective: 300px;
+  color: #ffffff;
+}
+
+.accent {
+  color: wheat;
+}
+
+.section {
+  margin: 80px 0px;
+}
+
+.section-small {
+  margin: 24px 0px;
+}
+
+.section-large {
+  margin: 100px 0px
+}
+
+.inner-main {
+  padding: 14px;
+}
+
+.parallax-group {
+  position: relative;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
