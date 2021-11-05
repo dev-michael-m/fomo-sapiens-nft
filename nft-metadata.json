@@ -1,0 +1,28 @@
+{
+    "attributes": [
+      {
+        "trait_type": "Head",
+        "value": "Half Skull Green"
+      },
+      {
+        "trait_type": "Eyes",
+        "value": "Left Missing"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Blonde Brains"
+      },
+      {
+        "trait_type": "Shirt",
+        "value": "Red Track Suit"
+      },
+      {
+        "trait_type": "Accessory",
+        "value": "Gold Cross Chain"
+      }
+    ],
+    "description": "Zombie #0001",
+    "image": "https://gateway.pinata.cloud/ipfs/QmbsrCEXswncbuH5BHkzzQZddwCL8WE6SjYhuusRwudFgH",
+    "name": "#0001"
+  }
+  
