@@ -1,0 +1,21 @@
+.card-container {
+    text-align: left;
+    background-color: rgba(255,255,255,0.12);
+    border-radius: 4px;
+    margin-bottom: 20px;
+    box-shadow: 2px 6px 12px rgba(47,47,47,0.82);
+}
+
+.card-inner {
+    padding: 20px;
+}
+
+.card-header {
+    display: flex;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(245,222,179,0.12);
+    justify-content: center;
+    align-items: center;
+}

@@ -1,12 +1,14 @@
 import React, {useEffect,useState} from 'react';
 import { FormatDropTimer } from './../utilities/util';
 
+const LAUNCH_DATE = '11/20/2021';
+
 const CountDown = () => {
-    const [timer,setTimer] = useState(FormatDropTimer(new Date()));
+    const [timer,setTimer] = useState(FormatDropTimer(new Date(), new Date(LAUNCH_DATE)));
 
     useEffect(() => {
         const timer = setInterval(() => {
-            setTimer(FormatDropTimer(new Date()))
+            setTimer(FormatDropTimer(new Date(), new Date(LAUNCH_DATE)))
         },100)
 
         return () => {

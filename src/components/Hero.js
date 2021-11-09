@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import HeroImg from '../assets/hero-img-2.jpg';
+import HeroImg from '../assets/hero-img-3.jpg';
 import $ from 'jquery';
 import { FormatDropTimer } from './../utilities/util';
 
@@ -30,7 +30,7 @@ const Hero = () => {
                         </div>
                     </div>
                 </div>
-                <div style={{position: 'relative', bottom: 84}}>
+                <div style={{position: 'relative', bottom: 130}}>
                     <IconButton className="down-arrow-button" onClick={handleScrollView}><KeyboardArrowDownIcon style={{color: 'white'}} /></IconButton>
                 </div>             
                 

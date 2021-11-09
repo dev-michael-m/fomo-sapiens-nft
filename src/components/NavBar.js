@@ -1,17 +1,34 @@
-import React,{useState} from 'react';
+import React,{useEffect, useState} from 'react';
 import Logo from '../assets/rmp.png';
 import '../stylesheet/NavBar.css';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import Button from '@mui/material/Button';
 import AppsIcon from '@mui/icons-material/Apps';
 import Drawer from '@mui/material/Drawer';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import CloseIcon from '@mui/icons-material/Close';
+import VerifiedIcon from '@mui/icons-material/Verified';
 import $ from 'jquery';
+import { ConnectWallet } from '../utilities/util';
+
 
 const NavBar = (props) => {
 
     const [menu,setMenu] = useState(false);
+    const [wallet,setWallet] = useState({
+        address: null,
+        provider: null,
+        snippet: null
+    })
+
+    useEffect(() => {
+        // if(window.ethereum.request({method: 'eth_requestAccounts'})){
+        //     handleConnectWallet();
+        // }else{
+        //     console.warn(`User has not connected their wallet to this DApp.`)
+        // }
+    },[])
 
     const handleDrawer = () => {
         setMenu(prevState => !prevState);
@@ -26,7 +43,7 @@ const NavBar = (props) => {
                 pos = $('#countdown').position();
                 break;
             case 'roadmap':
-                pos = $('#countdown').position();
+                pos = $('#roadmap').position();
                 break;
             case 'specs':
                 pos = $('#countdown').position();
@@ -41,6 +58,18 @@ const NavBar = (props) => {
         
     }
 
+    const handleConnectWallet = () => {
+        ConnectWallet().then(status => {
+            setWallet({
+                address: status.address,
+                snippet: status.address_snippet
+            });
+        })
+        .catch(error => {
+            console.error(error);
+        })
+      }
+
     return (
         <div id="nav-container" className="nav-container">
             <div id="inner-nav" className="inner-nav">
@@ -48,9 +77,17 @@ const NavBar = (props) => {
                     
                 </div>
                 <div style={{marginLeft: 12, marginRight: 'auto'}}>
-                    <h2 className="nav-header">FOMO SAPIENS</h2>
+                    <h3 className="nav-header">FOMO SAPIENS</h3>
                 </div>
                 <div className="socials">
+                    {!wallet.address ? <div id="connect-wallet" style={{width: 122}}>
+                        <Button className="custom-button small-social social-button" style={{fontSize: 10}} onClick={handleConnectWallet}> Connect Wallet</Button>
+                    </div> :
+                    <div style={{width: 122,display: 'flex',alignItems: 'center', justifyContent: 'center'}}>
+                        <VerifiedIcon style={{color: '#f5deb3d9', fontSize: 15, paddingRight: 6}} />
+                        <label style={{fontSize: 10, color: '#f5deb3d9'}}>{wallet.snippet}</label>
+                    </div>
+                    }
                     <div id="twitter">
                         <IconButton className="social-button" ><TwitterIcon style={{color: 'rgb(255,255,255)', fontSize: 20}} /></IconButton>
                     </div>
