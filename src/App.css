@@ -38,6 +38,10 @@
   visibility: visible;
 }
 
+.section-background {
+  background: radial-gradient(rgba(255,255,255,0.2),black);
+}
+
 .section {
   margin-bottom: 80px;
 }

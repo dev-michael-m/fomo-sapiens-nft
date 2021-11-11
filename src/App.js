@@ -5,12 +5,15 @@ import Button from '@mui/material/Button';
 import MainApp from './pages/MainApp';
 import CountDown from './components/CountDown';
 import ApiIcon from '@mui/icons-material/Api';
-import { ConnectWallet } from './utilities/util';
+import { ConnectWallet, DateDifference } from './utilities/util';
 import RoadMap from './components/RoadMap';
 import FadeInContainer from './components/FadeInContainer';
+import { useEffect, useState } from 'react';
+
+const LAUNCH_DATE = '11/20/2021';
 
 function App() {
-
+  const [progress,setProgress] = useState(DateDifference(new Date(), new Date(LAUNCH_DATE)));
   const handleConnectWallet = async () => {
     const status = await ConnectWallet();
     console.log({status});
@@ -23,12 +26,6 @@ function App() {
             <div className="inner-main">
               <Hero />
               <div className="body-container">
-                <FadeInContainer>
-                  <div id="countdown" className="section-large" >
-                    <CountDown />                  
-                  </div>
-                </FadeInContainer>
-                
                 <div id="welcome-section" className="section-large">
                   <FadeInContainer>
                     <div style={{marginBottom: 86}}>
@@ -46,7 +43,12 @@ function App() {
                       <Button className="custom-button primary small" variant="contained" color="primary" onClick={handleConnectWallet}>Join the List</Button>
                     </div>
                   </FadeInContainer>                
-                </div>               
+                </div>
+                <FadeInContainer progress_enabled progress={progress}>
+                  <div id="countdown" className="section-large" >
+                    <CountDown launch_date={LAUNCH_DATE} />                  
+                  </div>
+                </FadeInContainer>               
                 <RoadMap />
                 <div className="section">
                   <ApiIcon className="accent" />

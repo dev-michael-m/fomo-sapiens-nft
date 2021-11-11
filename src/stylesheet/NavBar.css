@@ -58,7 +58,7 @@
 }
 
 .down-arrow-button {
-    background-color: #f5deb3d9 !important;
+    /* background-color: #f5deb3d9 !important; */
 }
 
 .right-nav-container {
@@ -92,6 +92,11 @@
     background-color: #f5deb3 !important;
 }
 
+.disabled {
+    background-color: rgba(255,255,255,0.15) !important;
+    color: gray !important;
+}
+
 .secondary-text {
     color: #f5deb3 !important;
 }
@@ -105,8 +110,55 @@
 }
 
 .timer-container {
+    padding: 20px;
+}
+
+.countdown-container {
     font-family: 'Roboto Mono',monospace;
-    font-size: 26px;
+}
+
+.timer-1 {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 12px;
+    border-width: 2px;
+    border-image: linear-gradient(to top, wheat, rgba(0,0,0,0)) 1 20%;
+    border-style: solid;
+}
+
+.progress{
+    position: relative;
+    margin: 4px;
+    float:left;
+    text-align: center;
+  }
+  .barOverflow{ /* Wraps the rotating .bar */
+    position: relative;
+    overflow: hidden; /* Comment this line to understand the trick */
+    width: 250px; height: 125px; /* Half circle (overflow) */
+    margin-bottom: -14px; /* bring the numbers up */
+  }
+  .bar{
+    position: absolute;
+    top: 0; left: 0;
+    width: 250px; height: 250px; /* full circle! */
+    border-radius: 50%;
+    box-sizing: border-box;
+    border: 5px solid rgba(255,255,255,0.25);     /* half gray, */
+    border-bottom-color: #20d5d5;  /* half azure */
+    border-right-color: #20d5d5;
+    transform: rotate(226deg);
+    transition: transform 1.25s;
+  }
+
+.timer-container h3 {
+    margin: 6px;
+    font-size: 20px;
+}
+
+.timer-container label {
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
 }
 
 .nft-stat {

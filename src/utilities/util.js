@@ -6,10 +6,49 @@ export const FormatDropTimer = (date = new Date(), end_date = new Date()) => {
         const hourDiff = Math.floor((end_date.getTime() - date.getTime()) / (1000 * 3600)) % 24;
         const minuteDiff = Math.floor((end_date.getTime() - date.getTime()) / (1000 * 60)) % 60;
         const secondDiff = Math.floor((end_date.getTime() - date.getTime()) / 1000) % 60;
-        return `${dateDiff}d ${hourDiff.toString().padStart(2,'0')}h ${minuteDiff.toString().padStart(2,'0')}m ${secondDiff.toString().padStart(2,'0')}s`;
+        return {days: dateDiff, hours: hourDiff.toString().padStart(2,'0'), minutes: minuteDiff.toString().padStart(2,'0'), seconds: secondDiff.toString().padStart(2,'0')}
     } catch (error) {
         console.error(error);
-        return '';
+        return {
+            days: 0,
+            hours: 0,
+            minutes: 0,
+            seconds: 0
+        };
+    }
+}
+
+export const DateDifference = (date = new Date(), end_date = new Date()) => {
+    try {
+        return Math.floor((end_date.getTime() - date.getTime()) / (1000 * 3600 * 24));
+    } catch (error) {
+        console.error(error);
+        return 0;
+    }
+}
+
+export const FormatDropDate = (dateIn = '') => {
+    try {
+        const date_str = new Date(dateIn).toLocaleString('en-us',{weekday: 'long', day: '2-digit', year: 'numeric' })
+        const month = new Date(dateIn).toLocaleString('en-us',{month: 'short'});
+        const [date,day,year] = date_str.split(' ');
+
+      return {
+          day: day.trim(),
+          date: date.trim(),
+          month: month.trim(),
+          year: year.trim(),
+          time: ''
+      } 
+    } catch (error) {
+        console.error(error);
+        return {
+            day: '',
+            date: '',
+            month: '',
+            year: '',
+            time: '',
+        }
     }
 }
 

@@ -1,4 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
+import $ from 'jquery';
+
+const TOTAL_PROG = 180;
 
 const FadeInContainer = (props) => {
     const [visible, setVisible] = useState(false);
@@ -9,6 +12,10 @@ const FadeInContainer = (props) => {
             entries.forEach(entry => {
                 if(entry.isIntersecting){
                     setVisible(entry.isIntersecting);
+                    if(props.progress_enabled){
+                        const percent = (TOTAL_PROG / props.progress) / 100;
+                        $('#progress-bar').css({transform: `rotate(${45 + (TOTAL_PROG * percent)}deg)`});
+                    }                    
                 }
             })
         });
