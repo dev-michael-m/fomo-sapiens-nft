@@ -1,5 +1,6 @@
 import React from 'react';
 import '../stylesheet/Footer.css';
+import TwitterIcon from '@mui/icons-material/Twitter';
 
 const Footer = () => {
     return (
@@ -22,8 +23,14 @@ const Footer = () => {
                     </ul>
                 </div>
             </div> */}
+            <div style={{paddingTop: 14}}>
+                <label >Fomo Sapiens</label>
+                <div style={{marginTop: 20}}>
+                    <TwitterIcon />
+                </div>
+            </div>
             <div className="footer-copyright">
-                <label>&copy; {new Date().getFullYear()} Lythium LLC</label>
+                <label>&copy; {new Date().getFullYear()} Fomo Sapiens</label>
             </div>
         </div>
     )

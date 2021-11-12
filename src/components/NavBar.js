@@ -40,7 +40,7 @@ const NavBar = (props) => {
 
         switch(id){
             case 'whitelist':
-                pos = $('#countdown').position();
+                pos = $('#welcome-section').position();
                 break;
             case 'roadmap':
                 pos = $('#roadmap').position();

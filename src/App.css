@@ -46,6 +46,20 @@
   margin-bottom: 80px;
 }
 
+.hero-tab {
+  margin-right: 20px;
+  color: rgba(255,255,255,0.54);
+}
+
+.hero-tab:hover{
+  cursor: pointer;
+}
+
+.active-tab {
+  border-bottom: 1px solid white;
+  color: white;
+}
+
 .section-small {
   margin-bottom: 24px;
 }

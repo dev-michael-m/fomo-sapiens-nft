@@ -25,7 +25,7 @@ const CountDown = ({launch_date = ''}) => {
     return (
         <div className="section-background">
             <div>
-                <h1 style={{marginBottom: 75}}>Launching</h1>
+                <h2 style={{marginBottom: 75}}>Launching</h2>
             </div>
             <div className="countdown-container" style={{display: 'flex', flexDirection: 'column'}}>
                 <div style={{margin: 'auto'}}>

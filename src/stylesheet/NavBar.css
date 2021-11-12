@@ -30,7 +30,7 @@
     padding: 6px;
     display: flex;
     flex-direction: column;
-    border-bottom: 1px solid rgb(255,255,255);
+    border-bottom: 1px solid wheat;
     margin: 10px 0px;
 }
 
@@ -184,7 +184,7 @@
 }
 
 .hero-desc {
-    width: 50%;
+    width: 100%;
 }
 
 .small-social {

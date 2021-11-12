@@ -50,7 +50,7 @@ function App() {
                   </div>
                 </FadeInContainer>               
                 <RoadMap />
-                <div className="section">
+                {/* <div className="section">
                   <ApiIcon className="accent" />
                   <h2 className="accent">EVOLVE</h2>
                   <p>Step into a world of human evolution. Become the past, present, and the future.</p>
@@ -64,7 +64,7 @@ function App() {
                   <ApiIcon className="accent" />
                   <h2 className="accent">EVOLVE</h2>
                   <p>Step into a world of human evolution. Become the past, present, and the future.</p>
-                </div>
+                </div> */}
                 <div className="section">
 
                 </div>

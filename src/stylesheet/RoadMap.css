@@ -10,6 +10,33 @@
     padding: 20px;
 }
 
+.roadmap-dot {
+    border-radius: 50% !important;
+    width: 18px !important;
+    display: flex !important;
+    justify-content: center !important;
+    border-color: wheat !important;
+    background-color: transparent !important;
+    font-weight: bold !important;
+    margin: 18px 0px !important;
+}
+
+.roadmap-seperator::before {
+    content: none !important;
+}
+
+.roadmap-container {
+    background: radial-gradient(rgba(255,255,255,0.16), black);
+}
+
+.roadmap-desc {
+    color: rgba(255,255,255,0.82);
+}
+
+.roadmap-connector {
+    background-color: wheat !important;
+}
+
 .card-header {
     display: flex;
     width: 40px;
