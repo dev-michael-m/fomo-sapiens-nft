@@ -9,6 +9,8 @@ import { ConnectWallet, DateDifference } from './utilities/util';
 import RoadMap from './components/RoadMap';
 import FadeInContainer from './components/FadeInContainer';
 import { useEffect, useState } from 'react';
+import Specs from './components/Specs';
+import Founders from './components/Founders';
 
 const LAUNCH_DATE = '11/20/2021';
 
@@ -30,7 +32,13 @@ function App() {
                   <FadeInContainer>
                     <div style={{marginBottom: 86}}>
                       <h1 style={{margin: 40}}>WELCOME</h1>
-                      <p><i>Fomo Sapiens is an exclusive collection of <label className="secondary-text"><b>2,000</b></label> NFT digital assets residing on the Ethereum blockchain.  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Amet purus gravida quis blandit turpis cursus in hac.</i></p>
+                      <p>
+                        <i>
+                          2 million years ago a brave ape decided he would no longer let his environment determine how he lived:  his back hurt, knees shot, and quite frankly was disguisted at the idea
+                          of continuing to crawl around.  He stood up tall, looked across the desert and took our species first steps.  2 million years later his ancestors dubbed him FOMO Habilis.<br></br><br></br>
+                          Today we pay homage not only to him, not only to the pinnacle of evolution, the FOMO Sapiens, but to all our ancestors who perished so we could prosper.
+                        </i>
+                      </p>
                     </div>
                   </FadeInContainer>
                   <FadeInContainer>
@@ -48,25 +56,24 @@ function App() {
                   <div id="countdown" className="section-large" >
                     <CountDown launch_date={LAUNCH_DATE} />                  
                   </div>
-                </FadeInContainer>               
-                <RoadMap />
-                {/* <div className="section">
-                  <ApiIcon className="accent" />
-                  <h2 className="accent">EVOLVE</h2>
-                  <p>Step into a world of human evolution. Become the past, present, and the future.</p>
+                </FadeInContainer>   
+                <FadeInContainer>
+                  <div id="stake" className="section-large">
+                    <h2>Staking</h2>
+                    <p>Earn $SAPIEN tokens by simply holding your NFT.  Our user's come first, and it's our mission to provide you with ever lasting value. Simply stake your sapien and let him do the work for you.</p>
+                    <div style={{margin: '40px 0px'}}>
+                      <Button className="custom-button primary small" variant="contained" color="primary" onClick={handleConnectWallet}>Staking</Button>
+                    </div>
+                  </div>                  
+                </FadeInContainer>
+                <div id="specs" className="section-large">
+                  <Specs />           
                 </div>
-                <div className="section">
-                  <ApiIcon className="accent" />
-                  <h2 className="accent">REVOLUTIONIZE</h2>
-                  <p>Step into a world of human evolution. Become the past, present, and the future.</p>
+                <div className="section-large">
+                  <RoadMap />
                 </div>
-                <div className="section">
-                  <ApiIcon className="accent" />
-                  <h2 className="accent">EVOLVE</h2>
-                  <p>Step into a world of human evolution. Become the past, present, and the future.</p>
-                </div> */}
-                <div className="section">
-
+                <div id="founders" className="section-large">
+                  <Founders />
                 </div>
               </div>              
               <Footer />

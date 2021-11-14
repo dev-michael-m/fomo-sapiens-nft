@@ -7,8 +7,9 @@ import HeroImg from '../assets/hero-img-3.jpg';
 import $ from 'jquery';
 
 const TABS = [
-    {title: 'Unique', desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'},
-    {title: 'Exclusive', desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Laoreet suspendisse interdum consectetur libero id faucibus nisl tincidunt eget. Fermentum odio eu feugiat pretium nibh ipsum consequat nisl.'},
+    {title: 'Unique', desc: 'FOMO Sapiens is a hand-crafted collection of 2,000, non-generative, digital assets. Each sapien was tailored with their own unique traits, to guarantee what you receive is truly one of a kind.'},
+    {title: 'Exclusive', desc: `We've limited each address to one Sapien due to the limited nature of this collection.  Therefore, giving each individual the opportunity to mint their own piece of history.`},
+    {title: 'Added Value', desc: `Most NFT collections stop providing value after the minting process, but FOMO Sapiens goes above and beyond that.  We wanted to give our users the most value out of their NFT by adding the ability to stake your sapien in return for $SAPIEN tokens. You can learn more about the staking process here.`},
 ]
 
 const Hero = () => {

@@ -46,10 +46,13 @@ const NavBar = (props) => {
                 pos = $('#roadmap').position();
                 break;
             case 'specs':
-                pos = $('#countdown').position();
+                pos = $('#specs').position();
                 break;
             case 'team':
-                pos = $('#countdown').position();                    
+                pos = $('#founders').position();                    
+                break;
+            case 'stake':
+                pos = $('#stake').position();
                 break;
         }
 
@@ -112,9 +115,10 @@ const NavBar = (props) => {
                             </div>
                             <div className="menu-list">
                                 <a id="whitelist" href="#" onClick={handleLinkClick}>Join the List</a>
-                                <a id="roadmap" href="#" onClick={handleLinkClick}>Roadmap</a>
+                                <a id="stake" href="#" onClick={handleLinkClick}>Staking</a>
                                 <a id="specs" href="#" onClick={handleLinkClick}>Specs</a>
-                                <a id="team" href="#" onClick={handleLinkClick}>Team Members</a>
+                                <a id="roadmap" href="#" onClick={handleLinkClick}>Roadmap</a>                                
+                                <a id="team" href="#" onClick={handleLinkClick}>The Founders</a>
                             </div>                            
                         </div>                        
                     </Drawer>
