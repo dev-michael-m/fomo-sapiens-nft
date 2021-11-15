@@ -6,6 +6,9 @@ html,body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: rgb(0,0,0);
+  font-size: large;
+  letter-spacing: 2px;
+  line-height: 26px;
 }
 
 code {

@@ -19,6 +19,9 @@
     background-color: transparent !important;
     font-weight: bold !important;
     margin: 18px 0px !important;
+    font-size: medium !important;
+    letter-spacing: normal;
+    line-height: normal;
 }
 
 .roadmap-seperator::before {

@@ -26,18 +26,18 @@ function App() {
         <MainApp>
           <div className="main-container parallax-container">
             <div className="inner-main">
-              <Hero />
+              <FadeInContainer>
+                <Hero />
+              </FadeInContainer>
               <div className="body-container">
                 <div id="welcome-section" className="section-large">
                   <FadeInContainer>
                     <div style={{marginBottom: 86}}>
                       <h1 style={{margin: 40}}>WELCOME</h1>
                       <p>
-                        <i>
                           2 million years ago a brave ape decided he would no longer let his environment determine how he lived:  his back hurt, knees shot, and quite frankly was disguisted at the idea
                           of continuing to crawl around.  He stood up tall, looked across the desert and took our species first steps.  2 million years later his ancestors dubbed him FOMO Habilis.<br></br><br></br>
-                          Today we pay homage not only to him, not only to the pinnacle of evolution, the FOMO Sapiens, but to all our ancestors who perished so we could prosper.
-                        </i>
+                          Today we pay homage not only to him, not only to the pinnacle of evolution, the <b>FOMO Sapiens</b>, but to all our ancestors who perished so we could prosper.
                       </p>
                     </div>
                   </FadeInContainer>
@@ -60,7 +60,7 @@ function App() {
                 <FadeInContainer>
                   <div id="stake" className="section-large">
                     <h2>Staking</h2>
-                    <p>Earn $SAPIEN tokens by simply holding your NFT.  Our user's come first, and it's our mission to provide you with ever lasting value. Simply stake your sapien and let him do the work for you.</p>
+                    <p>Earn <b>$SAPIEN</b> tokens by simply holding your NFT.  Our user's come first, and it's our mission to provide you with ever lasting value. Simply stake your sapien and let him do the work for you.</p>
                     <div style={{margin: '40px 0px'}}>
                       <Button className="custom-button primary small" variant="contained" color="primary" onClick={handleConnectWallet}>Staking</Button>
                     </div>
@@ -72,7 +72,7 @@ function App() {
                 <div className="section-large">
                   <RoadMap />
                 </div>
-                <div id="founders" className="section-large">
+                <div id="founders" className="section-medium">
                   <Founders />
                 </div>
               </div>              

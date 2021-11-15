@@ -76,9 +76,6 @@ const NavBar = (props) => {
     return (
         <div id="nav-container" className="nav-container">
             <div id="inner-nav" className="inner-nav">
-                <div>
-                    
-                </div>
                 <div style={{marginLeft: 12, marginRight: 'auto'}}>
                     <h3 className="nav-header">FOMO SAPIENS</h3>
                 </div>

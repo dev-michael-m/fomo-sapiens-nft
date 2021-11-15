@@ -1,11 +1,11 @@
 async function main() {
     const Sapien = await ethers.getContractFactory("Sapien")
-    const NAME = 'Fomo Sapiens';
+    const NAME = 'FOMO SAPIENS';
     const SYMBOL = 'SAPIEN';
-    const SUPPLY = 2000;
+    const _BASE_URL = 'https://ipfs/';
     // Start deployment, returning a promise that resolves to a contract object
-    const sapien = await Sapien.deploy(NAME, SYMBOL, SUPPLY);
-    console.log("Contract deployed to address:", sapien.address)
+    const sapien = await Sapien.deploy(NAME, SYMBOL, _BASE_URL);
+    console.log("Contract deployed to address:", sapien.address);
   }
   
   main()

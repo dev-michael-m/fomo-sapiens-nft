@@ -23,7 +23,7 @@ const Specs = () => {
                 <div style={{display: 'flex',flexWrap: 'wrap', alignItems: 'center', marginBottom: 180}}>
                     <div style={{width: '60%', zIndex: 2, textAlign: 'left'}}>
                         <div style={{display:'flex',alignItems: 'center',justifyContent: 'space-evenly'}}>
-                            <h3 className="secondary-text">Realistic Textures</h3>
+                            <h4 className="secondary-text">Realistic Textures</h4>
                             <TextureIcon className="secondary-text" />
                         </div>
                         <p>
@@ -43,10 +43,10 @@ const Specs = () => {
                     </div>
                     <div style={{width: '60%', zIndex: 2, textAlign: 'right'}}>
                         <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-evenly'}}>
-                            <h3 className="primary-text">Traits</h3>
-                            <AccountTreeIcon className="primary-text" />
+                            <h4 className="secondary-text">Unique Traits</h4>
+                            <AccountTreeIcon className="secondary-text" />
                         </div>
-                        <p>
+                        <p style={{textAlign: 'right'}}>
                             With over 100 different traits...
                         </p>
                     </div>                    
@@ -56,7 +56,7 @@ const Specs = () => {
                 <div style={{display: 'flex',flexWrap: 'wrap', alignItems: 'center', marginBottom: 180}}>
                     <div style={{width: '60%', zIndex: 2, textAlign: 'left'}}>
                         <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-evenly'}}>
-                            <h3 className="secondary-text">Added Depth</h3>
+                            <h4 className="secondary-text">Added Depth</h4>
                             <ViewInArIcon className="secondary-text" />
                         </div>
                         <p>

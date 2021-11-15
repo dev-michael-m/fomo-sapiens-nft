@@ -1,4 +1,4 @@
-require("dotenv").config()
+require("dotenv").config({path: '../.env'})
 const API_URL = process.env.API_URL
 const PUBLIC_KEY = process.env.PUBLIC_KEY
 const PRIVATE_KEY = process.env.PRIVATE_KEY
@@ -7,10 +7,18 @@ const { createAlchemyWeb3 } = require("@alch/alchemy-web3")
 const web3 = createAlchemyWeb3(API_URL)
 
 const contract = require("../artifacts/contracts/Sapien.sol/Sapien.json")
-const contractAddress = "0x26b73354575088aba2a8b10e0719fc5904954910"
+const contractAddress = process.env.CONTRACT_ADDRESS
 const nftContract = new web3.eth.Contract(contract.abi, contractAddress)
 
-async function mintNFT(tokenURI) {
+export const tokenExists = (tokenId) => {
+  return nftContract.methods.tokenExists(tokenId).encodeABI();
+}
+
+export const getTokensMinted = () => {
+  return nftContract.methods.getTokensMinted().encodeABI();
+}
+
+export const mintNFT = async (tokenURI) => {
   const nonce = await web3.eth.getTransactionCount(PUBLIC_KEY, "latest") //get latest nonce
 
   //the transaction
@@ -27,7 +35,7 @@ async function mintNFT(tokenURI) {
     .then((signedTx) => {
       web3.eth.sendSignedTransaction(
         signedTx.rawTransaction,
-        function (err, hash) {
+        (err, hash) => {
           if (!err) {
             console.log(
               "The hash of your transaction is: ",
@@ -48,6 +56,6 @@ async function mintNFT(tokenURI) {
     })
 }
 
-mintNFT(
-  "https://gateway.pinata.cloud/ipfs/Qmd6d3s56nt8yunDLEcofLY7ytm5EUGPCzE2QWgdnAGPqT"
-)
+// mintNFT(
+//   "https://gateway.pinata.cloud/ipfs/Qmd6d3s56nt8yunDLEcofLY7ytm5EUGPCzE2QWgdnAGPqT"
+// )
