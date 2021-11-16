@@ -20,8 +20,9 @@ contract Sapien is ERC721URIStorage, Ownable{
 
     // @recipient: recipient's address
     // @tokenURI: URL to NFT metadata (ie. Pinata)
+    // @_tokenId: randomly generated tokenId to attach to metadata
     // this is a payable contract
-    function mintSapien(address recipient, string memory tokenURI) public payable returns(uint256)
+    function mintSapien(address recipient, string memory tokenURI, uint256 _tokenId) public payable returns(uint256)
     {
         // sale must be active to mint NFTs
         require(active, "Sale is currently inactive");
@@ -32,12 +33,11 @@ contract Sapien is ERC721URIStorage, Ownable{
         // Tokens minted must not exceed the supply of tokens
         require(getTokensMinted() < supply, "All NFTs have been minted");
         
-        uint256 tokenId = tokenCount;
-        _safeMint(recipient, tokenId);
-        _setTokenURI(tokenId, tokenURI);
+        _safeMint(recipient, _tokenId);
+        _setTokenURI(_tokenId, tokenURI);
         tokenCount = tokenCount + 1;
 
-        return tokenId;
+        return _tokenId;
     }
     
     // @_owner: recipient's address

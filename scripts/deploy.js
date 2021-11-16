@@ -1,6 +1,6 @@
 async function main() {
     const Sapien = await ethers.getContractFactory("Sapien")
-    const NAME = 'FOMO SAPIENS';
+    const NAME = 'FOMOSAPIENS';
     const SYMBOL = 'SAPIEN';
     const _BASE_URL = 'https://ipfs/';
     // Start deployment, returning a promise that resolves to a contract object

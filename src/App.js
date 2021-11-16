@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import MainApp from './pages/MainApp';
 import CountDown from './components/CountDown';
 import ApiIcon from '@mui/icons-material/Api';
-import { ConnectWallet, DateDifference } from './utilities/util';
+import { ConnectWallet, DateDifference, tokensMinted } from './utilities/util';
 import RoadMap from './components/RoadMap';
 import FadeInContainer from './components/FadeInContainer';
 import { useEffect, useState } from 'react';
@@ -19,6 +19,11 @@ function App() {
   const handleConnectWallet = async () => {
     const status = await ConnectWallet();
     console.log({status});
+  }
+
+  const handleTokensMinted = async () => {
+    const minted = await tokensMinted();
+    console.log({minted})
   }
 
   return (
@@ -62,7 +67,7 @@ function App() {
                     <h2>Staking</h2>
                     <p>Earn <b>$SAPIEN</b> tokens by simply holding your NFT.  Our user's come first, and it's our mission to provide you with ever lasting value. Simply stake your sapien and let him do the work for you.</p>
                     <div style={{margin: '40px 0px'}}>
-                      <Button className="custom-button primary small" variant="contained" color="primary" onClick={handleConnectWallet}>Staking</Button>
+                      <Button className="custom-button primary small" variant="contained" color="primary" onClick={handleTokensMinted}>Staking</Button>
                     </div>
                   </div>                  
                 </FadeInContainer>

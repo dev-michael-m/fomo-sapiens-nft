@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "D:\\code\\ratemypublication\\contracts\\Sapien.sol": {
-      "lastModificationDate": 1636084529183,
-      "contentHash": "b00a0c5ed49a9be5d7b150b2d0fd776c",
+      "lastModificationDate": 1636955287729,
+      "contentHash": "c03c71b4e84382d5441bb86a91eef119",
       "sourceName": "contracts/Sapien.sol",
       "solcConfig": {
         "version": "0.8.0",
@@ -30,12 +30,11 @@
       },
       "imports": [
         "@openzeppelin/contracts/token/ERC721/ERC721.sol",
-        "@openzeppelin/contracts/utils/Counters.sol",
         "@openzeppelin/contracts/access/Ownable.sol",
         "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol"
       ],
       "versionPragmas": [
-        "^0.8.0"
+        ">=0.7.0 <0.9.0"
       ],
       "artifacts": [
         "Sapien"
@@ -82,41 +81,6 @@
       ],
       "artifacts": [
         "ERC721"
-      ]
-    },
-    "D:\\code\\ratemypublication\\node_modules\\@openzeppelin\\contracts\\utils\\Counters.sol": {
-      "lastModificationDate": 1636083726059,
-      "contentHash": "b7811964d33f23b2d45ed3ebb76a4548",
-      "sourceName": "@openzeppelin/contracts/utils/Counters.sol",
-      "solcConfig": {
-        "version": "0.8.0",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "Counters"
       ]
     },
     "D:\\code\\ratemypublication\\node_modules\\@openzeppelin\\contracts\\access\\Ownable.sol": {
