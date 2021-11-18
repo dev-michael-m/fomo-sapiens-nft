@@ -48,12 +48,14 @@ function App() {
                   </FadeInContainer>
                   <FadeInContainer>
                     <div style={{marginBottom: 16}}>
-                      <Button className="custom-button primary medium" variant="contained" color="primary">View on OpenSea</Button>
+                      <Button className="custom-button primary medium" variant="contained" color="primary" onClick={() => document.getElementById('OS').click()}>View on OpenSea</Button>
+                      <a id="OS" target="_blank" href="https://opensea.io/FomoSapiensNFT"></a>
                     </div>                    
                   </FadeInContainer>  
                   <FadeInContainer>
                     <div>
-                      <Button className="custom-button primary small" variant="contained" color="primary" onClick={handleConnectWallet}>Join the List</Button>
+                      <Button className="custom-button primary small" variant="contained" color="primary" onClick={() => document.getElementById('discord-link').click()}>Join the List</Button>
+                      <a id="discord-link" target="_blank" href="https://discord.com/channels/909901600775086141/909901601521684512"></a>
                     </div>
                   </FadeInContainer>                
                 </div>

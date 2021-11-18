@@ -1,10 +1,14 @@
 import { ethers } from "ethers";
+
 require('dotenv').config();
 const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
+const PUBLIC_KEY = process.env.PUBLIC_KEY;
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 const web3 = createAlchemyWeb3(alchemyKey);
 const contractABI = require('../contract-abi.json');
-const contractAddress = "0xC4098B76daf2B0210057980474cEe137Be88e439";
+const contractAddress = "0x3F2701C84989CcfECA0480aa4484295A7D060962";
+const SAPIEN_PRICE = 100000000000;
+
 export const fomoContract = new web3.eth.Contract(contractABI, contractAddress)
 
 export const FormatDropTimer = (date = new Date(), end_date = new Date()) => {
@@ -106,3 +110,113 @@ export const tokensMinted = async () => {
     const minted = await fomoContract.methods.getTokensMinted().call();
     return minted;
 }
+
+const checkTokenExists = async (tokenId) => {
+    return new Promise(async(resolve,reject) => {
+        try {
+            const exists = await fomoContract.methods.tokenExists(tokenId).call();
+            resolve({
+                status: true,
+                exists: exists
+            })
+        } catch (error) {
+            console.error(`util.tokenExists: ${error}`);
+            reject({
+                status: false,
+                msg: error
+            })
+        }
+    })    
+}
+
+export const mintNFT = async () => {
+    return new Promise(async(resolve,reject) => {
+        try {
+            if(window.ethereum.request({method: 'eth_requestAccounts'})){
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const address = await signer.getAddress();
+                console.log({address});
+                // errors here
+                //const nonce = await web3.eth.getTransactionCount(address, "latest") //get latest nonce
+                const tokenId = Math.ceil(Math.random() * 2000 + 1);  // get tokenid
+              
+                console.log({address,tokenId})
+                await checkTokenExists(tokenId).then(async(status) => {
+                    if(status.status){
+                        if(!status.exists){
+                            // get tokenURI based on tokenId
+                            const tokenURI = "https://gateway.pinata.cloud/ipfs/Qmd6d3s56nt8yunDLEcofLY7ytm5EUGPCzE2QWgdnAGPqT";
+                            //the transaction
+                            const tx = {
+                                from: address,
+                                to: contractAddress,
+                                value: '0x174876E800',
+                                gas: '0x7A120',
+                                data: fomoContract.methods.mintSapien(address, tokenURI, tokenId).encodeABI(),
+                            }
+                        
+                            const txHash = await window.ethereum.request({
+                                method: 'eth_sendTransaction',
+                                params: [tx]
+                            })
+                        
+                            console.log({txHash})
+                            resolve({
+                                status: true,
+                                txn: txHash
+                            });
+                        }else{
+                            console.log('token already exists.')
+                        }
+                    }
+                }).catch(error => {
+                    console.error(`util.mintNFT.tokenExists: ${error}`)
+                    reject({
+                        status: false,
+                        msg: error
+                    })
+                })
+            }else{
+                reject({
+                    status: false,
+                    msg: `You must connect your MetaMask wallet to continue.  If you don't have a Metamask wallet, follow this link to get started LINK`
+                })
+            }    
+        } catch (error) {
+            console.error(`util.mintNFT: ${error}`)
+            reject({
+                status: false,
+                msg: error
+            })
+        }
+        
+        
+      
+        // const signPromise = web3.eth.accounts.signTransaction(tx, PRIVATE_KEY)
+        // signPromise
+        //   .then((signedTx) => {
+        //     web3.eth.sendSignedTransaction(
+        //       signedTx.rawTransaction,
+        //       (err, hash) => {
+        //         if (!err) {
+        //           console.log(
+        //             "The hash of your transaction is: ",
+        //             hash,
+        //             "\nCheck Alchemy's Mempool to view the status of your transaction!"
+        //           )
+        //         } else {
+        //           console.log(
+        //             "Something went wrong when submitting your transaction:",
+        //             err
+        //           )
+        //         }
+        //       }
+        //     )
+        //   })
+        //   .catch((err) => {
+        //     console.log("Promise failed:", err)
+        //   })
+    })
+    
+  }

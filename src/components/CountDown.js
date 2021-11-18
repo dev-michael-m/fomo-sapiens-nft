@@ -1,5 +1,5 @@
 import React, {useEffect,useState} from 'react';
-import { FormatDropDate, FormatDropTimer } from './../utilities/util';
+import { FormatDropDate, FormatDropTimer, mintNFT } from './../utilities/util';
 import Button from '@mui/material/Button';
 
 const CountDown = ({launch_date = ''}) => {
@@ -21,6 +21,10 @@ const CountDown = ({launch_date = ''}) => {
         setDropDisplay(FormatDropDate(launch_date));
         
     },[])
+
+    const onMint = async () => {
+        const status = await mintNFT('someuri');
+    }
 
     return (
         <div className="section-background">
@@ -62,7 +66,7 @@ const CountDown = ({launch_date = ''}) => {
                 </div>
             </div>
             <div style={{marginTop: 32}}>
-                <Button className="custom-button medium disabled" disabled variant="contained" color="primary">Mint</Button>
+                <Button className="custom-button medium" variant="contained" color="primary" onClick={onMint}>Mint</Button>
             </div>
         </div>
         
