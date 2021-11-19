@@ -11,24 +11,43 @@ import FadeInContainer from './components/FadeInContainer';
 import { useEffect, useState } from 'react';
 import Specs from './components/Specs';
 import Founders from './components/Founders';
+import AlertBar from './components/AlertBar';
 
 const LAUNCH_DATE = '11/20/2021';
 
 function App() {
   const [progress,setProgress] = useState(DateDifference(new Date(), new Date(LAUNCH_DATE)));
-  const handleConnectWallet = async () => {
-    const status = await ConnectWallet();
-    console.log({status});
-  }
+  const [alert,setAlert] = useState({
+    severity: 'success',
+    msg: '',
+    visible: false
+  });
 
   const handleTokensMinted = async () => {
     const minted = await tokensMinted();
     console.log({minted})
   }
 
+  const onAlert = (severity, msg, visible) => {
+    setAlert({
+      severity,
+      msg,
+      visible
+    })
+  }
+
+  const onCloseAlert = () => {
+    setAlert(prevState => ({
+      ...prevState,
+      visible: false
+    }))
+  }
+
   return (
     <div className="App">
-        <MainApp>
+        <MainApp onAlert={onAlert}>
+          {alert.visible ? <AlertBar severity={alert.severity} visible={alert.visible} msg={alert.msg} onClose={onCloseAlert} /> : null}
+          
           <div className="main-container parallax-container">
             <div className="inner-main">
               <FadeInContainer>
@@ -61,7 +80,7 @@ function App() {
                 </div>
                 <FadeInContainer progress_enabled progress={progress}>
                   <div id="countdown" className="section-large" >
-                    <CountDown launch_date={LAUNCH_DATE} />                  
+                    <CountDown launch_date={LAUNCH_DATE} onAlert={onAlert} />                  
                   </div>
                 </FadeInContainer>   
                 <FadeInContainer>

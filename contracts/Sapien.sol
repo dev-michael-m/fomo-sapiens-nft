@@ -59,4 +59,8 @@ contract Sapien is ERC721URIStorage, Ownable{
     function setActive(bool _active) public onlyOwner {
         active = _active;
     }
+
+    function getActive() public view returns (bool){
+        return active;
+    }
 }

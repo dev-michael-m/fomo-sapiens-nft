@@ -6,8 +6,8 @@ const PUBLIC_KEY = process.env.PUBLIC_KEY;
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 const web3 = createAlchemyWeb3(alchemyKey);
 const contractABI = require('../contract-abi.json');
-const contractAddress = "0x3F2701C84989CcfECA0480aa4484295A7D060962";
-const SAPIEN_PRICE = 100000000000;
+const contractAddress = "0x7469585c3f9D7D33671780c2A682F6A8c2ec3F23";
+const SAPIEN_PRICE = '0x16345785D8A0000' //100000000000000000 wei;
 
 export const fomoContract = new web3.eth.Contract(contractABI, contractAddress)
 
@@ -85,7 +85,8 @@ export const ConnectWallet = async () => {
                 const balance = await provider.getBalance(address);
                 const eth = ethers.utils.formatEther(balance);
                 resolve({
-                    status: true,
+                    status: 'success',
+                    msg: 'Wallet connected',
                     address: address,
                     balance: eth,
                     address_snippet: MaskAddress(address)
@@ -93,15 +94,10 @@ export const ConnectWallet = async () => {
             } catch (error) {
                 console.error(error);
                 reject({
-                    status: false,
-                    msg: 'You must connect your Metamask wallet to continue.'
+                    status: 'error',
+                    msg: error
                 })                
             }
-        }else{
-            reject({
-                status: false,
-                msg: `You must connect your MetaMask wallet to continue.  If you don't have a Metamask wallet, follow this link to get started LINK`
-            })
         }
     })    
 }
@@ -109,6 +105,39 @@ export const ConnectWallet = async () => {
 export const tokensMinted = async () => {
     const minted = await fomoContract.methods.getTokensMinted().call();
     return minted;
+}
+
+export const setSaleActive = async (active) => {
+    if(window.ethereum.request({method: 'eth_requestAccounts'})){
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const address = await signer.getAddress();
+
+        const status = await fomoContract.methods.setActive(active).send({
+            from: address
+        })
+
+        console.log({status})
+
+        return status;
+    }    
+}
+const getSaleActive = () => {
+    return new Promise(async(resolve,reject) => {
+        try{
+            const active = await fomoContract.methods.getActive().call();
+            resolve({
+                status: true,
+                active: active
+            });
+        } catch(error){
+            console.error(`util.getSaleActive: ${error}`);
+            reject({
+                status: false,
+                msg: error
+            });
+        }
+    })
 }
 
 const checkTokenExists = async (tokenId) => {
@@ -133,60 +162,70 @@ export const mintNFT = async () => {
     return new Promise(async(resolve,reject) => {
         try {
             if(window.ethereum.request({method: 'eth_requestAccounts'})){
-                const provider = new ethers.providers.Web3Provider(window.ethereum);
-                const signer = provider.getSigner();
-                const address = await signer.getAddress();
-                console.log({address});
-                // errors here
-                //const nonce = await web3.eth.getTransactionCount(address, "latest") //get latest nonce
-                const tokenId = Math.ceil(Math.random() * 2000 + 1);  // get tokenid
-              
-                console.log({address,tokenId})
-                await checkTokenExists(tokenId).then(async(status) => {
-                    if(status.status){
-                        if(!status.exists){
-                            // get tokenURI based on tokenId
-                            const tokenURI = "https://gateway.pinata.cloud/ipfs/Qmd6d3s56nt8yunDLEcofLY7ytm5EUGPCzE2QWgdnAGPqT";
-                            //the transaction
-                            const tx = {
-                                from: address,
-                                to: contractAddress,
-                                value: '0x174876E800',
-                                gas: '0x7A120',
-                                data: fomoContract.methods.mintSapien(address, tokenURI, tokenId).encodeABI(),
+                const active = await getSaleActive();
+                if(active.active){
+                    const provider = new ethers.providers.Web3Provider(window.ethereum);
+                    const signer = provider.getSigner();
+                    const address = await signer.getAddress();
+                    console.log({address});
+                    // errors here
+                    //const nonce = await web3.eth.getTransactionCount(address, "latest") //get latest nonce
+                    const tokenId = Math.ceil(Math.random() * 2000 + 1);  // get tokenid
+                  
+                    console.log({address,tokenId})
+                    await checkTokenExists(tokenId).then(async(status) => {
+                        if(status.status){
+                            if(!status.exists){
+                                // get tokenURI based on tokenId
+                                const tokenURI = "https://gateway.pinata.cloud/ipfs/Qmd6d3s56nt8yunDLEcofLY7ytm5EUGPCzE2QWgdnAGPqT";
+                                //the transaction
+                                const tx = {
+                                    from: address,
+                                    to: contractAddress,
+                                    value: SAPIEN_PRICE,
+                                    gas: '0x7A120',
+                                    data: fomoContract.methods.mintSapien(address, tokenURI, tokenId).encodeABI(),
+                                }
+                            
+                                const txHash = await window.ethereum.request({
+                                    method: 'eth_sendTransaction',
+                                    params: [tx]
+                                })
+                            
+                                console.log({txHash})
+                                resolve({
+                                    status: 'success',
+                                    msg: 'NFT minted successfully',
+                                    payload: txHash
+                                });
+                            }else{
+                                console.log('token already exists.')
                             }
-                        
-                            const txHash = await window.ethereum.request({
-                                method: 'eth_sendTransaction',
-                                params: [tx]
-                            })
-                        
-                            console.log({txHash})
-                            resolve({
-                                status: true,
-                                txn: txHash
-                            });
-                        }else{
-                            console.log('token already exists.')
                         }
-                    }
-                }).catch(error => {
-                    console.error(`util.mintNFT.tokenExists: ${error}`)
-                    reject({
-                        status: false,
-                        msg: error
+                    }).catch(error => {
+                        console.error(`util.mintNFT.tokenExists: ${error}`)
+                        resolve({
+                            status: 'error',
+                            msg: error
+                        })
                     })
-                })
+                }else{
+                    console.warn('Sale is currently inactive');
+                    resolve({
+                        status: 'warning',
+                        msg: 'Sale is currently inactive'
+                    })
+                }                
             }else{
-                reject({
-                    status: false,
+                resolve({
+                    status: 'warning',
                     msg: `You must connect your MetaMask wallet to continue.  If you don't have a Metamask wallet, follow this link to get started LINK`
                 })
             }    
         } catch (error) {
             console.error(`util.mintNFT: ${error}`)
-            reject({
-                status: false,
+            resolve({
+                status: 'error',
                 msg: error
             })
         }

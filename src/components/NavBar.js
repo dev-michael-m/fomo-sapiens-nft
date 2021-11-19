@@ -11,11 +11,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import $ from 'jquery';
 import { ConnectWallet } from '../utilities/util';
+import { setSaleActive } from './../utilities/util';
 
 
-const NavBar = (props) => {
+const NavBar = ({onAlert}) => {
 
     const [menu,setMenu] = useState(false);
+    const [active,setActive] = useState(false);
     const [wallet,setWallet] = useState({
         address: null,
         provider: null,
@@ -67,11 +69,21 @@ const NavBar = (props) => {
                 address: status.address,
                 snippet: status.address_snippet
             });
+            onAlert(
+                status.status,
+                status.msg,
+                true
+            )
         })
         .catch(error => {
             console.error(error);
         })
       }
+
+    const setSale = () => {
+        setSaleActive(!active); 
+        setActive(prevState => !prevState);
+    }
 
     return (
         <div id="nav-container" className="nav-container">
@@ -116,6 +128,7 @@ const NavBar = (props) => {
                                 <a id="specs" href="#" onClick={handleLinkClick}>Specs</a>
                                 <a id="roadmap" href="#" onClick={handleLinkClick}>Roadmap</a>                                
                                 <a id="team" href="#" onClick={handleLinkClick}>The Founders</a>
+                                <a id="sale" href="#" onClick={setSale}>Activate Sale</a>
                             </div>                            
                         </div>                        
                     </Drawer>

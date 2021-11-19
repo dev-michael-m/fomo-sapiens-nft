@@ -2,7 +2,7 @@ import React, {useEffect,useState} from 'react';
 import { FormatDropDate, FormatDropTimer, mintNFT } from './../utilities/util';
 import Button from '@mui/material/Button';
 
-const CountDown = ({launch_date = ''}) => {
+const CountDown = ({launch_date = '', onAlert}) => {
     const [timer,setTimer] = useState(FormatDropTimer(new Date(), new Date(launch_date)));
     const [dropDisplay,setDropDisplay] = useState({});
 
@@ -23,7 +23,13 @@ const CountDown = ({launch_date = ''}) => {
     },[])
 
     const onMint = async () => {
-        const status = await mintNFT('someuri');
+        const status = await mintNFT();
+        console.log({status});
+        onAlert(
+            status.status,
+            status.msg,
+            true
+        )
     }
 
     return (
