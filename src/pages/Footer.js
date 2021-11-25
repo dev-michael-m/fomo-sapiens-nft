@@ -2,7 +2,8 @@ import React from 'react';
 import '../stylesheet/Footer.css';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import DiscordIcon from '../assets/discord.png';
-
+import IconButton from '@mui/material/IconButton';
+//https://twitter.com/FomoSapiens_NFT
 const Footer = () => {
     return (
         <div className="footer-container">

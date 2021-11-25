@@ -7,7 +7,7 @@ const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 const web3 = createAlchemyWeb3(alchemyKey);
 const contractABI = require('../contract-abi.json');
 const contractAddress = "0x7469585c3f9D7D33671780c2A682F6A8c2ec3F23";
-const SAPIEN_PRICE = '0x16345785D8A0000' //100000000000000000 wei;
+const SAPIEN_PRICE = '0x16345785D8A0000' //100000000000000000 wei / 0.1 ETH;
 
 export const fomoContract = new web3.eth.Contract(contractABI, contractAddress)
 
@@ -43,13 +43,14 @@ export const FormatDropDate = (dateIn = '') => {
         const date_str = new Date(dateIn).toLocaleString('en-us',{weekday: 'long', day: '2-digit', year: 'numeric' })
         const month = new Date(dateIn).toLocaleString('en-us',{month: 'short'});
         const [date,day,year] = date_str.split(' ');
+        const time = new Date(dateIn).toLocaleString('en-us',{hour: '2-digit', minute: '2-digit'}).split(' ')[0];
 
       return {
           day: day.trim(),
           date: date.trim(),
           month: month.trim(),
           year: year.trim(),
-          time: ''
+          time: time.trim()
       } 
     } catch (error) {
         console.error(error);

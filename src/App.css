@@ -76,7 +76,7 @@
 }
 
 .body-container {
-  padding: 38px;
+  padding: 26px;
 }
 
 .parallax-group {
@@ -107,4 +107,18 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+@media screen and (min-width: 768px){
+  .body-container{
+    padding: 106px
+  }
+
+  .section-large {
+    margin-bottom: 280px;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  
 }

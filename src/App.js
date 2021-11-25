@@ -17,6 +17,7 @@ const LAUNCH_DATE = '11/20/2021';
 
 function App() {
   const [progress,setProgress] = useState(DateDifference(new Date(), new Date(LAUNCH_DATE)));
+  const [active, setActive] = useState(false);
   const [alert,setAlert] = useState({
     severity: 'success',
     msg: '',
@@ -61,14 +62,14 @@ function App() {
                       <p>
                           2 million years ago a brave ape decided he would no longer let his environment determine how he lived:  his back hurt, knees shot, and quite frankly was disguisted at the idea
                           of continuing to crawl around.  He stood up tall, looked across the desert and took our species first steps.  2 million years later his ancestors dubbed him FOMO Habilis.<br></br><br></br>
-                          Today we pay homage not only to him, not only to the pinnacle of evolution, the <b>FOMO Sapiens</b>, but to all our ancestors who perished so we could prosper.
+                          Today we pay homage not only to him, not only to the pinnacle of evolution, the <b>FOMO SAPIENS</b>, but to all our ancestors who perished so we could prosper.
                       </p>
                     </div>
                   </FadeInContainer>
                   <FadeInContainer>
                     <div style={{marginBottom: 16}}>
                       <Button className="custom-button primary medium" variant="contained" color="primary" onClick={() => document.getElementById('OS').click()}>View on OpenSea</Button>
-                      <a id="OS" target="_blank" href="https://opensea.io/FomoSapiensNFT"></a>
+                      <a id="OS" target="_blank" href="https://opensea.io/collection/fomosapiens"></a>
                     </div>                    
                   </FadeInContainer>  
                   <FadeInContainer>
@@ -80,7 +81,7 @@ function App() {
                 </div>
                 <FadeInContainer progress_enabled progress={progress}>
                   <div id="countdown" className="section-large" >
-                    <CountDown launch_date={LAUNCH_DATE} onAlert={onAlert} />                  
+                    <CountDown launch_date={active ? LAUNCH_DATE : null} onAlert={onAlert} />                  
                   </div>
                 </FadeInContainer>   
                 <FadeInContainer>

@@ -5,21 +5,35 @@ import Button from '@mui/material/Button';
 const CountDown = ({launch_date = '', onAlert}) => {
     const [timer,setTimer] = useState(FormatDropTimer(new Date(), new Date(launch_date)));
     const [dropDisplay,setDropDisplay] = useState({});
+    const [active,setActive] = useState(false);
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            setTimer(FormatDropTimer(new Date(), new Date(launch_date)))            
-        },100)
-
-        return () => {
-            clearInterval(timer);
-        }
+        if(active){
+            const timer = setInterval(() => {
+                setTimer(FormatDropTimer(new Date(), new Date(launch_date)))            
+            },100)
+    
+            return () => {
+                clearInterval(timer);
+            }
+        }        
     },[])
 
     useEffect(() => {
-        console.log('calling display')
-        setDropDisplay(FormatDropDate(launch_date));
-        
+        if(active){
+            setDropDisplay(FormatDropDate(launch_date));
+        }else{
+
+            const timer = setInterval(() => {
+                const today = new Date();
+                const ld = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()} ${today.getHours()}:${today.getMinutes()}`;
+                setDropDisplay(FormatDropDate(ld));
+            },1000);
+
+            return () => {
+                clearInterval(timer);
+            }
+        }       
     },[])
 
     const onMint = async () => {
@@ -46,33 +60,33 @@ const CountDown = ({launch_date = '', onAlert}) => {
                         <div style={{position: 'relative', bottom: 60}}>
                             <label style={{color: 'rgba(255,255,255,0.5)',fontSize: 14}}>{dropDisplay.day}</label><br></br>
                             <label>{`${dropDisplay.date} ${dropDisplay.month} ${dropDisplay.year}`}</label><br></br><br></br>
-                            <h2 style={{margin: 2}}>09:30</h2>
+                            <h2 style={{margin: 2}}>{dropDisplay.time}</h2>
                         </div>                    
                     </div>
                 </div>
                 <div id="countdown-timer" className="timer-container">
                     <div style={{color: "white", display: 'flex', justifyContent: 'space-evenly'}} className="timer-1">                
                         <div>
-                            <h3>{timer.days}</h3>
+                            <h3>{active ? timer.days : 'TBA'}</h3>
                             <label>Days</label>
                         </div>
                         <div>
-                            <h3>{timer.hours}</h3>
+                            <h3>{active ? timer.hours : 'TBA'}</h3>
                             <label>Hours</label>
                         </div>
                         <div>
-                            <h3>{timer.minutes}</h3>
+                            <h3>{active ? timer.minutes : 'TBA'}</h3>
                             <label>Mins</label>
                         </div>
                         <div>
-                            <h3>{timer.seconds}</h3>
+                            <h3>{active ? timer.seconds : 'TBA'}</h3>
                             <label>Sec</label>
                         </div>                        
                     </div>
                 </div>
             </div>
             <div style={{marginTop: 32}}>
-                <Button className="custom-button medium" variant="contained" color="primary" onClick={onMint}>Mint</Button>
+                <Button className="custom-button medium disabled" disabled variant="contained" color="primary" onClick={onMint}>Mint</Button>
             </div>
         </div>
         

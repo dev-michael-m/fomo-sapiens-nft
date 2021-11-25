@@ -6,6 +6,7 @@
     line-height: normal;
     position: absolute;
     z-index: 10;
+    margin-top: 4px;
 }
 
 .inner-nav {
@@ -81,7 +82,11 @@
 .hero-img {
     position: relative;
     transform: scale(-1,1);
-    padding-top: 180px;
+    padding-top: 300px;
+}
+
+.hero-img img {
+    transform: scale(3.5);
 }
 
 .custom-button {
@@ -89,6 +94,20 @@
     color: white !important;
     border-radius: 36px !important;
     text-transform: none !important;
+}
+
+.mobile-stepper {
+    display: flex !important;
+    justify-content: center !important;
+    background-color: transparent !important;
+}
+
+div.MuiMobileStepper-dot {
+    background-color: rgba(255,255,255,0.35) !important;
+}
+
+div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
+    background-color: #20d5d5 !important;
 }
 
 .primary {
@@ -245,3 +264,86 @@
     border: none !important;
     color: rgba(0,0,0,0.52) !important;
 }
+
+.fade-section {
+    animation: fadeIn 2.5s;
+}
+
+.inner-stepper {
+    padding: 0px 26px;
+    text-align: left;
+}
+
+.hero-details {
+    position: absolute; 
+    top: 368;
+    left: 0;
+    z-index: 20;
+    width: 100%;
+}
+
+.down-arrow {
+    position: relative;
+    bottom: 36;
+}
+
+@keyframes fadeIn {
+    0% {opacity: 0%;}
+    100% {opacity: 100%;}
+}
+
+@media screen and (min-width: 925px) and (max-width: 1024px) {
+    .hero-img img {
+        transform: scale(1.5);
+    }
+
+    .hero-img {
+        left: 240px;
+    }
+
+    .hero-details {
+        top: 346px;
+    }
+
+    .inner-stepper {
+        padding-right: 50%;
+    }
+
+    .down-arrow {
+        bottom: 366px;
+    }
+
+    .nft-stat {
+        bottom: 240px;
+    }
+
+    .inner-nav{
+        padding: 16px
+      }
+}
+
+@media screen and (min-width: 768px) and (max-width: 925px){
+    .inner-nav{
+      padding: 16px
+    }
+
+    .down-arrow {
+        bottom: 216px;
+    }
+
+    .hero-img img {
+        transform: scale(2.5);
+    }
+
+    .inner-stepper {
+        padding: 0px 106px;
+    }
+
+    .nft-stat {
+        bottom: 200px;
+    }
+
+    .hero-details {
+        top: 464px;
+    }
+  }

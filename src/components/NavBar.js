@@ -1,8 +1,7 @@
 import React,{useEffect, useState} from 'react';
-import Logo from '../assets/rmp.png';
+import Logo from '../assets/fomo-sapiens-logo.png';
 import '../stylesheet/NavBar.css';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import Button from '@mui/material/Button';
 import AppsIcon from '@mui/icons-material/Apps';
 import Drawer from '@mui/material/Drawer';
@@ -23,6 +22,7 @@ const NavBar = ({onAlert}) => {
         provider: null,
         snippet: null
     })
+    const [walletActive,setWalletActive] = useState(false);
 
     useEffect(() => {
         // if(window.ethereum.request({method: 'eth_requestAccounts'})){
@@ -88,20 +88,22 @@ const NavBar = ({onAlert}) => {
     return (
         <div id="nav-container" className="nav-container">
             <div id="inner-nav" className="inner-nav">
-                <div style={{marginLeft: 12, marginRight: 'auto'}}>
-                    <h3 className="nav-header">FOMO SAPIENS</h3>
+                <div style={{marginLeft: 12, marginRight: 'auto', textAlign: 'left', display: 'flex'}}>
+                    {/* <h3 className="nav-header">FOMO SAPIENS</h3> */}
+                    <img src={Logo} width="185px"></img>
                 </div>
                 <div className="socials">
-                    {!wallet.address ? <div id="connect-wallet" style={{width: 122}}>
+                    {walletActive && !wallet.address ? <div id="connect-wallet" style={{width: 122}}>
                         <Button className="custom-button small-social social-button" style={{fontSize: 10}} onClick={handleConnectWallet}> Connect Wallet</Button>
-                    </div> :
+                    </div> : walletActive && wallet.address ?
                     <div style={{width: 122,display: 'flex',alignItems: 'center', justifyContent: 'center'}}>
                         <VerifiedIcon style={{color: '#f5deb3d9', fontSize: 15, paddingRight: 6}} />
                         <label style={{fontSize: 10, color: '#f5deb3d9'}}>{wallet.snippet}</label>
-                    </div>
+                    </div> : null
                     }
                     <div id="twitter">
-                        <IconButton className="social-button" ><TwitterIcon style={{color: 'rgb(255,255,255)', fontSize: 20}} /></IconButton>
+                        <IconButton className="social-button" onClick={() => document.getElementById('twitter-link-nav').click()}><TwitterIcon style={{color: 'rgb(255,255,255)', fontSize: 20}} /></IconButton>
+                        <a id="twitter-link-nav" target="_blank" href="https://twitter.com/FomoSapiens_NFT"></a>
                     </div>
                     <div id="discord">
 
@@ -128,7 +130,6 @@ const NavBar = ({onAlert}) => {
                                 <a id="specs" href="#" onClick={handleLinkClick}>Specs</a>
                                 <a id="roadmap" href="#" onClick={handleLinkClick}>Roadmap</a>                                
                                 <a id="team" href="#" onClick={handleLinkClick}>The Founders</a>
-                                <a id="sale" href="#" onClick={setSale}>Activate Sale</a>
                             </div>                            
                         </div>                        
                     </Drawer>
