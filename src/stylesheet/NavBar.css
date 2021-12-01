@@ -119,7 +119,7 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
 }
 
 .secondary {
-    background-color: #f5deb3 !important;
+    background-color: rgb(245,222,179) !important;
 }
 
 .disabled {
@@ -179,6 +179,11 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
     border-right-color: #20d5d5;
     transform: rotate(226deg);
     transition: transform 1.25s;
+  }
+
+  .inner-prog-bar {
+      position: relative;
+      bottom: 60px;
   }
 
 .timer-container h3 {
@@ -276,7 +281,7 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
 
 .hero-details {
     position: absolute; 
-    top: 368;
+    top: 5%;
     left: 0;
     z-index: 20;
     width: 100%;
@@ -284,12 +289,60 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
 
 .down-arrow {
     position: relative;
-    bottom: 36;
+    bottom: 36px;
 }
 
 @keyframes fadeIn {
     0% {opacity: 0%;}
     100% {opacity: 100%;}
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1440px) {
+    .hero-img img {
+        transform: scale(1.5);
+    }
+
+    .hero-img {
+        left: 240px;
+    }
+
+    .hero-details {
+        top: 346px;
+    }
+
+    .inner-stepper {
+        padding-right: 50%;
+    }
+
+    .down-arrow {
+        bottom: 572px;
+    }
+
+    .nft-stat {
+        bottom: 384px;
+    }
+
+    .inner-nav{
+        padding: 16px
+      }
+    
+    .mobile-stepper {
+        width: 45%;
+    }
+
+    .bar {
+        width: 500px;
+        height: 500px;
+    }
+
+    .barOverflow {
+        width: 500px;
+        height: 250px;
+    }
+
+    .inner-prog-bar {
+        bottom: 120px;
+    }
 }
 
 @media screen and (min-width: 925px) and (max-width: 1024px) {
@@ -320,6 +373,10 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
     .inner-nav{
         padding: 16px
       }
+    
+    .mobile-stepper {
+        width: 45%;
+    }
 }
 
 @media screen and (min-width: 768px) and (max-width: 925px){
@@ -345,5 +402,21 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
 
     .hero-details {
         top: 464px;
+    }
+  }
+
+  @media screen and (min-width: 360px) and (max-width: 425px){
+    .hero-details {
+        top: 4.75%;
+    }
+  }
+
+  @media screen and (min-width: 320px) and (max-width: 359px){
+    .hero-details {
+        top: 4%;
+    }
+
+    .down-arrow {
+        bottom: 0px;
     }
   }

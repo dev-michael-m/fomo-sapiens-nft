@@ -12,7 +12,7 @@ const Founders = () => {
     return (
         <div>
             <FadeInContainer>
-                <h2>The Founders</h2>
+                <h1>THE FOUNDERS</h1>
             </FadeInContainer>
             <FadeInContainer>
                 <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '60px 0px'}}>

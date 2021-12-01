@@ -12,6 +12,8 @@ import { useEffect, useState } from 'react';
 import Specs from './components/Specs';
 import Founders from './components/Founders';
 import AlertBar from './components/AlertBar';
+import FAQs from './components/FAQs';
+import Promo from './components/Promo';
 
 const LAUNCH_DATE = '11/20/2021';
 
@@ -67,37 +69,46 @@ function App() {
                     </div>
                   </FadeInContainer>
                   <FadeInContainer>
-                    <div style={{marginBottom: 16}}>
-                      <Button className="custom-button primary medium" variant="contained" color="primary" onClick={() => document.getElementById('OS').click()}>View on OpenSea</Button>
-                      <a id="OS" target="_blank" href="https://opensea.io/collection/fomosapiens"></a>
-                    </div>                    
-                  </FadeInContainer>  
-                  <FadeInContainer>
                     <div>
                       <Button className="custom-button primary small" variant="contained" color="primary" onClick={() => document.getElementById('discord-link').click()}>Join the List</Button>
                       <a id="discord-link" target="_blank" href="https://discord.com/channels/909901600775086141/909901601521684512"></a>
                     </div>
                   </FadeInContainer>                
                 </div>
+                <div className="section-large">
+                  <FadeInContainer>
+                    <Promo />
+                  </FadeInContainer>
+                  {/* <FadeInContainer>
+                    <div>
+                      <Button className="custom-button primary medium" variant="contained" color="primary" onClick={() => document.getElementById('OS').click()}>View on OpenSea</Button>
+                      <a id="OS" target="_blank" href="https://opensea.io/collection/fomosapiens"></a>
+                    </div>                    
+                  </FadeInContainer>   */}
+                </div>
                 <FadeInContainer progress_enabled progress={progress}>
                   <div id="countdown" className="section-large" >
                     <CountDown launch_date={active ? LAUNCH_DATE : null} onAlert={onAlert} />                  
                   </div>
-                </FadeInContainer>   
+                </FadeInContainer> 
+                
                 <FadeInContainer>
                   <div id="stake" className="section-large">
-                    <h2>Staking</h2>
+                    <h1>STAKING</h1>
                     <p>Earn <b>$SAPIEN</b> tokens by simply holding your NFT.  Our user's come first, and it's our mission to provide you with ever lasting value. Simply stake your sapien and let him do the work for you.</p>
                     <div style={{margin: '40px 0px'}}>
                       <Button className="custom-button primary small" variant="contained" color="primary" onClick={handleTokensMinted}>Staking</Button>
                     </div>
                   </div>                  
                 </FadeInContainer>
-                <div id="specs" className="section-large">
+                {/* <div id="specs" className="section-large">
                   <Specs />           
-                </div>
+                </div> */}
                 <div className="section-large">
                   <RoadMap />
+                </div>
+                <div className="section-large">
+                  <FAQs />
                 </div>
                 <div id="founders" className="section-medium">
                   <Founders />

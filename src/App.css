@@ -43,7 +43,7 @@
 }
 
 .section-background {
-  background: radial-gradient(rgba(255,255,255,0.2),black);
+  background: radial-gradient(closest-side,rgba(255,255,255,0.2),black);
 }
 
 .section {
@@ -100,6 +100,20 @@
   color: #61dafb;
 }
 
+.nft-img-side {
+  width: 85%;
+  box-shadow: 0px 10px 26px rgba(245,222,179,0.4);
+}
+
+.nft-img-front {
+  width: 120%;
+  box-shadow: 0px 10px 16px rgb(0,0,0);
+}
+
+.nft-img-container {
+  margin: 16px 0px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -109,9 +123,19 @@
   }
 }
 
-@media screen and (min-width: 768px){
+@media screen and (min-width: 1024px) and (max-width: 1440px) {
   .body-container{
-    padding: 106px
+    padding: 0px 180px;
+  }
+
+  .section-large {
+    margin-bottom: 28%;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 925px){
+  .body-container{
+    padding: 72px;
   }
 
   .section-large {
@@ -119,6 +143,6 @@
   }
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 925px) and (max-width: 1024px) {
   
 }

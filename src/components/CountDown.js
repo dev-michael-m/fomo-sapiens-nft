@@ -49,7 +49,7 @@ const CountDown = ({launch_date = '', onAlert}) => {
     return (
         <div className="section-background">
             <div>
-                <h2 style={{marginBottom: 75}}>Launching</h2>
+                <h1 style={{marginBottom: 75}}>LAUNCHING</h1>
             </div>
             <div className="countdown-container" style={{display: 'flex', flexDirection: 'column'}}>
                 <div style={{margin: 'auto'}}>
@@ -57,7 +57,7 @@ const CountDown = ({launch_date = '', onAlert}) => {
                         <div className="barOverflow">
                             <div id="progress-bar" className="bar"></div>
                         </div>
-                        <div style={{position: 'relative', bottom: 60}}>
+                        <div className="inner-prog-bar">
                             <label style={{color: 'rgba(255,255,255,0.5)',fontSize: 14}}>{dropDisplay.day}</label><br></br>
                             <label>{`${dropDisplay.date} ${dropDisplay.month} ${dropDisplay.year}`}</label><br></br><br></br>
                             <h2 style={{margin: 2}}>{dropDisplay.time}</h2>

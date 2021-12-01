@@ -29,7 +29,7 @@
 }
 
 .roadmap-container {
-    background: radial-gradient(rgba(255,255,255,0.16), black);
+    background: radial-gradient(closest-side,rgba(255,255,255,0.16), black);
 }
 
 .roadmap-desc {

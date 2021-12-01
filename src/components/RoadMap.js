@@ -12,23 +12,23 @@ import TimelineDot from '@mui/lab/TimelineDot';
 
 const steps = [
     {
-        label: 'Title 1',
+        label: 'Phase 1 - Airdrop',
+        description: 'Airdrop 2-D pixel version of each individual holders sapien.'
+    },
+    {
+        label: 'Phase 2 - Companion',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu risus quis varius quam quisque id diam.'
     },
     {
-        label: 'Title 2',
+        label: 'Phase 3 - Evolution',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu risus quis varius quam quisque id diam.'
     },
     {
-        label: 'Title 3',
+        label: 'Phase 4',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu risus quis varius quam quisque id diam.'
     },
     {
-        label: 'Title 4',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu risus quis varius quam quisque id diam.'
-    },
-    {
-        label: 'Title 5',
+        label: 'Phase 5',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu risus quis varius quam quisque id diam.'
     },
 ]
@@ -39,7 +39,7 @@ const RoadMap = () => {
         <div id="roadmap" className="roadmap-container">
             <FadeInContainer>
                 <div style={{margin: 40}}>
-                    <h2>RoadMap</h2>
+                    <h1>ROADMAP</h1>
                 </div>
             </FadeInContainer>
             <Timeline position="right">

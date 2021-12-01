@@ -6,19 +6,25 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Sapien is ERC721Enumerable, Ownable{
     using Strings for uint256;
-
-    uint256 public MAX_SUPPLY = 2000;
-    uint256 public PRESALE_SUPPLY = 1000;
+    // keep track of total number of NFTs alloted
+    uint256 public MAX_SUPPLY = 14;
+    uint256 public PRESALE_SUPPLY = 7;
     uint256 private SALE_PRICE = 0.1 ether;
     bool private active = false; // variable for public sale
     bool private presale_active = false; // variable for presale
     bool public paused = false;
     bool public revealed = false;
+    string public BASE_URL = "https://gateway.pinata.cloud/ipfs/QmUn6EPc187kUuD8aV6DYhYuJ9EhZWmkA2M5DeTKVUFuqy/";
+    string public EXTENSION = ".png";   // change this to .json for metadata
     mapping(address => bool) public whitelist;
     
     constructor() public ERC721("FOMO SAPIENS", "FSNFT") {}
 
-    function mint() public payable returns(uint256)
+    // @recipient: recipient's address
+    // @tokenURI: URL to NFT metadata (ie. Pinata)
+    // @_tokenId: randomly generated tokenId to attach to metadata
+    // this is a payable contract
+    function mint() public payable returns(string memory)
     {
         require(!paused);
         // sale must be active
@@ -67,9 +73,15 @@ contract Sapien is ERC721Enumerable, Ownable{
         require(!_exists(_tokenId), "Cannot mint this token");
         
         _safeMint(msg.sender, _tokenId);
-        //_setTokenURI(_tokenId, tokenURI);
+        string memory _tokenURI = tokenURI(_tokenId);
 
-        return _tokenId;
+        return _tokenURI;
+    }
+
+    function tokenURI(uint256 _tokenId) public view virtual override returns(string memory){
+        return bytes(BASE_URL).length > 0
+        ? string(abi.encodePacked(BASE_URL, _tokenId.toString(), EXTENSION))
+        : "";
     }
     
     // @_active: sale boolean

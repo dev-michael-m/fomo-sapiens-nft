@@ -127,7 +127,6 @@ const NavBar = ({onAlert}) => {
                             <div className="menu-list">
                                 <a id="whitelist" href="#" onClick={handleLinkClick}>Join the List</a>
                                 <a id="stake" href="#" onClick={handleLinkClick}>Staking</a>
-                                <a id="specs" href="#" onClick={handleLinkClick}>Specs</a>
                                 <a id="roadmap" href="#" onClick={handleLinkClick}>Roadmap</a>                                
                                 <a id="team" href="#" onClick={handleLinkClick}>The Founders</a>
                             </div>                            
