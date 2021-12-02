@@ -1,0 +1,11 @@
+{
+    "name": "FOMO SAPIENS #1",
+    "description": "FOMO SAPIENs OpenSea test.",
+    "image": "ipfs://QmVESqXUQF7vrYC2eMoB8hXkrHkjvJ8f7TjU6vmQwSJh5n/1.png",
+    "attributes": [
+        {
+            "trait_type": "Fur",
+            "value": "Gold"
+        }
+    ]
+}

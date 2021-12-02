@@ -1,0 +1,11 @@
+{
+    "name": "FOMO SAPIENS #2",
+    "description": "FOMO SAPIENs OpenSea test.",
+    "image": "ipfs://QmVESqXUQF7vrYC2eMoB8hXkrHkjvJ8f7TjU6vmQwSJh5n/2.png",
+    "attributes": [
+        {
+            "trait_type": "Fur",
+            "value": "Trippy"
+        }
+    ]
+}

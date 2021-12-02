@@ -1,0 +1,11 @@
+{
+    "name": "FOMO SAPIENS #7",
+    "description": "FOMO SAPIENs OpenSea test.",
+    "image": "ipfs://QmVESqXUQF7vrYC2eMoB8hXkrHkjvJ8f7TjU6vmQwSJh5n/7.png",
+    "attributes": [
+        {
+            "trait_type": "Fur",
+            "value": "Pink"
+        }
+    ]
+}
