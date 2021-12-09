@@ -14,6 +14,10 @@ import Founders from './components/Founders';
 import AlertBar from './components/AlertBar';
 import FAQs from './components/FAQs';
 import Promo from './components/Promo';
+import DiscordIcon from './assets/discord.png';
+import OpenSeaIcon from './assets/opensea.png';
+import IconButton from '@mui/material/IconButton';
+import TwitterIcon from '@mui/icons-material/Twitter';
 
 const LAUNCH_DATE = '11/20/2021';
 
@@ -57,15 +61,27 @@ function App() {
                 <Hero />
               </FadeInContainer>
               <div className="body-container">
-                <div id="welcome-section" className="section-large">
+                <div id="welcome-section" className="section-large primary-section">
                   <FadeInContainer>
-                    <div style={{marginBottom: 86}}>
+                    <div style={{marginBottom: '12%'}}>
                       <h1 style={{margin: 40}}>WELCOME</h1>
                       <p>
                           2 million years ago a brave ape decided he would no longer let his environment determine how he lived:  his back hurt, knees shot, and quite frankly was disguisted at the idea
                           of continuing to crawl around.  He stood up tall, looked across the desert and took our species first steps.  2 million years later his ancestors dubbed him FOMO Habilis.<br></br><br></br>
                           Today we pay homage not only to him, not only to the pinnacle of evolution, the <b>FOMO SAPIENS</b>, but to all our ancestors who perished so we could prosper.
                       </p>
+                    </div>
+                    <div style={{display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', marginBottom: '12%'}}>
+                      <div id="twitter">
+                          <TwitterIcon style={{color: 'rgb(255,255,255)', fontSize: 26}} />
+                          <a id="twitter-link-nav" target="_blank" href="https://twitter.com/FomoSapiens_NFT"></a>
+                      </div>
+                      <div id="discord">
+                        <img style={{margin: '0px 10px'}} src={DiscordIcon} width="26px"></img>
+                      </div>
+                      <div id="opensea">
+                        <img style={{margin: '0px 10px'}} src={OpenSeaIcon} width="26px"></img>
+                      </div>
                     </div>
                   </FadeInContainer>
                   <FadeInContainer>
@@ -79,12 +95,6 @@ function App() {
                   <FadeInContainer>
                     <Promo />
                   </FadeInContainer>
-                  {/* <FadeInContainer>
-                    <div>
-                      <Button className="custom-button primary medium" variant="contained" color="primary" onClick={() => document.getElementById('OS').click()}>View on OpenSea</Button>
-                      <a id="OS" target="_blank" href="https://opensea.io/collection/fomosapiens"></a>
-                    </div>                    
-                  </FadeInContainer>   */}
                 </div>
                 <FadeInContainer progress_enabled progress={progress}>
                   <div id="countdown" className="section-large" >
@@ -93,7 +103,7 @@ function App() {
                 </FadeInContainer> 
                 
                 <FadeInContainer>
-                  <div id="stake" className="section-large">
+                  <div id="stake" className="section-large primary-section">
                     <h1>STAKING</h1>
                     <p>Earn <b>$SAPIEN</b> tokens by simply holding your NFT.  Our user's come first, and it's our mission to provide you with ever lasting value. Simply stake your sapien and let him do the work for you.</p>
                     <div style={{margin: '40px 0px'}}>

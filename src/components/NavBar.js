@@ -10,7 +10,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import $ from 'jquery';
 import { ConnectWallet } from '../utilities/util';
-import { setSaleActive } from './../utilities/util';
 
 
 const NavBar = ({onAlert}) => {
@@ -79,11 +78,6 @@ const NavBar = ({onAlert}) => {
             console.error(error);
         })
       }
-
-    const setSale = () => {
-        setSaleActive(!active); 
-        setActive(prevState => !prevState);
-    }
 
     return (
         <div id="nav-container" className="nav-container">

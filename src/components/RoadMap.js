@@ -12,15 +12,15 @@ import TimelineDot from '@mui/lab/TimelineDot';
 
 const steps = [
     {
-        label: 'Phase 1 - Airdrop',
-        description: 'Airdrop 2-D pixel version of each individual holders sapien.'
-    },
-    {
-        label: 'Phase 2 - Companion',
+        label: 'Phase 1',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu risus quis varius quam quisque id diam.'
     },
     {
-        label: 'Phase 3 - Evolution',
+        label: 'Phase 2',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu risus quis varius quam quisque id diam.'
+    },
+    {
+        label: 'Phase 3',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu risus quis varius quam quisque id diam.'
     },
     {

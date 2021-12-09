@@ -1,7 +1,7 @@
 import React from 'react'
-import FSNFT1 from '../assets/18.png';
-import FSNFT2 from '../assets/11.png';
-import FSNFT3 from '../assets/13.png';
+import FSNFT1 from '../assets/22.png';
+import FSNFT2 from '../assets/20.png';
+import FSNFT3 from '../assets/21.png';
 
 const Promo = () => {
     return (

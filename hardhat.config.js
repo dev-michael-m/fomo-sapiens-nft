@@ -12,7 +12,7 @@ module.exports = {
       hardhat: {},
       ropsten: {
          url: process.env.API_URL,
-         accounts: [`0x${process.env.PRIVATE_KEY}`]
+         accounts: [`0x${process.env.REACT_APP_PRIVATE_KEY}`]
       }
    },
    etherscan: {

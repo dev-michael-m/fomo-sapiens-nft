@@ -2,14 +2,22 @@ import { ethers } from "ethers";
 
 require('dotenv').config();
 const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
-const PUBLIC_KEY = process.env.PUBLIC_KEY;
+const PUBLIC_KEY = process.env.REACT_APP_PUBLIC_KEY;
+const PRIVATE_KEY = process.env.REACT_APP_PRIVATE_KEY;
+const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 const web3 = createAlchemyWeb3(alchemyKey);
 const contractABI = require('../contract-abi.json');
-const contractAddress = "0x7469585c3f9D7D33671780c2A682F6A8c2ec3F23";
 const SAPIEN_PRICE = '0x16345785D8A0000' //100000000000000000 wei / 0.1 ETH;
+const WHITELIST = [
+    "0x103EcE5B498b9c425295F58148Aa5bdAc7575708",
+    "0x182B80929672984a64d3d756588C7b3c217f0182",
+    "0xF0036aA4B10d8712fDaa193a6036c01E3a12880c"
+]
 
-export const fomoContract = new web3.eth.Contract(contractABI, contractAddress)
+const MAXSUPPLY = 4000;
+
+export const fomoContract = new web3.eth.Contract(contractABI, CONTRACT_ADDRESS)
 
 export const FormatDropTimer = (date = new Date(), end_date = new Date()) => {
     try {
@@ -74,6 +82,28 @@ const MaskAddress = (full_address = '') => {
     }
 }
 
+export const CheckAdmin = () => {
+    return new Promise(async(resolve,reject) => {
+        if(window.ethereum.request({method: 'eth_requestAccounts'})){
+            try{
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const address = await signer.getAddress();
+                
+                if(address === process.env.REACT_APP_F1_ADDRESS){
+                    resolve({status: 'success',msg: 'Verified'});
+                }else{
+                    reject({msg: `You do not have access to this page.`,status: 'error'})
+                }
+            }catch(error) {
+                reject({msg: error, status: 'error'});
+            }            
+        }else{
+            reject({msg: `You must connect your MetaMask wallet to be verified.`,status: 'warning'})
+        }
+    })
+}
+
 //* Web3 Contract Interactive Methods
 
 export const ConnectWallet = async () => {
@@ -108,25 +138,32 @@ export const tokensMinted = async () => {
     return minted;
 }
 
-export const setSaleActive = async (active) => {
+export const setSaleState = async (active,sale_type) => {
     if(window.ethereum.request({method: 'eth_requestAccounts'})){
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const address = await signer.getAddress();
 
-        const status = await fomoContract.methods.setActive(active).send({
-            from: address
-        })
+        if(sale_type === 'presale'){
+            const status = await fomoContract.methods.setPresale(active).send({
+                from: address
+            })
 
-        console.log({status})
+            console.log({status})
+        }else if(sale_type === 'public'){
+            const status = await fomoContract.methods.setPublicSale(active).send({
+                from: address
+            })
 
-        return status;
+            console.log({status})
+        }
     }    
 }
-const getSaleActive = () => {
+
+export const getPresaleState = () => {
     return new Promise(async(resolve,reject) => {
         try{
-            const active = await fomoContract.methods.getActive().call();
+            const active = await fomoContract.methods.getPresale().call();
             resolve({
                 status: true,
                 active: active
@@ -141,82 +178,94 @@ const getSaleActive = () => {
     })
 }
 
-const checkTokenExists = async (tokenId) => {
+export const getPublicState = () => {
     return new Promise(async(resolve,reject) => {
-        try {
-            const exists = await fomoContract.methods.tokenExists(tokenId).call();
+        try{
+            const active = await fomoContract.methods.getPublicSale().call();
             resolve({
                 status: true,
-                exists: exists
+                active: active
+            });
+        } catch(error){
+            console.error(`util.getSaleActive: ${error}`);
+            reject({
+                status: false,
+                msg: error
+            });
+        }
+    })
+}
+
+const checkWhitelist = (contract_address,signature,user) => {
+    return new Promise(async(resolve,reject) => {
+        try {
+            const whitelisted = await fomoContract.methods.isWhitelisted(contract_address,signature,user).call();
+            console.log({whitelisted})
+            resolve({
+                status: true,
+                data: whitelisted
             })
         } catch (error) {
-            console.error(`util.tokenExists: ${error}`);
+            console.error(`util.checkWhitelist: ${error}`);
             reject({
                 status: false,
                 msg: error
             })
         }
-    })    
+    })
 }
 
-export const mintNFT = async () => {
+export const mintNFT = async (sale_type) => {
     return new Promise(async(resolve,reject) => {
         try {
             if(window.ethereum.request({method: 'eth_requestAccounts'})){
-                const active = await getSaleActive();
-                if(active.active){
-                    const provider = new ethers.providers.Web3Provider(window.ethereum);
-                    const signer = provider.getSigner();
-                    const address = await signer.getAddress();
-                    console.log({address});
-                    // errors here
-                    //const nonce = await web3.eth.getTransactionCount(address, "latest") //get latest nonce
-                    const tokenId = Math.ceil(Math.random() * 2000 + 1);  // get tokenid
-                  
-                    console.log({address,tokenId})
-                    await checkTokenExists(tokenId).then(async(status) => {
-                        if(status.status){
-                            if(!status.exists){
-                                // get tokenURI based on tokenId
-                                const tokenURI = "https://gateway.pinata.cloud/ipfs/Qmd6d3s56nt8yunDLEcofLY7ytm5EUGPCzE2QWgdnAGPqT";
-                                //the transaction
-                                const tx = {
-                                    from: address,
-                                    to: contractAddress,
-                                    value: SAPIEN_PRICE,
-                                    gas: '0x7A120',
-                                    data: fomoContract.methods.mintSapien(address, tokenURI, tokenId).encodeABI(),
-                                }
-                            
-                                const txHash = await window.ethereum.request({
-                                    method: 'eth_sendTransaction',
-                                    params: [tx]
-                                })
-                            
-                                console.log({txHash})
-                                resolve({
-                                    status: 'success',
-                                    msg: 'NFT minted successfully',
-                                    payload: txHash
-                                });
-                            }else{
-                                console.log('token already exists.')
-                            }
-                        }
-                    }).catch(error => {
-                        console.error(`util.mintNFT.tokenExists: ${error}`)
-                        resolve({
-                            status: 'error',
-                            msg: error
-                        })
-                    })
-                }else{
-                    console.warn('Sale is currently inactive');
-                    resolve({
-                        status: 'warning',
-                        msg: 'Sale is currently inactive'
-                    })
-                }                
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const address = await signer.getAddress();
+                const pubkey = web3.eth.accounts.privateKeyToAccount(PRIVATE_KEY);
+                const signature = pubkey.sign(address + MAXSUPPLY);
+                console.log({signature});
+                const presale_active = await getPresaleState();
+
+                if(sale_type === 'presale' && presale_active && WHITELIST.includes(address)){
+                    
+                }else if(sale_type === 'public'){
+
+                }
+                // const whitelisted = await checkWhitelist(contractAddress,signature.signature,address);
+                // console.log({whitelisted})
+                // if(active.active){
+                //     console.log({address});
+                //     // get tokenURI based on tokenId
+                //     const tokenURI = "https://gateway.pinata.cloud/ipfs/Qmd6d3s56nt8yunDLEcofLY7ytm5EUGPCzE2QWgdnAGPqT";
+                //     //the transaction
+                //     const tx = {
+                //         from: address,
+                //         to: contractAddress,
+                //         value: SAPIEN_PRICE,
+                //         gas: '0x7A120',
+                //         data: fomoContract.methods.mintSapien(address, tokenURI, tokenId).encodeABI(),
+                //     }
+                
+                //     const txHash = await window.ethereum.request({
+                //         method: 'eth_sendTransaction',
+                //         params: [tx]
+                //     })
+                
+                //     console.log({txHash})
+                //     resolve({
+                //         status: 'success',
+                //         msg: 'NFT minted successfully',
+                //         payload: txHash
+                //     });
+                    
+                // }else{
+                //     console.warn('Sale is currently inactive');
+                //     resolve({
+                //         status: 'warning',
+                //         msg: 'Sale is currently inactive'
+                //     })
+                // }                
             }else{
                 resolve({
                     status: 'warning',
@@ -230,33 +279,6 @@ export const mintNFT = async () => {
                 msg: error
             })
         }
-        
-        
-      
-        // const signPromise = web3.eth.accounts.signTransaction(tx, PRIVATE_KEY)
-        // signPromise
-        //   .then((signedTx) => {
-        //     web3.eth.sendSignedTransaction(
-        //       signedTx.rawTransaction,
-        //       (err, hash) => {
-        //         if (!err) {
-        //           console.log(
-        //             "The hash of your transaction is: ",
-        //             hash,
-        //             "\nCheck Alchemy's Mempool to view the status of your transaction!"
-        //           )
-        //         } else {
-        //           console.log(
-        //             "Something went wrong when submitting your transaction:",
-        //             err
-        //           )
-        //         }
-        //       }
-        //     )
-        //   })
-        //   .catch((err) => {
-        //     console.log("Promise failed:", err)
-        //   })
     })
     
   }

@@ -37,7 +37,7 @@ const CountDown = ({launch_date = '', onAlert}) => {
     },[])
 
     const onMint = async () => {
-        const status = await mintNFT();
+        const status = await mintNFT('presale');
         console.log({status});
         onAlert(
             status.status,
@@ -86,7 +86,7 @@ const CountDown = ({launch_date = '', onAlert}) => {
                 </div>
             </div>
             <div style={{marginTop: 32}}>
-                <Button className="custom-button medium disabled" disabled variant="contained" color="primary" onClick={onMint}>Mint</Button>
+                <Button className="custom-button medium disabled" disabled={false} variant="contained" color="primary" onClick={onMint}>Mint</Button>
             </div>
         </div>
         
