@@ -7,7 +7,6 @@
     position: absolute;
     z-index: 10;
     margin-top: 4px;
-    background-color: rgba(255,255,255,0.1);
 }
 
 .inner-nav {
@@ -81,7 +80,7 @@
 }
 
 .hero-img {
-    padding-top: 82px;
+    padding-top: 164px;
 }
 
 .hero-img img {
@@ -103,18 +102,25 @@
 
 div.MuiMobileStepper-dot {
     background-color: rgba(255,255,255,0.35) !important;
+    border-radius: 0px !important;
+    width: 40px !important;
 }
 
 div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
-    background-color: #20d5d5 !important;
+    /* background-color: #20d5d5 !important; */
+    background-color: #20b2aa !important;
+    border-radius: 0px !important;
+    width: 40px !important;
 }
 
 .primary {
-    background-color: #20d5d5 !important;
+    /* background-color: #20d5d5 !important; */
+    background-color: #20b2aa !important;
 }
 
 .primary-text {
-    color: #20d5d5 !important;
+    /* color: #20d5d5 !important; */
+    color: #20b2aa !important;
 }
 
 .secondary {
@@ -246,8 +252,6 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
 
 .hero-container {
     overflow: hidden;
-    padding-bottom: 100%;
-    background-color: rgb(0,0,0);
 }
 
 .hero-div-bottom {
@@ -287,8 +291,15 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
     font-size: 14px;
 }
 
+.swipeable-view div {
+    width: 60%;
+}
+.hero-inner {
+    background: linear-gradient(to top, black 50%, transparent)
+}
+
 .down-arrow {
-    margin-top: 4%;
+    padding-top: 10%;
 }
 
 @keyframes fadeIn {

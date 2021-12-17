@@ -15,7 +15,7 @@ const WHITELIST = [
     "0xF0036aA4B10d8712fDaa193a6036c01E3a12880c"
 ]
 
-const MAXSUPPLY = 4000;
+const MAXSUPPLY = 14;
 
 export const fomoContract = new web3.eth.Contract(contractABI, CONTRACT_ADDRESS)
 
@@ -138,26 +138,32 @@ export const tokensMinted = async () => {
     return minted;
 }
 
-export const setSaleState = async (active,sale_type) => {
-    if(window.ethereum.request({method: 'eth_requestAccounts'})){
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        const address = await signer.getAddress();
+export const setSaleState = (active,sale_type) => {
+    return new Promise(async(resolve,reject) => {
+        try{
+            if(window.ethereum.request({method: 'eth_requestAccounts'})){
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const address = await signer.getAddress();
 
-        if(sale_type === 'presale'){
-            const status = await fomoContract.methods.setPresale(active).send({
-                from: address
-            })
-
-            console.log({status})
-        }else if(sale_type === 'public'){
-            const status = await fomoContract.methods.setPublicSale(active).send({
-                from: address
-            })
-
-            console.log({status})
+                if(sale_type === 'presale'){
+                    const status = await fomoContract.methods.setPresale(active).send({
+                        from: address
+                    })
+                    resolve(status);
+                }else if(sale_type === 'public'){
+                    const status = await fomoContract.methods.setPublicSale(active).send({
+                        from: address
+                    })
+                    resolve(status);
+                }
+            }else{
+                reject({status: false})
+            }
+        } catch(error) {
+            reject({status: false})
         }
-    }    
+    })        
 }
 
 export const getPresaleState = () => {
@@ -196,11 +202,10 @@ export const getPublicState = () => {
     })
 }
 
-const checkWhitelist = (contract_address,signature,user) => {
+const checkWhitelist = (signature, address) => {
     return new Promise(async(resolve,reject) => {
         try {
-            const whitelisted = await fomoContract.methods.isWhitelisted(contract_address,signature,user).call();
-            console.log({whitelisted})
+            const whitelisted = await fomoContract.methods.isWhitelisted(signature, address).call();
             resolve({
                 status: true,
                 data: whitelisted
@@ -222,15 +227,24 @@ export const mintNFT = async (sale_type) => {
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const address = await signer.getAddress();
-                const pubkey = web3.eth.accounts.privateKeyToAccount(PRIVATE_KEY);
-                const signature = pubkey.sign(address + MAXSUPPLY);
-                console.log({signature});
+                
                 const presale_active = await getPresaleState();
 
                 if(sale_type === 'presale' && presale_active && WHITELIST.includes(address)){
-                    
+                    // second layer of verification to whitelist
+                    const message = web3.eth.abi.encodeParameters(["address","uint256"],[address,MAXSUPPLY]);
+                    const {signature} = web3.eth.accounts.sign(message,PRIVATE_KEY);
+                    const whitelisted = await checkWhitelist(signature,address);
+                    console.log({whitelisted});
+                    if(whitelisted.status){
+                        console.log('user is whitelisted and good to reserve')
+                    }else{
+                        console.error('user is not whitelisted to mint')
+                    }
                 }else if(sale_type === 'public'){
 
+                }else{
+                    console.log('sale is not active, or user is not whitelisted')
                 }
                 // const whitelisted = await checkWhitelist(contractAddress,signature.signature,address);
                 // console.log({whitelisted})

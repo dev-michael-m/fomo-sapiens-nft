@@ -30,6 +30,7 @@
 
 .roadmap-container {
     background: radial-gradient(closest-side,rgba(255,255,255,0.16), black);
+    padding: 26px;
 }
 
 .roadmap-desc {

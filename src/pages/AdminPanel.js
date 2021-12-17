@@ -10,6 +10,8 @@ const AdminPanel = () => {
     const [presale,setPresale] = useState(false);
     const [publicSale,setPublicSale] = useState(false);
     const [loading,setLoading] = useState(true);
+    const [pendingPresale,setPendingPresale] = useState(false);
+    const [pendingPublic,setPendingPublic] = useState(false);
 
     useEffect(() => {
         let mounted = true;
@@ -37,12 +39,30 @@ const AdminPanel = () => {
 
         switch (action) {
             case 'presale':
-                    setSaleState(!presale,'presale')
-                 setPresale(prevState => !prevState)                
+                setPendingPresale(true);
+                setSaleState(!presale,'presale').then(res => {
+                    if(res.status){
+                        setPendingPresale(false);
+                        setPresale(prevState => !prevState) 
+                    }
+                }).catch(error => {
+                    console.error(error);
+                    setPendingPresale(false);
+                })
+                               
                 break;
             case 'public': 
-                setSaleState(!publicSale,'public')
-                setPublicSale(prevState => !prevState);
+                setPendingPublic(true);
+                setSaleState(!publicSale,'public').then(res => {
+                    if(res.status){
+                        setPendingPublic(false);
+                        setPublicSale(prevState => !prevState);
+                    }
+                }).catch(error => {
+                    console.error(error);
+                    setPendingPublic(false);
+                })
+                
                 break;
         }
     }
@@ -58,8 +78,12 @@ const AdminPanel = () => {
                 </p>
                 {!loading ? <div className="sale-opts">
                     <h3>Sale Options</h3>
-                    <FormControlLabel control={<Switch id="presale" checked={presale} onChange={handleSaleAction} />} label="Presale" />
-                    <FormControlLabel control={<Switch id="public" checked={publicSale} onChange={handleSaleAction} />} label="Public Sale" />
+                    <div>
+                        <FormControlLabel control={<Switch id="presale" checked={presale} onChange={handleSaleAction} />} label="Presale" />{pendingPresale && presale || pendingPresale && !presale ? <label style={{fontSize: 14,fontWeight: 'bold',color: 'orange'}}>pending...</label> : !pendingPresale && presale ? <label style={{fontSize: 14,fontWeight: 'bold',color: 'forestgreen'}}>active</label> : null}
+                    </div>
+                    <div>
+                        <FormControlLabel control={<Switch id="public" checked={publicSale} onChange={handleSaleAction} />} label="Public Sale" />{pendingPublic && publicSale || pendingPublic && !publicSale ? <label style={{fontSize: 14,fontWeight: 'bold',color: 'orange'}}>pending...</label> : !pendingPublic && publicSale ? <label style={{fontSize: 14,fontWeight: 'bold',color: 'forestgreen'}}>active</label> : null}
+                    </div>
                 </div> :
                     <CircularProgress />
                 }

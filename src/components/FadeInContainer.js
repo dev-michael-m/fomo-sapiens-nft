@@ -27,7 +27,7 @@ const FadeInContainer = (props) => {
 
     return (
         <div
-            className={`fade-in-section ${visible ? 'is-visible' : ''}`}
+            className={`${props.animation == 'fade-in' ? 'fade-in-section' : props.animation == 'fade-x' ? 'fade-in-section-x' : 'ease-in-section'} ${visible ? 'is-visible' : ''}`}
             ref={domRef}
         >
             {props.children}

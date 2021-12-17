@@ -37,14 +37,14 @@ const RoadMap = () => {
     const [active,setActive] = useState(0);
     return (
         <div id="roadmap" className="roadmap-container">
-            <FadeInContainer>
+            <FadeInContainer animation="fade-in">
                 <div style={{margin: 40}}>
                     <h1>ROADMAP</h1>
                 </div>
             </FadeInContainer>
             <Timeline position="right">
                 {steps.map((step, index) => (
-                    <FadeInContainer>
+                    <FadeInContainer animation="fade-in">
                         <TimelineItem className="roadmap-seperator" key={step.label}>
                             <TimelineSeparator>
                                 <TimelineDot className="roadmap-dot">
@@ -65,21 +65,6 @@ const RoadMap = () => {
                     
                 ))}                
             </Timeline>
-            {/* <FadeInContainer>
-                <Card number={1}/>
-            </FadeInContainer>
-            <FadeInContainer>
-                <Card number={2}/>
-            </FadeInContainer>
-            <FadeInContainer>
-                <Card number={3}/>
-            </FadeInContainer>
-            <FadeInContainer>
-                <Card number={4}/>
-            </FadeInContainer>
-            <FadeInContainer>
-                <Card number={5}/>
-            </FadeInContainer>             */}
         </div>
     )
 }

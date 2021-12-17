@@ -36,14 +36,31 @@
   transition: opacity 1s ease-out, transform 0.75s ease-out;
   will-change: opacity, visibility;
 }
-.fade-in-section.is-visible {
+
+.fade-in-section-x {
+  opacity: 0;
+  transform: translateX(-10vh);
+  visibility: hidden;
+  transition: opacity 1s ease-out, transform 0.5s ease-out;
+  will-change: opacity, visibility;
+}
+
+.fade-in-section.is-visible, .fade-in-section-x.is-visible, .ease-in-section.is-visible {
   opacity: 1;
   transform: none;
   visibility: visible;
 }
 
+.ease-in-section {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1.5s ease-out;
+  will-change: opacity, visibility;
+}
+
 .section-background {
-  background: radial-gradient(closest-side,rgba(255,255,255,0.2),black);
+  background: radial-gradient(closest-side,rgba(255,255,255,0.2),black 88%);
+  padding: 26px;
 }
 
 .section {
@@ -75,11 +92,11 @@
 .primary-section {
   background-image: linear-gradient(to bottom right, wheat, rgb(255,255,255) 95%);
   color: rgb(0,0,0);
-  font-weight: bold;
   padding: 26px;
 }
 
 .inner-main {
+  backdrop-filter: blur(4px);
 }
 
 .body-container {
@@ -109,12 +126,46 @@
 
 .nft-img-side {
   width: 85%;
-  box-shadow: 0px 10px 16px rgb(0 0 0)
+  box-shadow: 0px 2px 10px rgb(0 0 0)
 }
 
 .nft-img-front {
   width: 120%;
   box-shadow: 0px 5px 12px rgb(0,0,0);
+}
+
+.divider {
+  width: 100%;
+  border: 1px solid wheat;
+}
+
+.float {
+  animation: float 4s infinite linear;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-16px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.rotate {
+  animation: rotation 4s infinite linear;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
 }
 
 .nft-img-container {

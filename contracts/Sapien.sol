@@ -10,6 +10,8 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 contract Sapien is ERC721Enumerable, Ownable{
     using Strings for uint256;
+    using ECDSA for bytes32;
+    using ECDSA for bytes;
 
     uint256 public MAX_SUPPLY = 14; // change val before launch
     uint256 public PRESALE_SUPPLY = 6;  // change val before launch
@@ -49,7 +51,7 @@ contract Sapien is ERC721Enumerable, Ownable{
         // Each address is allowed one Sapien
         require(!minted[msg.sender], "You cannot mint more than one Sapien");
         // Tokens minted must not exceed the supply of tokens
-        require(totalSupply() < MAX_SUPPLY, "All Sapiens have been minted");  
+        require(_tokenIds < MAX_SUPPLY, "All Sapiens have been minted");  
 
         uint256 _tokenId = (_tokenIds + starting_idx) % MAX_SUPPLY + 1;  
         
@@ -75,7 +77,7 @@ contract Sapien is ERC721Enumerable, Ownable{
 
         require(isReserved(msg.sender) != 0,"Sapien needs to be reserved first");
         // Tokens minted must not exceed the supply of tokens
-        require(totalSupply() < PRESALE_SUPPLY, "Presale supply has been met");  
+        require(_tokenIds < PRESALE_SUPPLY, "Presale supply has been met");  
 
         uint256 _tokenId = reservedList[msg.sender];  
         
@@ -91,7 +93,7 @@ contract Sapien is ERC721Enumerable, Ownable{
     *   @dev function to reserve NFT.  Address must be whitelisted to reserve.
     *   @param _signature - used to verify whitelisted address.
     */
-    function reserveNFT(bytes memory _signature) public payable {
+    function reserveNFT(bytes calldata _signature) public payable {
         require(!paused);
         require(presale_active,"Presale is currently inactive");
         require(tx.origin == msg.sender,"Contracts are not allowed to reserve");
@@ -173,28 +175,24 @@ contract Sapien is ERC721Enumerable, Ownable{
     /**
     *   @dev function to verify address is whitelisted
     *   @param _signature - used to verify address
-    *   @param _user - address of _user
+    *   @param _user - address of connected user
     *   @return bool verification
     */
-    function isWhitelisted(bytes memory _signature, address _user) public view returns(bool) {
-        return ECDSA.recover(keccak256(abi.encodePacked(_user,MAX_SUPPLY)),_signature) == pubkey;
+    function isWhitelisted(bytes calldata _signature, address _user) public view returns(bool) {
+        return abi.encode(_user,MAX_SUPPLY).toEthSignedMessageHash().recover(_signature) == pubkey;
     }
 
     function withdraw() public payable onlyOwner {
-        // transfer 30% of funds to DAO
-        (bool dao, ) = payable(DAO).call{value: address(this).balance * 30 / 100}("");
+        // transfer 20% of funds to DAO
+        (bool dao,)= payable(DAO).call{value:(address(this).balance * 20 / 100)}("");
         require(dao);
 
-        (bool f1, ) = payable(founder1).call{value: address(this).balance * 33 / 100}("");
-        require(f1);
+        uint256 remainingBalance = address(this).balance * 33 / 100;
+        payable(founder1).transfer(remainingBalance);
+        payable(founder2).transfer(remainingBalance);
+        payable(founder3).transfer(remainingBalance);
 
-        (bool f2, ) = payable(founder2).call{value: address(this).balance * 33 / 100}("");
-        require(f2);
-
-        (bool f3, ) = payable(founder3).call{value: address(this).balance * 33 / 100}("");
-        require(f3);
-        
-        (bool os, ) = payable(DAO).call{value: address(this).balance}("");
+        (bool os,)= payable(DAO).call{value:address(this).balance}("");
         require(os);
     }
 }

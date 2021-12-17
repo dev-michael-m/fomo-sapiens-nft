@@ -17,5 +17,6 @@ code {
 }
 
 .main-container {
-  background-image: url('./assets/background2.jpg');
+  background-image: url('./assets/background3.jpg');
+  background-position-x: left;
 }

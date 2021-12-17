@@ -1,8 +1,10 @@
 import React, {useEffect,useState} from 'react';
-import { FormatDropDate, FormatDropTimer, mintNFT } from './../utilities/util';
+import { FormatDropDate, FormatDropTimer, mintNFT, DateDifference } from './../utilities/util';
 import Button from '@mui/material/Button';
-
+import FadeInContainer from './FadeInContainer';
+const LAUNCH_DATE = '11/20/2021';
 const CountDown = ({launch_date = '', onAlert}) => {
+    const [progress,setProgress] = useState(DateDifference(new Date(), new Date(LAUNCH_DATE)));
     const [timer,setTimer] = useState(FormatDropTimer(new Date(), new Date(launch_date)));
     const [dropDisplay,setDropDisplay] = useState({});
     const [active,setActive] = useState(false);
@@ -36,21 +38,15 @@ const CountDown = ({launch_date = '', onAlert}) => {
         }       
     },[])
 
-    const onMint = async () => {
-        const status = await mintNFT('presale');
-        console.log({status});
-        onAlert(
-            status.status,
-            status.msg,
-            true
-        )
-    }
-
     return (
+        
         <div className="section-background">
-            <div>
-                <h1 style={{marginBottom: 75}}>LAUNCHING</h1>
-            </div>
+            <FadeInContainer animation="fade-in">
+                <div>
+                    <h1 style={{marginBottom: 75}}>LAUNCHING</h1>
+                </div>
+            </FadeInContainer>            
+            <FadeInContainer  animation="fade-in" progress_enabled progress={progress}>
             <div className="countdown-container" style={{display: 'flex', flexDirection: 'column'}}>
                 <div style={{margin: 'auto'}}>
                     <div className="progress">
@@ -85,11 +81,8 @@ const CountDown = ({launch_date = '', onAlert}) => {
                     </div>
                 </div>
             </div>
-            <div style={{marginTop: 32}}>
-                <Button className="custom-button medium disabled" disabled={false} variant="contained" color="primary" onClick={onMint}>Mint</Button>
-            </div>
+            </FadeInContainer>
         </div>
-        
     )
 }
 
