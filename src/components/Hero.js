@@ -8,7 +8,7 @@ import FadeInContainer from './FadeInContainer';
 import DiscordIcon from '../assets/discord.png';
 import OpenSeaIcon from '../assets/opensea.png';
 import TwitterIcon from '@mui/icons-material/Twitter';
-import { mintNFT } from './../utilities/util';
+import { getPresaleState, getPublicState, mintNFT } from './../utilities/util';
 
 const TABS = [
     {title: 'Unique', desc: <p><b>FOMO SAPIENS</b> is a hand-crafted collection of <b>4,000</b>, non-generative digital assets. Each sapien is personalized with their own traits, to guarantee what you receive is truly one of a kind.</p>},
@@ -19,10 +19,32 @@ const TABS = [
 const Hero = ({onAlert}) => {
     const [active,setActive] = useState(false);
     const [timer,setTimer] = useState({});
+    const [saleActive,setSaleActive] = useState(false);
     const handleScrollView = () => {
         const pos = $('#welcome-section').position();
         window.scrollTo({top: pos.top, behavior: 'smooth'})
     }
+
+    useEffect(() => {
+        let mounted = true;
+
+        if(mounted){
+            (async () => {
+                const presale = await getPresaleState();
+                const publicSale = await getPublicState();
+                
+                if(presale.status && publicSale.status){
+                    if(presale.active || publicSale.active){
+                        setSaleActive(true)
+                    }
+                }
+            })();
+        }
+
+        return () => {
+            mounted = false;
+        }
+    },[])
 
     const onMint = async () => {
         const status = await mintNFT('presale');
@@ -41,59 +63,42 @@ const Hero = ({onAlert}) => {
                     <div className="hero-img" id="hero-img">
                         <img src={HeroImg} width="100%"></img>
                     </div>
-                </FadeInContainer> 
-                <FadeInContainer>
-                <div id="countdown-timer" className="timer-container">
-                    <div style={{color: "white", display: 'flex', justifyContent: 'space-evenly'}} className="timer-1">                
-                        <div>
-                            <h3>{active ? timer.days : 'TBA'}</h3>
-                            <label>Days</label>
-                        </div>
-                        <div>
-                            <h3>{active ? timer.hours : 'TBA'}</h3>
-                            <label>Hours</label>
-                        </div>
-                        <div>
-                            <h3>{active ? timer.minutes : 'TBA'}</h3>
-                            <label>Mins</label>
-                        </div>
-                        <div>
-                            <h3>{active ? timer.seconds : 'TBA'}</h3>
-                            <label>Sec</label>
-                        </div>                        
-                    </div>
-                </div>
                 </FadeInContainer>
-                <FadeInContainer>
-                <div style={{marginTop: 32}}>
-                    <Button className="custom-button medium disabled" disabled={false} variant="contained" color="primary" onClick={onMint}>Mint</Button>
-                </div>
-                </FadeInContainer>
-                <div className="down-arrow">
-                    <IconButton className="down-arrow-button" onClick={handleScrollView}><KeyboardArrowDownIcon style={{color: 'wheat', fontSize: 38}} /></IconButton>
-                </div> 
-            </div>
-                       
-            {/* <div className="hero-details" id="hero-details">
-                <div className="nft-stat">
-                    <SwipeableViews enableMouseEvents index={activeStep} onChangeIndex={onIndexChange}>
-                        {TABS.map((tab,index) => (
-                            <div key={index} id={`stepper-${index}`} className={index === activeStep ? 'inner-stepper fade-section' : 'inner-stepper'}>
-                                <p style={{fontWeight: 'bold', fontSize: 26, width: 'fit-content', borderBottom: '4px solid wheat'}}>{tab.title}</p>
-                                <p>{tab.desc}</p>
+                <div id="countdown-container">
+                    <FadeInContainer>
+                    <div id="countdown-timer" className="timer-container">
+                        <div style={{color: "white", display: 'flex', justifyContent: 'space-evenly'}} className="timer-1">                
+                            <div>
+                                <h3>{active ? timer.days : 'TBA'}</h3>
+                                <label>Days</label>
                             </div>
-                        ))}
-                    </SwipeableViews>
-                    <MobileStepper
-                        className="mobile-stepper"
-                        steps={TABS.length}
-                        position="static"
-                        activeStep={activeStep}
-                    /> 
+                            <div>
+                                <h3>{active ? timer.hours : 'TBA'}</h3>
+                                <label>Hours</label>
+                            </div>
+                            <div>
+                                <h3>{active ? timer.minutes : 'TBA'}</h3>
+                                <label>Mins</label>
+                            </div>
+                            <div>
+                                <h3>{active ? timer.seconds : 'TBA'}</h3>
+                                <label>Sec</label>
+                            </div>                        
+                        </div>
+                    </div>
+                    </FadeInContainer>
+                    <FadeInContainer>
+                    <div style={{marginTop: 32}}>
+                        <Button className={`custom-button medium ${!saleActive ? 'disabled' : ''}`} disabled={!saleActive ? true : false} variant="contained" color="primary" onClick={onMint}>Mint</Button>
+                    </div>
+                    </FadeInContainer>
                     
-                </div>
-                
-            </div> */}
+                </div>               
+                 
+            </div>
+            <div className="down-arrow">
+                <IconButton className="down-arrow-button" onClick={handleScrollView}><KeyboardArrowDownIcon style={{color: 'wheat', fontSize: 38}} /></IconButton>
+            </div> 
             
             <div id="welcome-section" className="section-large primary-section">
                   <FadeInContainer animation="fade-in">

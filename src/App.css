@@ -139,6 +139,10 @@
   border: 1px solid wheat;
 }
 
+.faq-container {
+
+}
+
 .float {
   animation: float 4s infinite linear;
 }
@@ -182,9 +186,6 @@
 }
 
 @media screen and (min-width: 1024px) and (max-width: 1440px) {
-  .body-container{
-    padding: 0px 180px;
-  }
 
   .section-large {
     margin-bottom: 28%;
@@ -192,12 +193,17 @@
 }
 
 @media screen and (min-width: 768px) and (max-width: 925px){
-  .body-container{
-    padding: 72px;
-  }
 
   .section-large {
     margin-bottom: 280px;
+  }
+
+  .primary-section {
+    padding: 100px;
+  }
+
+  .faq-container {
+    padding: 50px;
   }
 }
 

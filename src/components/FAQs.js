@@ -14,7 +14,7 @@ const FAQs = () => {
     }
 
     return (
-        <div>
+        <div className='faq-container'>
             <FadeInContainer animation="fade-in">
                 <h1>FAQ</h1>
             </FadeInContainer>
