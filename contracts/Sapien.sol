@@ -37,7 +37,7 @@ contract Sapien is ERC721Enumerable, Ownable{
     
     constructor() ERC721("FOMO SAPIENS", "SAPIEN") {}
 
-    function mint() public payable returns(string memory)
+    function mint() public payable
     {
         require(!paused);
         // sale must be active
@@ -58,14 +58,11 @@ contract Sapien is ERC721Enumerable, Ownable{
         minted[msg.sender] = true;
 
         _safeMint(msg.sender, _tokenId);
-        string memory _tokenURI = tokenURI(_tokenId);
 
         _tokenIds++;
-
-        return _tokenURI;
     }
 
-    function whitelistMint() public payable returns(string memory) {
+    function whitelistMint() public payable {
         require(!paused);
         // sale must be active
         require(presale_active, "Sale is currently inactive");
@@ -84,9 +81,6 @@ contract Sapien is ERC721Enumerable, Ownable{
         minted[msg.sender] = true;
 
         _safeMint(msg.sender, _tokenId);
-        string memory _tokenURI = tokenURI(_tokenId);
-    
-        return _tokenURI;  
     }
 
     /**
