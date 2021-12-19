@@ -46,14 +46,14 @@ const NavBar = ({onAlert}) => {
             case 'roadmap':
                 pos = $('#roadmap').position();
                 break;
-            case 'specs':
-                pos = $('#specs').position();
+            case 'faqs':
+                pos = $('#faqs').position();
                 break;
             case 'team':
                 pos = $('#founders').position();                    
                 break;
-            case 'stake':
-                pos = $('#stake').position();
+            case 'benefits':
+                pos = $('#benefits').position();
                 break;
         }
 
@@ -120,8 +120,9 @@ const NavBar = ({onAlert}) => {
                             </div>
                             <div className="menu-list">
                                 <a id="whitelist" href="#" onClick={handleLinkClick}>Join the List</a>
-                                <a id="stake" href="#" onClick={handleLinkClick}>Staking</a>
-                                <a id="roadmap" href="#" onClick={handleLinkClick}>Roadmap</a>                                
+                                <a id="benefits" href="#" onClick={handleLinkClick}>Utility and Benefits</a>
+                                <a id="roadmap" href="#" onClick={handleLinkClick}>Roadmap</a>                             
+                                <a id="faqs" href="#" onClick={handleLinkClick}>FAQs</a>                             
                                 <a id="team" href="#" onClick={handleLinkClick}>The Founders</a>
                             </div>                            
                         </div>                        

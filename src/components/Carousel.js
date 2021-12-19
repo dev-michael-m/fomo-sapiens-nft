@@ -74,9 +74,9 @@ const Carousel = () => {
     }
 
     return (
-        <div style={{marginBottom: '50%', display: 'flex', justifyContent: 'center',flexDirection: 'column'}}>
+        <div className='carousel-container'>
             <FadeInContainer animation="fade-in">
-            <div style={{marginBottom: 20}}>
+            <div className='carousel-header-img'>
                 <img style={{boxShadow: '0px 2px 10px black'}} src={Sapien18} width="75%"></img>
             </div>
             </FadeInContainer>

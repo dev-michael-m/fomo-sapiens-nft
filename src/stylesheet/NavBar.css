@@ -100,6 +100,11 @@
     background-color: transparent !important;
 }
 
+.carousel-header-img {
+    margin-bottom: 20px;
+    padding: 26px;
+}
+
 div.MuiMobileStepper-dot {
     background-color: rgba(255,255,255,0.35) !important;
     border-radius: 0px !important;
@@ -150,6 +155,7 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
 
 .countdown-container {
     font-family: 'Roboto Mono',monospace;
+    width: 100%;
 }
 
 .timer-1 {
@@ -291,6 +297,13 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
     font-size: 14px;
 }
 
+.carousel-container {
+    margin-bottom: 50%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
 .swipeable-view div {
     width: 60%;
 }
@@ -317,6 +330,10 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
         left: 240px;
     }
 
+    .countdown-container {
+        width: 120%;
+    }
+
     .inner-stepper {
         padding-right: 50%;
     }
@@ -328,10 +345,6 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
     .inner-nav{
         padding: 16px
       }
-    
-    .mobile-stepper {
-        width: 45%;
-    }
 
     .bar {
         width: 500px;
@@ -343,8 +356,21 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
         height: 250px;
     }
 
+    .carousel-header-img {
+        padding: 100px;
+    }
+
+    .carousel-container {
+        margin-bottom: 25%;
+    }
+
     .inner-prog-bar {
         bottom: 120px;
+    }
+
+    .hero-inner {
+        flex-direction: row;
+        align-items: center;
     }
 }
 
@@ -353,6 +379,10 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
 
     .hero-img {
         left: 240px;
+    }
+
+    .countdown-container {
+        width: 120%;
     }
 
     .inner-stepper {
@@ -366,15 +396,28 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
     .inner-nav{
         padding: 16px
       }
-    
-    .mobile-stepper {
-        width: 45%;
+
+    .carousel-header-img {
+        padding: 100px;
+    }
+
+    .carousel-container {
+        margin-bottom: 25%;
+    }
+
+    .hero-inner {
+        flex-direction: row;
+        align-items: center;
     }
 }
 
 @media screen and (min-width: 768px) and (max-width: 925px){
     .inner-nav{
       padding: 16px
+    }
+
+    .countdown-container {
+        width: 120%;
     }
 
     .inner-stepper {
@@ -391,6 +434,14 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
 
     .hero-img {
         padding-top: 100px;
+    }
+
+    .carousel-header-img {
+        padding: 100px;
+    }
+
+    .carousel-container {
+        margin-bottom: 25%;
     }
 
     .hero-inner {

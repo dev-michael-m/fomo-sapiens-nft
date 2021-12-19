@@ -64,7 +64,7 @@ const Hero = ({onAlert}) => {
                         <img src={HeroImg} width="100%"></img>
                     </div>
                 </FadeInContainer>
-                <div id="countdown-container">
+                <div className='countdown-container' id="countdown-container">
                     <FadeInContainer>
                     <div id="countdown-timer" className="timer-container">
                         <div style={{color: "white", display: 'flex', justifyContent: 'space-evenly'}} className="timer-1">                

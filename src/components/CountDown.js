@@ -47,7 +47,7 @@ const CountDown = ({launch_date = '', onAlert}) => {
                 </div>
             </FadeInContainer>            
             <FadeInContainer  animation="fade-in" progress_enabled progress={progress}>
-            <div className="countdown-container" style={{display: 'flex', flexDirection: 'column'}}>
+            <div style={{display: 'flex', flexDirection: 'column'}}>
                 <div style={{margin: 'auto'}}>
                     <div className="progress">
                         <div className="barOverflow">

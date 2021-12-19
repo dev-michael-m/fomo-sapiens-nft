@@ -13,8 +13,9 @@ contract Sapien is ERC721Enumerable, Ownable{
     using ECDSA for bytes32;
     using ECDSA for bytes;
 
-    uint256 public MAX_SUPPLY = 14; // change val before launch
-    uint256 public PRESALE_SUPPLY = 6;  // change val before launch
+    uint256 public MAX_SUPPLY = 5000; // change val before launch
+    uint256 public MAX_MINT = 3;
+    uint256 public RESERVED = 50;    // amount of sapiens reserved for giveaways
     uint256 private SALE_PRICE = 0.1 ether;
     uint256 public _tokenIds;
     uint256 public starting_idx;
@@ -27,8 +28,8 @@ contract Sapien is ERC721Enumerable, Ownable{
     string public BASE_URL = "ipfs://QmVy1ZWFhg6stX7VSo2XoFopoLqJVT7xc3RWReQ6MXCRMV/";
     string public PLACEHOLDER = "ipfs://QmWnrqkBe9Z1B24H5hooiMMN7z4ZpKRM2N2nNcZPPi7s5r";
     string public EXTENSION = ".json";
-    mapping(address => bool) private minted;
-    mapping(address => uint256) private reservedList;
+    mapping(address => uint256) private minted;
+    mapping(address => uint256[]) private reservedList;
     address pubkey = 0x103EcE5B498b9c425295F58148Aa5bdAc7575708;
     address DAO = 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2;
     address founder1 = 0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db;
@@ -37,71 +38,75 @@ contract Sapien is ERC721Enumerable, Ownable{
     
     constructor() ERC721("FOMO SAPIENS", "SAPIEN") {}
 
-    function mint() public payable
+    function mint(uint256 _numTokens) public payable
     {
         require(!paused);
-        // sale must be active
         require(active, "Sale is currently inactive");
-
         require(tx.origin == msg.sender, "Contracts are not allowed to mint");
-    
-        // Ether sent must equal the amount of a Sapien
-        require(msg.value == SALE_PRICE, "Incorrect amount of ether");
+        require(msg.value == (SALE_PRICE * _numTokens), "Incorrect amount of ether");
+        require(minted[msg.sender] < MAX_MINT, "You cannot mint more than 3 sapiens from the same address");
+        require((minted[msg.sender] + _numTokens) <= MAX_MINT, "You cannot mint more than 3 sapiens");
+        require(_tokenIds < (MAX_SUPPLY - RESERVED), "All Sapiens have been minted");
+        require((_tokenIds + _numTokens) <= (MAX_SUPPLY - RESERVED), "Purchase would exceed max supply of sapiens");  
 
-        // Each address is allowed one Sapien
-        require(!minted[msg.sender], "You cannot mint more than one Sapien");
-        // Tokens minted must not exceed the supply of tokens
-        require(_tokenIds < MAX_SUPPLY, "All Sapiens have been minted");  
+        minted[msg.sender] += _numTokens;
 
-        uint256 _tokenId = (_tokenIds + starting_idx) % MAX_SUPPLY + 1;  
-        
-        minted[msg.sender] = true;
-
-        _safeMint(msg.sender, _tokenId);
-
-        _tokenIds++;
+        for(uint256 i = 0; i < _numTokens; i++){
+            uint256 _tokenId = (_tokenIds + starting_idx) % MAX_SUPPLY + 1;  
+            _safeMint(msg.sender, _tokenId);
+            _tokenIds++;    
+        }        
     }
 
     function whitelistMint() public payable {
         require(!paused);
-        // sale must be active
         require(presale_active, "Sale is currently inactive");
-
         require(tx.origin == msg.sender, "Contracts are not allowed to mint");
-
-        // Each address is allowed one Sapien
-        require(!minted[msg.sender], "You cannot mint more than one Sapien");       
-
+        //require(isReserved(msg.sender) < MAX_MINT, "You cannot mint more than 3 Sapiens");       
         require(isReserved(msg.sender) != 0,"Sapien needs to be reserved first");
-        // Tokens minted must not exceed the supply of tokens
-        require(_tokenIds < PRESALE_SUPPLY, "Presale supply has been met");  
 
-        uint256 _tokenId = reservedList[msg.sender];  
+        minted[msg.sender] += reservedList[msg.sender].length;
+
+        for(uint256 i = 0; i < minted[msg.sender]; i++){
+            uint256 _tokenId = reservedList[msg.sender][i];  
+            _safeMint(msg.sender, _tokenId);
+        }
         
-        minted[msg.sender] = true;
-
-        _safeMint(msg.sender, _tokenId);
     }
 
     /**
-    *   @dev function to reserve NFT.  Address must be whitelisted to reserve.
+    *   @dev function to set aside tokens for giveaways.
+    */
+    function sapienReserves() public onlyOwner {
+        for(uint256 i = 0; i < RESERVED; i++){
+            uint256 _tokenId = (_tokenIds + starting_idx) % MAX_SUPPLY + 1;  
+            _safeMint(msg.sender, _tokenId);
+            _tokenIds++; 
+        }
+    }
+
+    /**
+    *   @dev function for members to reserve NFT.  Address must be whitelisted to reserve.
     *   @param _signature - used to verify whitelisted address.
     */
-    function reserveNFT(bytes calldata _signature) public payable {
+    function reserveNFT(bytes calldata _signature, uint256 _numTokens) public payable {
         require(!paused);
         require(presale_active,"Presale is currently inactive");
         require(tx.origin == msg.sender,"Contracts are not allowed to reserve");
         require(isWhitelisted(_signature, msg.sender),"Must be on whitelist to reserve a sapien");
-        require(msg.value == SALE_PRICE,"Incorrect amount of ether");
-        require(isReserved(msg.sender) == 0,"You can only reserve one Sapien");
-
-        // add address to reserved list with reserved tokenId
-        reservedList[msg.sender] = (_tokenIds + starting_idx) % MAX_SUPPLY + 1;
-        _tokenIds++;
+        require(msg.value == (SALE_PRICE * _numTokens),"Incorrect amount of ether");
+        require((isReserved(msg.sender) + _numTokens) <= MAX_MINT,"You cannot reserve more than 3 Sapiens");
+        require(isReserved(msg.sender) < MAX_MINT,"You can only reserve up to 3 Sapiens from the same address");
+        
+        // add address to reserved list with reserved tokenIds
+        for(uint256 i = 0; i < _numTokens; i++){
+            reservedList[msg.sender].push((_tokenIds + starting_idx) % MAX_SUPPLY + 1);
+            _tokenIds++;
+        }        
     }
 
     function isReserved(address _user) private view returns (uint256) {
-        return reservedList[_user];
+        return reservedList[_user].length;
     }
 
     /**
