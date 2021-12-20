@@ -8,7 +8,10 @@ import FadeInContainer from './FadeInContainer';
 import DiscordIcon from '../assets/discord.png';
 import OpenSeaIcon from '../assets/opensea.png';
 import TwitterIcon from '@mui/icons-material/Twitter';
-import { getPresaleState, getPublicState, mintNFT } from './../utilities/util';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import TextField from '@mui/material/TextField';
+import { FormatDropTimer, getPresaleState, getPublicState, mintNFT } from './../utilities/util';
 
 const TABS = [
     {title: 'Unique', desc: <p><b>FOMO SAPIENS</b> is a hand-crafted collection of <b>4,000</b>, non-generative digital assets. Each sapien is personalized with their own traits, to guarantee what you receive is truly one of a kind.</p>},
@@ -16,10 +19,14 @@ const TABS = [
     {title: 'Community First', desc: <p>Here the community comes first. We've dedicated <b>30%</b> of sales and <b>50%</b> of all royalties to be distributed back into the DAO. This way we can continue to provide you the most value out of your NFT than any other collection.</p>},
 ]
 
+const LAUNCH_DATE = '12/30/2021';
+
 const Hero = ({onAlert}) => {
-    const [active,setActive] = useState(false);
-    const [timer,setTimer] = useState({});
+    const [active,setActive] = useState(true);
+    const [tokens,setTokens] = useState(3);
+    const [timer,setTimer] = useState(FormatDropTimer(new Date(), new Date(LAUNCH_DATE)));
     const [saleActive,setSaleActive] = useState(false);
+
     const handleScrollView = () => {
         const pos = $('#welcome-section').position();
         window.scrollTo({top: pos.top, behavior: 'smooth'})
@@ -39,6 +46,16 @@ const Hero = ({onAlert}) => {
                     }
                 }
             })();
+
+            if(active){
+                const timer = setInterval(() => {
+                    setTimer(FormatDropTimer(new Date(), new Date(LAUNCH_DATE)))            
+                },100)
+        
+                return () => {
+                    clearInterval(timer);
+                }
+            }
         }
 
         return () => {
@@ -54,6 +71,18 @@ const Hero = ({onAlert}) => {
             status.msg,
             true
         )
+    }
+
+    const mintMinus = () => {
+        if(tokens > 1){
+            setTokens(prevState => prevState - 1);
+        }        
+    }
+
+    const mintAdd = () => {
+        if(tokens < 3){
+            setTokens(prevState => prevState + 1);
+        }
     }
 
     return (
@@ -88,6 +117,11 @@ const Hero = ({onAlert}) => {
                     </div>
                     </FadeInContainer>
                     <FadeInContainer>
+                    <div style={{display: 'flex',justifyContent: 'center',alignItems: 'center'}}>
+                        <IconButton onClick={mintMinus}><RemoveIcon style={{color: 'white'}} /></IconButton>
+                        <TextField className="mint-num" id="num-tokens" type="number" value={tokens} />
+                        <IconButton onClick={mintAdd}><AddIcon style={{color: 'white'}} /></IconButton>
+                    </div>
                     <div style={{marginTop: 32}}>
                         <Button className={`custom-button medium ${!saleActive ? 'disabled' : ''}`} disabled={!saleActive ? true : false} variant="contained" color="primary" onClick={onMint}>Mint</Button>
                     </div>

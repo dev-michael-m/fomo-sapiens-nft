@@ -10,14 +10,20 @@ import {
   Routes,
   Route
 } from 'react-router-dom'
+import PasswordProtected from './hoc/PasswordProtected';
+import PasswordPage from './pages/PasswordPage';
 
 ReactDOM.render(
   <React.StrictMode>
     <Router>
       <Routes>
-        <Route exact path="/F58148Aa5" element={<Admin />} />
-        <Route exact path="/dashboard" element={<AdminPanel />} />
-        <Route exact path="/" element={<App />} />
+          <Route exact path="/password-page" element={<PasswordPage />} />
+          <Route exact path="/F58148Aa5" element={<Admin />} />
+          <Route exact path="/dashboard" element={<AdminPanel />} />
+          <Route exact path="/" element={
+          <PasswordProtected >
+            <App />
+          </PasswordProtected>} />       
       </Routes>
     </Router>
   </React.StrictMode>,

@@ -44,17 +44,17 @@ const RoadMap = () => {
             </FadeInContainer>
             <Timeline position="right">
                 {steps.map((step, index) => (
-                    <FadeInContainer animation="fade-in">
-                        <TimelineItem className="roadmap-seperator" key={step.label}>
-                            <TimelineSeparator>
-                                <TimelineDot className="roadmap-dot">
+                    <FadeInContainer key={step.label} animation="fade-in">
+                        <TimelineItem key={step.label} className="roadmap-seperator" key={step.label}>
+                            <TimelineSeparator key={step.label}>
+                                <TimelineDot key={step.label} className="roadmap-dot">
                                     <div>
                                         <label>{index + 1}</label>
                                     </div>
                                 </TimelineDot>
                                 <TimelineConnector className="roadmap-connector" />
                             </TimelineSeparator>
-                            <TimelineContent>
+                            <TimelineContent key={`${step.label}-content`}>
                                 <div>
                                     <h2 style={{margin: '10px 0px'}}>{step.label}</h2>
                                     <div className="roadmap-desc" style={{marginTop: 16}}>{step.description}</div>

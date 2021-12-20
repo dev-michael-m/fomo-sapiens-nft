@@ -262,7 +262,7 @@
   }
 }
 
-@media screen and (min-width: 925px) and (max-width: 1024px) {
+@media screen and (min-width: 925px) {
   .primary-section {
     padding: 100px;
   }
