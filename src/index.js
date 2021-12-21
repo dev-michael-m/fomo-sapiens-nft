@@ -21,7 +21,7 @@ ReactDOM.render(
           <Route exact path="/F58148Aa5" element={<Admin />} />
           <Route exact path="/dashboard" element={<AdminPanel />} />
           <Route exact path="/" element={
-          <PasswordProtected >
+          <PasswordProtected enabled>
             <App />
           </PasswordProtected>} />       
       </Routes>
