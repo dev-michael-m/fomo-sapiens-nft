@@ -21,14 +21,32 @@ const NavBar = ({onAlert}) => {
         provider: null,
         snippet: null
     })
-    const [walletActive,setWalletActive] = useState(false);
+    const [walletActive,setWalletActive] = useState(true);
 
     useEffect(() => {
-        // if(window.ethereum.request({method: 'eth_requestAccounts'})){
-        //     handleConnectWallet();
-        // }else{
-        //     console.warn(`User has not connected their wallet to this DApp.`)
-        // }
+        let mounted = true;
+
+        async function handleAccountsChanged(accounts){
+            if(accounts.length === 0){
+                console.warn('user has not connected to metamask')
+            }else if(accounts[0] !== )
+        }
+
+        if(mounted){
+            if(window.ethereum.request({method: 'eth_requestAccounts'})){
+                handleConnectWallet('suppressed');
+            }else{
+                console.warn(`User has not connected their wallet to this DApp.`)
+            }
+
+
+            window.ethereum.on('accountsChanged', handleAccountsChanged)
+        }
+
+        return () => {
+            mounted = false;
+        }
+        
     },[])
 
     const handleDrawer = () => {
@@ -62,20 +80,30 @@ const NavBar = ({onAlert}) => {
         
     }
 
-    const handleConnectWallet = () => {
+    const handleConnectWallet = (suppress) => {
         ConnectWallet().then(status => {
             setWallet({
                 address: status.address,
                 snippet: status.address_snippet
             });
-            onAlert(
-                status.status,
-                status.msg,
-                true
-            )
+
+            if(!suppress){
+                onAlert(
+                    status.status,
+                    status.msg,
+                    true
+                )
+            }            
         })
         .catch(error => {
             console.error(error);
+            if(!suppress){
+                onAlert(
+                    error.status,
+                    error.msg,
+                    true
+                )
+            }            
         })
       }
 
@@ -91,8 +119,8 @@ const NavBar = ({onAlert}) => {
                         <Button className="custom-button small-social social-button" style={{fontSize: 10}} onClick={handleConnectWallet}> Connect Wallet</Button>
                     </div> : walletActive && wallet.address ?
                     <div style={{width: 122,display: 'flex',alignItems: 'center', justifyContent: 'center'}}>
-                        <VerifiedIcon style={{color: '#f5deb3d9', fontSize: 15, paddingRight: 6}} />
-                        <label style={{fontSize: 10, color: '#f5deb3d9'}}>{wallet.snippet}</label>
+                        <VerifiedIcon style={{color: '#ffffff', fontSize: 18, paddingRight: 6}} />
+                        <label style={{fontSize: 14, color: '#ffffff'}}>{wallet.snippet}</label>
                     </div> : null
                     }
                     <div id="twitter">

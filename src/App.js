@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import MainApp from './pages/MainApp';
 import CountDown from './components/CountDown';
 import ApiIcon from '@mui/icons-material/Api';
-import { ConnectWallet, DateDifference, tokensMinted } from './utilities/util';
+import { ConnectWallet, connectWalletSync, DateDifference, tokensMinted } from './utilities/util';
 import RoadMap from './components/RoadMap';
 import FadeInContainer from './components/FadeInContainer';
 import { useEffect, useState } from 'react';
@@ -66,10 +66,6 @@ function App() {
                 <div className='section-medium'>
                   <Carousel />
                 </div>
-                
-                {/* <div id="countdown" >
-                  <CountDown launch_date={null} onAlert={onAlert} />                  
-                </div> */}
                 
                 <div id="benefits" className="primary-section">
                   <h1>UTILITY AND BENEFITS</h1>

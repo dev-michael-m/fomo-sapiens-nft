@@ -13,7 +13,7 @@ contract Sapien is ERC721Enumerable, Ownable{
     using ECDSA for bytes32;
     using ECDSA for bytes;
 
-    uint256 public MAX_SUPPLY = 5000; // change val before launch
+    uint256 public MAX_SUPPLY = 5500; // change val before launch
     uint256 public MAX_MINT = 3;
     uint256 public RESERVED = 50;    // amount of sapiens reserved for giveaways
     uint256 private SALE_PRICE = 0.1 ether;

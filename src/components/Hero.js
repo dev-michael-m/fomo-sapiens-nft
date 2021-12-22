@@ -12,12 +12,10 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import TextField from '@mui/material/TextField';
 import { FormatDropTimer, getPresaleState, getPublicState, mintNFT } from './../utilities/util';
-
-const TABS = [
-    {title: 'Unique', desc: <p><b>FOMO SAPIENS</b> is a hand-crafted collection of <b>4,000</b>, non-generative digital assets. Each sapien is personalized with their own traits, to guarantee what you receive is truly one of a kind.</p>},
-    {title: 'Exclusive', desc: <p>Due to the limited nature of this collection, we want to make sure everyone has a fair chance to mint their own sapien.</p>},
-    {title: 'Community First', desc: <p>Here the community comes first. We've dedicated <b>30%</b> of sales and <b>50%</b> of all royalties to be distributed back into the DAO. This way we can continue to provide you the most value out of your NFT than any other collection.</p>},
-]
+require('dotenv').config();
+const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
+const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
+const web3 = createAlchemyWeb3(alchemyKey);
 
 const LAUNCH_DATE = '12/30/2021';
 
@@ -26,6 +24,7 @@ const Hero = ({onAlert}) => {
     const [tokens,setTokens] = useState(3);
     const [timer,setTimer] = useState(FormatDropTimer(new Date(), new Date(LAUNCH_DATE)));
     const [saleActive,setSaleActive] = useState(false);
+    const [minting,setMinting] = useState(false);
 
     const handleScrollView = () => {
         const pos = $('#welcome-section').position();
@@ -64,13 +63,39 @@ const Hero = ({onAlert}) => {
     },[])
 
     const onMint = async () => {
-        const status = await mintNFT('presale');
-        console.log({status});
-        onAlert(
-            status.status,
-            status.msg,
-            true
-        )
+        setMinting(true);
+        await mintNFT('public',tokens).then(res => {
+            const txHash = res.data;
+
+            const progress = setInterval(() => {
+                const receipt = web3.eth.getTransactionReceipt(txHash).then(status => {
+                    if(!status){
+                        //console.log({status})
+                    }else if(status.status){
+                        console.log({status})
+                        const tokenIds = status.logs.reduce((tokensMinted,log) => {
+                            tokensMinted.push(web3.utils.hexToNumber(log.topics[3]));
+                        },[])
+                        console.log({tokenIds});
+                        console.log({status})
+                        setMinting(false);
+                        clearInterval(progress);
+                    }
+                }).catch(error => {
+                    console.error(error);
+                    clearInterval(progress);
+                    setMinting(false);
+                })
+            },1000)
+        }).catch(error => {
+            console.error(error);
+            onAlert(
+                'error',
+                error.msg.message,
+                true
+            )
+            setMinting(false);
+        })        
     }
 
     const mintMinus = () => {
@@ -119,11 +144,11 @@ const Hero = ({onAlert}) => {
                     <FadeInContainer>
                     <div style={{display: 'flex',justifyContent: 'center',alignItems: 'center'}}>
                         <IconButton onClick={mintMinus}><RemoveIcon style={{color: 'white'}} /></IconButton>
-                        <TextField className="mint-num" id="num-tokens" type="number" value={tokens} />
+                        <TextField className="mint-num" id="num-tokens" type="number" inputMode="numeric" value={tokens} />
                         <IconButton onClick={mintAdd}><AddIcon style={{color: 'white'}} /></IconButton>
                     </div>
                     <div style={{marginTop: 32}}>
-                        <Button className={`custom-button medium ${!saleActive ? 'disabled' : ''}`} disabled={!saleActive ? true : false} variant="contained" color="primary" onClick={onMint}>Mint</Button>
+                        <Button className={`custom-button primary medium ${!saleActive ? 'disabled' : ''}`} disabled={!saleActive ? true : false} variant="contained" color="primary" onClick={onMint}>{minting ? 'Minting...' : 'Mint'}</Button>
                     </div>
                     </FadeInContainer>
                     
