@@ -12,6 +12,7 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import TextField from '@mui/material/TextField';
 import { FormatDropTimer, getPresaleState, getPublicState, mintNFT } from './../utilities/util';
+import Promo from './Promo';
 require('dotenv').config();
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
@@ -114,8 +115,11 @@ const Hero = ({onAlert}) => {
         <div className="hero-container">
             <div className='hero-inner'>
                 <FadeInContainer>
-                    <div className="hero-img" id="hero-img">
+                    {/* <div className="hero-img" id="hero-img">
                         <img src={HeroImg} width="100%"></img>
+                    </div> */}
+                    <div style={{paddingTop: 100}}>
+                        <Promo styling="full" animated outline="gold" />
                     </div>
                 </FadeInContainer>
                 <div className='countdown-container' id="countdown-container">
@@ -169,7 +173,7 @@ const Hero = ({onAlert}) => {
                           Today we pay homage not only to him, not only to the pinnacle of evolution, the <b>FOMO SAPIENS</b>, but to all our ancestors who perished so we could prosper.
                       </p>
                     </div>
-                    <div style={{display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', marginBottom: '12%'}}>
+                    <div style={{display: 'flex', justifyContent: 'space-around', width: 300, alignItems: 'center', margin: '0px auto 12% auto'}}>
                       <div id="twitter">
                           <TwitterIcon style={{color: 'rgb(0,0,0)', fontSize: 26}} />
                           <a id="twitter-link-nav" target="_blank" href="https://twitter.com/FomoSapiens_NFT"></a>

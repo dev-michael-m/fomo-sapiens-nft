@@ -59,4 +59,5 @@
 .pfield-input input {
     border-bottom: 2px solid wheat;
     color: white !important;
+    border-radius: 0px;
 }

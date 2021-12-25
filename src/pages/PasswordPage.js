@@ -51,7 +51,7 @@ const PasswordPage = () => {
             {alert.visible ? <AlertBar severity={alert.severity} visible={alert.visible} msg={alert.msg} onClose={onCloseAlert} /> : null}
             <img src={Logo} width="50%"></img>
             <div style={{margin: 50}}>
-                <TextField className="pfield-input" style={{borderBottom: '2px solid wheat'}} variant="standard" id="pfield" type="text" />
+                <TextField className="pfield-input" style={{borderBottom: '2px solid wheat'}} variant="standard" placeholder='Password' id="pfield" type="text" />
             </div>
             <div>
                 <Button className='custom-button medium secondary' variant='contained' color="primary" onClick={verifyAccount}>Enter</Button>

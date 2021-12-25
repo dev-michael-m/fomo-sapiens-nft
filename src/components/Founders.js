@@ -5,6 +5,7 @@ import Avatar1 from '../assets/syndk8.png';
 import Avatar2 from '../assets/adamkruz.png';
 import Avatar3 from '../assets/chefcoliin.png';
 import GroupsIcon from '@mui/icons-material/Groups';
+import DiscordIcon from '../assets/discord.png';
 import IconButton from '@mui/material/IconButton';
 import TwitterIcon from '@mui/icons-material/Twitter';
 
@@ -19,8 +20,9 @@ const Founders = () => {
                     <Avatar src={Avatar2} style={{width: 120, height: 120}} />
                     <h3>Adamkruz</h3>
                     <h5 style={{marginTop: 0}}>Marketing | Project Manager | Co-Founder</h5>
-                    <div>
-                    <IconButton className="social-button" ><TwitterIcon style={{color: 'rgb(0,0,0)', fontSize: 26}} /></IconButton>
+                    <div className='socials-founder'>
+                        <IconButton className="social-button" ><TwitterIcon style={{color: 'rgb(0,0,0)', fontSize: 26}} /></IconButton>
+                        <IconButton style={{width: 42}}><img style={{margin: '0px 10px',filter: 'invert(1)'}} src={DiscordIcon} width="26px"></img></IconButton>
                     </div>
                 </div>
             </FadeInContainer>
@@ -29,8 +31,9 @@ const Founders = () => {
                     <Avatar src={Avatar3} style={{width: 120, height: 120}} />
                     <h3>ChefColin.eth</h3>
                     <h5 style={{marginTop: 0}}>Marketing | Design | Co-Founder</h5>
-                    <div>
-                    <IconButton className="social-button" ><TwitterIcon style={{color: 'rgb(0,0,0)', fontSize: 26}} /></IconButton>
+                    <div className='socials-founder'>
+                        <IconButton className="social-button" ><TwitterIcon style={{color: 'rgb(0,0,0)', fontSize: 26}} /></IconButton>
+                        <IconButton style={{width: 42}}><img style={{margin: '0px 10px',filter: 'invert(1)'}} src={DiscordIcon} width="26px"></img></IconButton>
                     </div>
                 </div>
             </FadeInContainer>
@@ -39,8 +42,9 @@ const Founders = () => {
                     <Avatar src={Avatar1} style={{width: 120, height: 120}}/>
                     <h3>FOMO Syndk8</h3>
                     <h5 style={{marginTop: 0}}>Lead Developer | Smart Contract | Co-Founder</h5>
-                    <div>
-                    <IconButton className="social-button" ><TwitterIcon style={{color: 'rgb(0,0,0)', fontSize: 26}} /></IconButton>
+                    <div className='socials-founder'>
+                        <IconButton className="social-button" ><TwitterIcon style={{color: 'rgb(0,0,0)', fontSize: 26}} /></IconButton>
+                        <IconButton style={{width: 42}}><img style={{margin: '0px 10px',filter: 'invert(1)'}} src={DiscordIcon} width="26px"></img></IconButton>
                     </div>
                 </div>
             </FadeInContainer>            

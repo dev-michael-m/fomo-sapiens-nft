@@ -72,7 +72,7 @@ export const FormatDropDate = (dateIn = '') => {
     }
 }
 
-const MaskAddress = (full_address = '') => {
+export const MaskAddress = (full_address = '') => {
     try {
         const first_half = full_address.substring(0,5);
         const second_half = full_address.substring(full_address.length - 4);

@@ -4,32 +4,30 @@
 
 pragma solidity >=0.7.0 <0.9.0;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
-contract Sapien is ERC721Enumerable, Ownable{
+contract Sapien is ERC721, Ownable{
     using Strings for uint256;
     using ECDSA for bytes32;
     using ECDSA for bytes;
 
-    uint256 public MAX_SUPPLY = 5500; // change val before launch
+    uint256 public MAX_SUPPLY = 20; // change val before launch
     uint256 public MAX_MINT = 3;
-    uint256 public RESERVED = 50;    // amount of sapiens reserved for giveaways
-    uint256 private SALE_PRICE = 0.1 ether;
+    uint256 public GIVEAWAYS = 3;    // amount of sapiens reserved for giveaways
+    uint256 private SALE_PRICE = 1 ether;
     uint256 public _tokenIds;
     uint256 public starting_idx;
-    uint256 public starting_idx_block;
-    bool private active = false; // variable for public sale
-    bool private presale_active = false; // variable for presale
+    uint256 private starting_block_num;
+    bool public active = false; // variable for public sale
+    bool public presale_active = false; // variable for presale
     bool public paused = false;
     bool public revealed = false;
-    string public FSNFT_PROVENANCE = "";
-    string public BASE_URL = "ipfs://QmVy1ZWFhg6stX7VSo2XoFopoLqJVT7xc3RWReQ6MXCRMV/";
-    string public PLACEHOLDER = "ipfs://QmWnrqkBe9Z1B24H5hooiMMN7z4ZpKRM2N2nNcZPPi7s5r";
-    string public EXTENSION = ".json";
+    string public FSNFT_PROVENANCE;
+    string public BASE_URL;
+    bytes32 public EXTENSION = ".json";
     mapping(address => uint256) private minted;
-    mapping(address => uint256[]) private reservedList;
     address pubkey = 0x103EcE5B498b9c425295F58148Aa5bdAc7575708;
     address DAO = 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2;
     address founder1 = 0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db;
@@ -38,75 +36,54 @@ contract Sapien is ERC721Enumerable, Ownable{
     
     constructor() ERC721("FOMO SAPIENS", "SAPIEN") {}
 
-    function mint(uint256 _numTokens) public payable
+    function mint(uint256 tokensToMint) public payable
     {
         require(!paused);
         require(active, "Sale is currently inactive");
         require(tx.origin == msg.sender, "Contracts are not allowed to mint");
-        require(msg.value == (SALE_PRICE * _numTokens), "Incorrect amount of ether");
+        require(msg.value == (SALE_PRICE * tokensToMint), "Incorrect amount of ether");
+        require(_tokenIds < (MAX_SUPPLY - GIVEAWAYS), "All Sapiens have been minted");
+        require((_tokenIds + tokensToMint) <= (MAX_SUPPLY - GIVEAWAYS), "Purchase would exceed max supply of sapiens"); 
         require(minted[msg.sender] < MAX_MINT, "You cannot mint more than 3 sapiens from the same address");
-        require((minted[msg.sender] + _numTokens) <= MAX_MINT, "You cannot mint more than 3 sapiens");
-        require(_tokenIds < (MAX_SUPPLY - RESERVED), "All Sapiens have been minted");
-        require((_tokenIds + _numTokens) <= (MAX_SUPPLY - RESERVED), "Purchase would exceed max supply of sapiens");  
+        require((minted[msg.sender] + tokensToMint) <= MAX_MINT, "You cannot mint more than 3 sapiens");
+         
+        minted[msg.sender] += tokensToMint;
 
-        minted[msg.sender] += _numTokens;
-
-        for(uint256 i = 0; i < _numTokens; i++){
-            uint256 _tokenId = (_tokenIds + starting_idx) % MAX_SUPPLY + 1;  
-            _safeMint(msg.sender, _tokenId);
+        for(uint256 i = 0; i < tokensToMint; i++){ 
+            _mint(msg.sender, getInitialSequence());
             _tokenIds++;    
         }        
-    }
-
-    function whitelistMint() public payable {
-        require(!paused);
-        require(presale_active, "Sale is currently inactive");
-        require(tx.origin == msg.sender, "Contracts are not allowed to mint");
-        //require(isReserved(msg.sender) < MAX_MINT, "You cannot mint more than 3 Sapiens");       
-        require(isReserved(msg.sender) != 0,"Sapien needs to be reserved first");
-
-        minted[msg.sender] += reservedList[msg.sender].length;
-
-        for(uint256 i = 0; i < minted[msg.sender]; i++){
-            uint256 _tokenId = reservedList[msg.sender][i];  
-            _safeMint(msg.sender, _tokenId);
-        }
-        
     }
 
     /**
     *   @dev function to set aside tokens for giveaways.
     */
-    function sapienReserves() public onlyOwner {
-        for(uint256 i = 0; i < RESERVED; i++){
-            uint256 _tokenId = (_tokenIds + starting_idx) % MAX_SUPPLY + 1;  
-            _safeMint(msg.sender, _tokenId);
+    function mintGiveaways() public onlyOwner {
+        for(uint256 i = 0; i < GIVEAWAYS; i++){ 
+            _mint(msg.sender, getInitialSequence());
             _tokenIds++; 
         }
     }
 
     /**
-    *   @dev function for members to reserve NFT.  Address must be whitelisted to reserve.
+    *   @dev function for members to reserve sapiens.  Address must be whitelisted to reserve.
     *   @param _signature - used to verify whitelisted address.
     */
-    function reserveNFT(bytes calldata _signature, uint256 _numTokens) public payable {
+    function whitelistMint(bytes calldata _signature, uint256 tokensToMint) public payable {
         require(!paused);
         require(presale_active,"Presale is currently inactive");
-        require(tx.origin == msg.sender,"Contracts are not allowed to reserve");
-        require(isWhitelisted(_signature, msg.sender),"Must be on whitelist to reserve a sapien");
-        require(msg.value == (SALE_PRICE * _numTokens),"Incorrect amount of ether");
-        require((isReserved(msg.sender) + _numTokens) <= MAX_MINT,"You cannot reserve more than 3 Sapiens");
-        require(isReserved(msg.sender) < MAX_MINT,"You can only reserve up to 3 Sapiens from the same address");
+        require(tx.origin == msg.sender,"Contracts are not allowed to mint");
+        require(isWhitelisted(_signature, msg.sender),"Must be on whitelist to mint a sapien");
+        require(msg.value == (SALE_PRICE * tokensToMint),"Incorrect amount of ether");
+        require((minted[msg.sender] + tokensToMint) <= MAX_MINT,"You cannot mint more than 3 Sapiens");
+        require(minted[msg.sender] < MAX_MINT,"You can only mint up to 3 Sapiens from the same address");
         
-        // add address to reserved list with reserved tokenIds
-        for(uint256 i = 0; i < _numTokens; i++){
-            reservedList[msg.sender].push((_tokenIds + starting_idx) % MAX_SUPPLY + 1);
-            _tokenIds++;
-        }        
-    }
+        minted[msg.sender] += tokensToMint;
 
-    function isReserved(address _user) private view returns (uint256) {
-        return reservedList[_user].length;
+        for(uint256 i = 0; i < tokensToMint; i++){ 
+            _mint(msg.sender, getInitialSequence());
+            _tokenIds++;    
+        }     
     }
 
     /**
@@ -116,11 +93,14 @@ contract Sapien is ERC721Enumerable, Ownable{
     */
     function tokenURI(uint256 _tokenId) public view virtual override returns(string memory){
         if(!revealed){
-            return PLACEHOLDER;
+            return BASE_URL;
         }
 
-        return bytes(BASE_URL).length > 0
-        ? string(abi.encodePacked(BASE_URL, _tokenId.toString(), EXTENSION)) : "";
+        return string(abi.encodePacked(BASE_URL, _tokenId.toString(), EXTENSION));
+    }
+
+    function getInitialSequence() private view returns (uint256){
+        return (_tokenIds + starting_idx) % MAX_SUPPLY + 1;
     }
     
     function setPublicSale(bool _active) public onlyOwner {
@@ -144,31 +124,25 @@ contract Sapien is ERC721Enumerable, Ownable{
     }
 
     function setProvenanceHash(string memory _provenance) public onlyOwner {
+        require(starting_block_num == 0,"Provenance has already been set");
+
         FSNFT_PROVENANCE = _provenance;
-        starting_idx_block = block.number;
+        starting_block_num = block.number;
     }
 
-    function getProvenanceHash() public view returns(string memory) {
-        return FSNFT_PROVENANCE;
-    }
-
-    /**
-    *   @dev function to set the starting index number
-    */
-    function setStartingIdx() private onlyOwner {
-        // cannot change starting index once created
+    function setStartingIdx() public onlyOwner {
         require(starting_idx == 0,"Starting index has already been set");
-        require(starting_idx_block != 0,"Starting block number has not been set");
 
-        starting_idx = uint(blockhash(starting_idx_block)) % MAX_SUPPLY;
+        starting_idx = uint(blockhash(starting_block_num)) % MAX_SUPPLY;
     }
 
-    function getStartingIdx() public view returns(uint){
-        return starting_idx;
+    function toggleReveal(string memory _url) public onlyOwner {
+        BASE_URL = _url;
+        revealed = !revealed;
     }
 
-    function setReveal(bool _reveal) public onlyOwner {
-        revealed = _reveal;
+    function setBaseURL(string memory _url) public onlyOwner {
+        BASE_URL = _url;
     }
 
     /**

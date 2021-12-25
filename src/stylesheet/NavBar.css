@@ -156,6 +156,7 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
 .countdown-container {
     font-family: 'Roboto Mono',monospace;
     width: 100%;
+    padding-top: 0px;
 }
 
 .timer-1 {
@@ -320,9 +321,20 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
     flex-direction: column;
 }
 
+.nav-logo {
+    width: 185px;
+}
+
 .down-arrow {
     padding-top: 10%;
     background-color: rgb(0,0,0);
+}
+
+.socials-founder {
+    display: flex;
+    align-items: center;
+    width: 128px;
+    justify-content: space-between;
 }
 
 @keyframes fadeIn {
@@ -339,6 +351,7 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
 
     .countdown-container {
         width: 120%;
+        padding-top: 100px;
     }
 
     .inner-stepper {
@@ -390,6 +403,7 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
 
     .countdown-container {
         width: 120%;
+        padding-top: 100px;
     }
 
     .inner-stepper {
@@ -425,6 +439,7 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
 
     .countdown-container {
         width: 120%;
+        padding-top: 100px;
     }
 
     .inner-stepper {
@@ -471,4 +486,16 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
     .hero-container {
         margin-bottom: 66%;
     }
+  }
+
+  @media screen and (min-width: 350px) and (max-width: 400px) {
+      .nav-logo {
+          width: 150px;
+      }
+  }
+
+  @media screen and (max-width: 350px) {
+      .nav-logo {
+          width: 118px;
+      }
   }
