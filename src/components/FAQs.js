@@ -25,7 +25,7 @@ const FAQs = () => {
                     <p>What is FOMO SAPIENS?</p>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <p style={{fontWeight: 'normal'}}>FOMO SAPIENS is a hand crafted collection of 2,000, non-generative digital assets who call the Ethereum blockchain their home.</p>
+                    <p style={{fontWeight: 'normal'}}><b>FOMO SAPIENS</b> is a collection of 5,500 3D, generative digital assets who call the Ethereum blockchain their home.</p>
                 </AccordionDetails>
             </Accordion>
             </FadeInContainer>
@@ -45,7 +45,7 @@ const FAQs = () => {
                     <p>What is the cost to mint?</p>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <p style={{fontWeight: 'normal'}}>Due to the limited nature of this collection, each sapien will cost 0.1 ETH to mint. This will help build a solid foundation for expanding our team and building endless value for our holders.</p>
+                    <p style={{fontWeight: 'normal'}}>Due to the limited nature of this collection, each sapien will cost <b>0.1 ETH</b> to mint. This will help build a solid foundation for expanding our team and building endless value for our holders.</p>
                 </AccordionDetails>
             </Accordion>
             </FadeInContainer>
@@ -55,7 +55,7 @@ const FAQs = () => {
                     <p>How many sapiens will be available?</p>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <p style={{fontWeight: 'normal'}}>There are 2,000 sapiens available in this collection. We've elected 1,000 sapiens to be minted during presale, and the rest will be available during the public sale.</p>
+                    <p style={{fontWeight: 'normal'}}>There will be <b>5,500</b> sapiens available in this collection. We've elected 2,000 sapiens to be minted during presale, and the rest will be available during the public sale.</p>
                 </AccordionDetails>
             </Accordion>
             </FadeInContainer>
@@ -65,7 +65,7 @@ const FAQs = () => {
                     <p>Will my sapien have rarities and traits?</p>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <p style={{fontWeight: 'normal'}}>Yes. Each sapien was carefully hand crafted by our beloved artist, therefore each sapien contains their own unique traits. Some of these traits possess a higher rarity, but will not effect the amount of $SAPIEN tokens received during the staking process.</p>
+                    <p style={{fontWeight: 'normal'}}>Yes. Each sapien and thier traits were carefully crafted by our beloved artist, therefore each sapien contains their own unique traits. Some of these traits possess a higher rarity, but will not effect the amount of <b>$SAPIEN</b> tokens received during the staking process.</p>
                 </AccordionDetails>
             </Accordion>
             </FadeInContainer>
@@ -75,7 +75,7 @@ const FAQs = () => {
                     <p>Will I be able to stake my sapien?</p>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <p style={{fontWeight: 'normal'}}>Yes. You will have the option to stake your sapien in return for $SAPIEN tokens.</p>
+                    <p style={{fontWeight: 'normal'}}>Yes. You will have the option to stake your sapien in return for <b>$SAPIEN</b> tokens.</p>
                 </AccordionDetails>
             </Accordion>
             </FadeInContainer>

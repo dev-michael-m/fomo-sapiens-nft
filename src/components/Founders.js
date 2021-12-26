@@ -19,7 +19,7 @@ const Founders = () => {
                 <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '60px 0px'}}>
                     <Avatar src={Avatar2} style={{width: 120, height: 120}} />
                     <h3>Adamkruz</h3>
-                    <h5 style={{marginTop: 0}}>Marketing | Project Manager | Co-Founder</h5>
+                    <h5 style={{marginTop: 0}}>Marketing | Project Manager</h5>
                     <div className='socials-founder'>
                         <IconButton className="social-button" ><TwitterIcon style={{color: 'rgb(0,0,0)', fontSize: 26}} /></IconButton>
                         <IconButton style={{width: 42}}><img style={{margin: '0px 10px',filter: 'invert(1)'}} src={DiscordIcon} width="26px"></img></IconButton>
@@ -30,7 +30,7 @@ const Founders = () => {
                 <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '60px 0px'}}>
                     <Avatar src={Avatar3} style={{width: 120, height: 120}} />
                     <h3>ChefColin.eth</h3>
-                    <h5 style={{marginTop: 0}}>Marketing | Design | Co-Founder</h5>
+                    <h5 style={{marginTop: 0}}>Marketing | Design </h5>
                     <div className='socials-founder'>
                         <IconButton className="social-button" ><TwitterIcon style={{color: 'rgb(0,0,0)', fontSize: 26}} /></IconButton>
                         <IconButton style={{width: 42}}><img style={{margin: '0px 10px',filter: 'invert(1)'}} src={DiscordIcon} width="26px"></img></IconButton>
@@ -41,7 +41,7 @@ const Founders = () => {
                 <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '60px 0px'}}>   
                     <Avatar src={Avatar1} style={{width: 120, height: 120}}/>
                     <h3>FOMO Syndk8</h3>
-                    <h5 style={{marginTop: 0}}>Lead Developer | Smart Contract | Co-Founder</h5>
+                    <h5 style={{marginTop: 0}}>Developer | Smart Contract | Website</h5>
                     <div className='socials-founder'>
                         <IconButton className="social-button" ><TwitterIcon style={{color: 'rgb(0,0,0)', fontSize: 26}} /></IconButton>
                         <IconButton style={{width: 42}}><img style={{margin: '0px 10px',filter: 'invert(1)'}} src={DiscordIcon} width="26px"></img></IconButton>

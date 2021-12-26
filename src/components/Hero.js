@@ -5,8 +5,8 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import HeroImg from '../assets/sapienhero.png';
 import $ from 'jquery';
 import FadeInContainer from './FadeInContainer';
-import DiscordIcon from '../assets/discord.png';
-import OpenSeaIcon from '../assets/opensea.png';
+import DiscordIcon from '../assets/discordteal.png';
+import OpenSeaIcon from '../assets/openseateal.png';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -18,7 +18,7 @@ const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
 const web3 = createAlchemyWeb3(alchemyKey);
 
-const LAUNCH_DATE = '12/30/2021';
+const LAUNCH_DATE = '12/26/2021 14:40:00';
 
 const Hero = ({onAlert}) => {
     const [active,setActive] = useState(true);
@@ -26,6 +26,7 @@ const Hero = ({onAlert}) => {
     const [timer,setTimer] = useState(FormatDropTimer(new Date(), new Date(LAUNCH_DATE)));
     const [saleActive,setSaleActive] = useState(false);
     const [minting,setMinting] = useState(false);
+    const [imgSeed,setImgSeed] = useState([0,1,2]);
 
     const handleScrollView = () => {
         const pos = $('#welcome-section').position();
@@ -47,6 +48,8 @@ const Hero = ({onAlert}) => {
                 }
             })();
 
+            generateImageSeed();
+
             if(active){
                 const timer = setInterval(() => {
                     setTimer(FormatDropTimer(new Date(), new Date(LAUNCH_DATE)))            
@@ -62,6 +65,11 @@ const Hero = ({onAlert}) => {
             mounted = false;
         }
     },[])
+
+    const generateImageSeed = () => {
+        const shuffledImages = imgSeed.sort((a,b) => 0.5 - Math.random());
+        setImgSeed(shuffledImages);
+    }
 
     const onMint = async () => {
         setMinting(true);
@@ -111,6 +119,19 @@ const Hero = ({onAlert}) => {
         }
     }
 
+    const onSocialClick = (event) => {
+        const social = event.target.id;
+        
+        switch(social){
+            case 'twitter': document.getElementById('twitter-link-hero').click();
+                break;
+            case 'discord': document.getElementById('discord-link-hero').click();
+                break;
+            case 'opensea': document.getElementById('opensea-link-hero').click();
+                break;
+        }
+    }
+
     return (
         <div className="hero-container">
             <div className='hero-inner'>
@@ -119,7 +140,7 @@ const Hero = ({onAlert}) => {
                         <img src={HeroImg} width="100%"></img>
                     </div> */}
                     <div style={{paddingTop: 100}}>
-                        <Promo styling="full" animated outline="gold" />
+                        <Promo styling="full" animated glow seed={imgSeed} />
                     </div>
                 </FadeInContainer>
                 <div className='countdown-container' id="countdown-container">
@@ -173,20 +194,28 @@ const Hero = ({onAlert}) => {
                           Today we pay homage not only to him, not only to the pinnacle of evolution, the <b>FOMO SAPIENS</b>, but to all our ancestors who perished so we could prosper.
                       </p>
                     </div>
-                    <div style={{display: 'flex', justifyContent: 'space-around', width: 300, alignItems: 'center', margin: '0px auto 12% auto'}}>
-                      <div id="twitter">
-                          <TwitterIcon style={{color: 'rgb(0,0,0)', fontSize: 26}} />
-                          <a id="twitter-link-nav" target="_blank" href="https://twitter.com/FomoSapiens_NFT"></a>
-                      </div>
-                      <div id="discord">
-                        <img style={{margin: '0px 10px',filter: 'invert(1)'}} src={DiscordIcon} width="26px"></img>
-                      </div>
-                      <div id="opensea">
-                        <img style={{margin: '0px 10px', filter: 'invert(1)'}} src={OpenSeaIcon} width="26px"></img>
-                      </div>
-                    </div>
                   </FadeInContainer>
                   <FadeInContainer>
+                    <div style={{display: 'flex', justifyContent: 'space-around', width: 300, alignItems: 'center', margin: '0px auto 20px auto'}}>
+                      <div id="twitter">
+                          <IconButton id="twitter" style={{width: 40}} onClick={onSocialClick}>
+                            <TwitterIcon id="twitter" style={{color: 'lightseagreen', fontSize: 26}} />
+                            <a id="twitter-link-hero" hidden target="_blank" href="https://twitter.com/FomoSapiens_NFT"></a>
+                          </IconButton>
+                      </div>
+                      <div id="discord">
+                          <IconButton id="discord" style={{width: 40}} onClick={onSocialClick}>
+                              <img id="discord" style={{margin: '0px 10px'}} src={DiscordIcon} width="26px"></img>
+                              <a id="discord-link-hero" hidden target="_blank" href="https://twitter.com/FomoSapiens_NFT"></a>
+                          </IconButton>
+                      </div>
+                      <div id="opensea">
+                          <IconButton id="opensea" style={{width: 40}} onClick={onSocialClick}>
+                              <img id="opensea" style={{margin: '0px 10px'}} src={OpenSeaIcon} width="26px"></img>
+                              <a id="opensea-link-hero" hidden target="_blank" href="https://twitter.com/FomoSapiens_NFT"></a>
+                          </IconButton>
+                      </div>
+                    </div>
                     <div>
                       <Button className="custom-button primary small" variant="contained" color="primary" onClick={() => document.getElementById('discord-link').click()}>Join the List</Button>
                       <a id="discord-link" target="_blank" href="https://discord.com/channels/909901600775086141/909901601521684512"></a>

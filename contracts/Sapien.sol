@@ -16,7 +16,7 @@ contract Sapien is ERC721, Ownable{
     uint256 public MAX_SUPPLY = 20; // change val before launch
     uint256 public MAX_MINT = 3;
     uint256 public GIVEAWAYS = 3;    // amount of sapiens reserved for giveaways
-    uint256 private SALE_PRICE = 1 ether;
+    uint256 private SALE_PRICE = 0.1 ether;
     uint256 public _tokenIds;
     uint256 public starting_idx;
     uint256 private starting_block_num;
@@ -109,14 +109,6 @@ contract Sapien is ERC721, Ownable{
 
     function setPresale(bool _active) public onlyOwner {
         presale_active = _active;
-    }
-
-    function getPublicSale() public view returns (bool){
-        return active;
-    }
-
-    function getPresale() public view returns (bool){
-        return presale_active;
     }
 
     function setPaused(bool _state) public onlyOwner {

@@ -23,47 +23,22 @@ const IMGS = [
     Sapien22
 ]
 
-const styles = {
-    root: {
-      
-    },
-    slideContainer: {
-      width: '30%'
-    },
-    slide: {
-      minHeight: 100,
-      minWidth: 100
-    }
-  };
-
 const Carousel = () => {
     const [active,setActive] = useState(0);
     const [activeStep,setActiveStep] = useState(0);
+    const [slides,setSlides] = useState(3);
+
+    useEffect(() => {
+        const width = window.innerWidth;
+        if(width >= 1440){
+            setSlides(4);
+        }
+    },[])
 
     const handleClickTab = (event) => {
         const id = event.target.id;
         setActive(parseInt(id));
     }
-
-    // useEffect(() => {
-    //     const timer = setInterval(() => {
-    //         if(activeStep === IMGS.length){
-    //             setActiveStep(0);
-    //         }else{
-    //             setActiveStep(prevState => {
-    //                 if(prevState === IMGS.length - 1){
-    //                     return 0;
-    //                 }else{
-    //                     return prevState + 1;
-    //                 }
-    //             });
-    //         }
-    //     },6500)
-
-    //     return () => {
-    //         clearInterval(timer);
-    //     }
-    // },[])
 
     const onIndexChange = (index) => {
         setActiveStep(index);
@@ -77,14 +52,14 @@ const Carousel = () => {
         <div className='carousel-container'>
             <FadeInContainer animation="fade-in">
             <div className='carousel-header-img'>
-                <img style={{boxShadow: '0px 2px 10px black'}} src={Sapien18} width="75%"></img>
+                <img className='carousel-head-img' style={{boxShadow: '0px 2px 10px black'}} src={Sapien18}></img>
             </div>
             </FadeInContainer>
             <FadeInContainer>
             <div>
                 <Swiper
                     spaceBetween={2}
-                    slidesPerView={3}
+                    slidesPerView={slides}
                     onSlideChange={handleSlideChange}
                     loop={true}
                     loopFillGroupWithBlank={true}
@@ -93,7 +68,7 @@ const Carousel = () => {
                         disableOnInteraction: false
                     }}
                 >
-                    {IMGS.map((image,index) => (<SwiperSlide key={index}><img src={image} width="90%"></img></SwiperSlide>))}
+                    {IMGS.map((image,index) => (<SwiperSlide key={index}><img className='carousel-sub-img' src={image} width="106px"></img></SwiperSlide>))}
                 </Swiper>
                 <MobileStepper
                     className="mobile-stepper"

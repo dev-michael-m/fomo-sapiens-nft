@@ -105,6 +105,14 @@
     padding: 26px;
 }
 
+.carousel-sub-img {
+    width: 106px;
+}
+
+.carousel-head-img {
+    width: 300px;
+}
+
 div.MuiMobileStepper-dot {
     background-color: rgba(255,255,255,0.35) !important;
     border-radius: 0px !important;
@@ -333,7 +341,7 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
 .socials-founder {
     display: flex;
     align-items: center;
-    width: 128px;
+    width: 92px;
     justify-content: space-between;
 }
 
@@ -342,7 +350,122 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
     100% {opacity: 100%;}
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 1910px) {
+    .carousel-sub-img {
+        width: 416px;
+    }
+
+    .hero-img {
+        left: 240px;
+    }
+
+    .countdown-container {
+        width: 120%;
+        padding-top: 100px;
+    }
+
+    .inner-stepper {
+        padding-right: 50%;
+    }
+
+    .nft-stat {
+        bottom: 384px;
+    }
+
+    .inner-nav{
+        padding: 16px
+      }
+
+    .bar {
+        width: 500px;
+        height: 500px;
+    }
+
+    .barOverflow {
+        width: 500px;
+        height: 250px;
+    }
+
+    .carousel-header-img {
+        padding: 100px;
+    }
+    
+    .carousel-container {
+        margin-bottom: 25%;
+    }
+
+    .carousel-head-img {
+        width: 700px;
+    }
+
+    .inner-prog-bar {
+        bottom: 120px;
+    }
+
+    .hero-inner {
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
+@media screen and (min-width: 1420px) and (max-width: 1910px) {
+    .carousel-sub-img {
+        width: 330px;
+    }
+    .hero-img {
+        left: 240px;
+    }
+
+    .countdown-container {
+        width: 120%;
+        padding-top: 100px;
+    }
+
+    .inner-stepper {
+        padding-right: 50%;
+    }
+
+    .nft-stat {
+        bottom: 384px;
+    }
+
+    .inner-nav{
+        padding: 16px
+      }
+
+    .bar {
+        width: 500px;
+        height: 500px;
+    }
+
+    .barOverflow {
+        width: 500px;
+        height: 250px;
+    }
+
+    .carousel-header-img {
+        padding: 100px;
+    }
+    
+    .carousel-container {
+        margin-bottom: 25%;
+    }
+
+    .carousel-head-img {
+        width: 500px;
+    }
+
+    .inner-prog-bar {
+        bottom: 120px;
+    }
+
+    .hero-inner {
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1420px) {
     
 
     .hero-img {
@@ -384,6 +507,14 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
         margin-bottom: 25%;
     }
 
+    .carousel-head-img {
+        width: 500px;
+    }
+
+    .carousel-sub-img {
+        width: 284px;
+    }
+
     .inner-prog-bar {
         bottom: 120px;
     }
@@ -394,7 +525,7 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
     }
 }
 
-@media screen and (min-width: 925px) {
+@media screen and (min-width: 925px) and (max-width: 1024px) {
     
 
     .hero-img {
@@ -420,6 +551,14 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
 
     .carousel-header-img {
         padding: 100px;
+    }
+
+    .carousel-head-img {
+        width: 500px;
+    }
+
+    .carousel-sub-img {
+        width: 284px;
     }
 
     .carousel-container {
@@ -462,8 +601,16 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
         padding: 100px;
     }
 
+    .carousel-head-img {
+        width: 500px;
+    }
+
     .carousel-container {
         margin-bottom: 25%;
+    }
+
+    .carousel-sub-img {
+        width: 236px;
     }
 
     .hero-inner {
@@ -480,17 +627,35 @@ div.MuiMobileStepper-dot.MuiMobileStepper-dotActive {
     .hero-details {
         top: 4.5%;
     }
+
+    .carousel-sub-img {
+        width: 188px;
+    }
   }
 
   @media screen and (min-width: 515px) and (max-width: 600px){
     .hero-container {
         margin-bottom: 66%;
     }
+
+    .carousel-sub-img {
+        width: 160px;
+    }
+  }
+
+  @media screen and (min-width: 400px) and (max-width: 515px) {
+      .carousel-sub-img {
+          width: 136px;
+      }
   }
 
   @media screen and (min-width: 350px) and (max-width: 400px) {
       .nav-logo {
           width: 150px;
+      }
+
+      .carousel-sub-img {
+          width: 120px;
       }
   }
 

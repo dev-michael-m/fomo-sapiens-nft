@@ -25,7 +25,8 @@ export const FormatDropTimer = (date = new Date(), end_date = new Date()) => {
         const hourDiff = Math.floor((end_date.getTime() - date.getTime()) / (1000 * 3600)) % 24;
         const minuteDiff = Math.floor((end_date.getTime() - date.getTime()) / (1000 * 60)) % 60;
         const secondDiff = Math.floor((end_date.getTime() - date.getTime()) / 1000) % 60;
-        return {days: dateDiff, hours: hourDiff.toString().padStart(2,'0'), minutes: minuteDiff.toString().padStart(2,'0'), seconds: secondDiff.toString().padStart(2,'0')}
+        return {days: dateDiff > 0 ? dateDiff : '00', hours: hourDiff > 0 ? hourDiff.toString().padStart(2,'0') : '00', 
+        minutes: minuteDiff > 0 ? minuteDiff.toString().padStart(2,'0') : '00', seconds: secondDiff > 0 ? secondDiff.toString().padStart(2,'0') : '00'}
     } catch (error) {
         console.error(error);
         return {

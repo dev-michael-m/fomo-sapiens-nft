@@ -126,11 +126,13 @@
 
 .nft-img-side {
   width: 85%;
-  animation: glow 4s infinite linear;
 }
 
 .nft-img-front {
   width: 120%;
+}
+
+.glow {
   animation: glow 4s infinite linear;
 }
 

@@ -72,28 +72,6 @@ function App() {
                   <FadeInContainer animation="fade-in" >
                     <Promo />
                   </FadeInContainer>
-                  <div className='utility-section'>
-                    <div className='utility-left'>
-                      <FadeInContainer animation="fade-x">
-                        <h3 style={{width: 'fit-content'}}>LOWER FEES</h3>
-                      </FadeInContainer>
-                      <FadeInContainer animation="fade-in">
-                        <div className='divider'></div>
-                        <p>
-                          We understand gas prices can be ridiculous, and we want to make sure our members get to mint while keeping more in their wallets.
-                          We've given the ability for our whitelisted members to reserve their sapien before presale.  This prevents gas wars, and reduces gas fees, leading to a cheaper mint for everyone.
-                        </p>
-                      </FadeInContainer>
-                    </div>
-                    <div className='utility-right'>
-                      <FadeInContainer animation="fade-in">
-                        <div style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
-                          <img className='float' src={SapienCoin} width="50%"></img>
-                          <KeyboardDoubleArrowDownIcon className='float' style={{fontSize: 40, color: 'darkkhaki'}} />
-                        </div>
-                      </FadeInContainer>
-                    </div>
-                  </div>
                   <div className='utility-section-inverted'>
                     <div className='utility-left'>
                       <FadeInContainer animation="fade-x">
