@@ -137,6 +137,10 @@ contract Sapien is ERC721, Ownable{
         BASE_URL = _url;
     }
 
+    function getMinted(address _user) public view onlyOwner returns(uint256) {
+        return minted[_user];
+    }
+
     /**
     *   @dev function to verify address is whitelisted
     *   @param _signature - used to verify address

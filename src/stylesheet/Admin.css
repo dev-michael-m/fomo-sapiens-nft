@@ -53,11 +53,11 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 25%;
+    height: 480px;
   }
 
 .pfield-input input {
-    border-bottom: 2px solid wheat;
+    border-bottom: 1px solid wheat;
     color: white !important;
     border-radius: 0px;
 }

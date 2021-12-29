@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import MainApp from './pages/MainApp';
 import CountDown from './components/CountDown';
 import ApiIcon from '@mui/icons-material/Api';
-import { ConnectWallet, connectWalletSync, DateDifference, tokensMinted } from './utilities/util';
+import { ConnectWallet, connectWalletSync, DateDifference, MaskAddress } from './utilities/util';
 import RoadMap from './components/RoadMap';
 import FadeInContainer from './components/FadeInContainer';
 import { useEffect, useState } from 'react';
@@ -24,20 +24,78 @@ import MultiCoins from './assets/crypto-coins-web.png';
 import MetamaskIcon from './assets/metamask-icon.png';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 
-
 function App() {
   
-  const [active, setActive] = useState(false);
   const [alert,setAlert] = useState({
     severity: 'success',
     msg: '',
     visible: false
   });
 
-  const handleTokensMinted = async () => {
-    const minted = await tokensMinted();
-    console.log({minted})
-  }
+  const [wallet, setWallet] = useState({
+    address: null,
+    provider: null,
+    snippet: null,
+  });
+
+    useEffect(() => {
+      let mounted = true;
+
+      async function handleAccountsChanged(accounts) {
+        if (accounts.length === 0) {
+          console.warn("user has not connected to metamask");
+        } else {
+          setWallet((prevState) => ({
+            ...prevState,
+            address: accounts[0],
+            snippet: MaskAddress(accounts[0]),
+          }));
+        }
+      }
+
+      if (mounted) {
+        window.ethereum
+          .request({ method: "eth_accounts" })
+          .then((accounts) => {
+            if (accounts.length) {
+              setWallet((prevState) => ({
+                ...prevState,
+                address: accounts[0],
+                snippet: MaskAddress(accounts[0]),
+              }));
+            }
+          })
+          .catch((error) => {
+            console.warn(error);
+          });
+
+        window.ethereum.on("accountsChanged", handleAccountsChanged);
+      }
+
+      return () => {
+        mounted = false;
+      };
+    }, []);
+
+  const onConnectWallet = (suppress) => {
+    ConnectWallet()
+      .then((status) => {
+        setWallet({
+          address: status.address,
+          snippet: status.address_snippet,
+        });
+
+        if (!suppress) {
+          onAlert(status.status, status.msg, true);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (!suppress) {
+          onAlert(error.status, error.msg, true);
+        }
+      });
+  };
 
   const onAlert = (severity, msg, visible) => {
     setAlert({
@@ -56,12 +114,12 @@ function App() {
 
   return (
     <div className="App">
-        <MainApp onAlert={onAlert}>
+        <MainApp wallet={wallet} onConnectWallet={onConnectWallet} onAlert={onAlert}>
           {alert.visible ? <AlertBar severity={alert.severity} visible={alert.visible} msg={alert.msg} onClose={onCloseAlert} /> : null}
           
           <div className="main-container parallax-container">
             <div className="inner-main">
-              <Hero onAlert={onAlert} />
+              <Hero wallet={wallet} onAlert={onAlert} />
               <div className="body-container">
                 <div className='section-medium'>
                   <Carousel />

@@ -11,21 +11,27 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import TextField from '@mui/material/TextField';
-import { FormatDropTimer, getPresaleState, getPublicState, mintNFT } from './../utilities/util';
+import { FormatDropTimer, getPresaleState, getPublicState, mintNFT, getTokensMinted } from './../utilities/util';
 import Promo from './Promo';
+import CustomModal from './Modal';
+
 require('dotenv').config();
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
+const MAX_MINT = process.env.REACT_APP_MAX_MINT;
 const web3 = createAlchemyWeb3(alchemyKey);
 
-const LAUNCH_DATE = '12/26/2021 14:40:00';
+const LAUNCH_DATE = '12/26/2021 23:35:00';
 
-const Hero = ({onAlert}) => {
+const Hero = ({wallet,onAlert}) => {
     const [active,setActive] = useState(true);
     const [tokens,setTokens] = useState(3);
+    const [refreshTimer,setRefreshTimer] = useState(false);
     const [timer,setTimer] = useState(FormatDropTimer(new Date(), new Date(LAUNCH_DATE)));
     const [saleActive,setSaleActive] = useState(false);
     const [minting,setMinting] = useState(false);
+    const [txn,setTxn] = useState(null);
+    const [modalOpen,setModalOpen] = useState(false);
     const [imgSeed,setImgSeed] = useState([0,1,2]);
 
     const handleScrollView = () => {
@@ -43,7 +49,8 @@ const Hero = ({onAlert}) => {
                 
                 if(presale.status && publicSale.status){
                     if(presale.active || publicSale.active){
-                        setSaleActive(true)
+                        setSaleActive(true);
+                        setRefreshTimer(false);
                     }
                 }
             })();
@@ -52,7 +59,21 @@ const Hero = ({onAlert}) => {
 
             if(active){
                 const timer = setInterval(() => {
-                    setTimer(FormatDropTimer(new Date(), new Date(LAUNCH_DATE)))            
+                    const current_timer = FormatDropTimer(new Date(), new Date(LAUNCH_DATE));
+                    setTimer(current_timer);
+
+                    if(parseInt(current_timer.seconds) == 20){
+                        onAlert(
+                            'info',
+                            'Minting is about to commence!',
+                            true
+                        )
+                    }
+                    
+                    if(current_timer.active){
+                        setRefreshTimer(true);
+                        clearInterval(timer);
+                    }
                 },100)
         
                 return () => {
@@ -72,39 +93,49 @@ const Hero = ({onAlert}) => {
     }
 
     const onMint = async () => {
-        setMinting(true);
-        await mintNFT('public',tokens).then(res => {
-            const txHash = res.data;
+        const amount_minted = await getTokensMinted(wallet.address);
 
-            const progress = setInterval(() => {
-                const receipt = web3.eth.getTransactionReceipt(txHash).then(status => {
-                    if(!status){
-                        //console.log({status})
-                    }else if(status.status){
-                        console.log({status})
-                        const tokenIds = status.logs.reduce((tokensMinted,log) => {
-                            tokensMinted.push(web3.utils.hexToNumber(log.topics[3]));
-                        },[])
-                        console.log({tokenIds});
-                        console.log({status})
-                        setMinting(false);
-                        clearInterval(progress);
-                    }
+        if(amount_minted.status === 'success'){
+            if(amount_minted.data < MAX_MINT){
+                setMinting(true);
+                await mintNFT('public',tokens).then(res => {
+                    const txHash = res.data;
+        
+                    const progress = setInterval(() => {
+                        web3.eth.getTransactionReceipt(txHash).then(status => {
+                            if(!status){
+                                //console.log({status})
+                            }else if(status.status){
+                                // const tokenIds = status.logs.reduce((tokensMinted,log) => {
+                                //     tokensMinted.push(web3.utils.hexToNumber(log.topics[3]));
+                                //     return tokensMinted;
+                                // },[]);
+                                setTxn(status.transactionHash);
+                                setMinting(false);
+                                setModalOpen(true);
+                                clearInterval(progress);
+                            }
+                        }).catch(error => {
+                            console.error(error);
+                            clearInterval(progress);
+                            setMinting(false);
+                        })
+                    },1000)
                 }).catch(error => {
                     console.error(error);
-                    clearInterval(progress);
+                    onAlert(
+                        'error',
+                        error.msg.message,
+                        true
+                    )
                     setMinting(false);
                 })
-            },1000)
-        }).catch(error => {
-            console.error(error);
-            onAlert(
-                'error',
-                error.msg.message,
-                true
-            )
-            setMinting(false);
-        })        
+            }else{
+                onAlert("warning",`You cannot mint more than ${MAX_MINT} sapiens!`, true);
+            }
+        }else{
+            onAlert("error", amount_minted.msg, true);
+        }                
     }
 
     const mintMinus = () => {
@@ -132,8 +163,19 @@ const Hero = ({onAlert}) => {
         }
     }
 
+    const onRefresh = () => {
+        window.location.reload();
+    }
+
+    const onModalClose = () => {
+        setModalOpen(false);
+    }
+
     return (
         <div className="hero-container">
+            {txn ? <CustomModal id="mint-success" visible={modalOpen} onClose={onModalClose}>
+                <h1>Hi im a modal</h1>
+            </CustomModal> : null}
             <div className='hero-inner'>
                 <FadeInContainer>
                     {/* <div className="hero-img" id="hero-img">
@@ -146,7 +188,7 @@ const Hero = ({onAlert}) => {
                 <div className='countdown-container' id="countdown-container">
                     <FadeInContainer>
                     <div id="countdown-timer" className="timer-container">
-                        <div style={{color: "white", display: 'flex', justifyContent: 'space-evenly'}} className="timer-1">                
+                        <div style={{color: timer.color ? timer.color : 'white', display: 'flex', justifyContent: 'space-evenly'}} className="timer-1">                
                             <div>
                                 <h3>{active ? timer.days : 'TBA'}</h3>
                                 <label>Days</label>
@@ -173,7 +215,7 @@ const Hero = ({onAlert}) => {
                         <IconButton onClick={mintAdd}><AddIcon style={{color: 'white'}} /></IconButton>
                     </div>
                     <div style={{marginTop: 32}}>
-                        <Button className={`custom-button primary medium ${!saleActive ? 'disabled' : ''}`} disabled={!saleActive ? true : false} variant="contained" color="primary" onClick={onMint}>{minting ? 'Minting...' : 'Mint'}</Button>
+                        <Button className={`custom-button primary medium ${!saleActive && !refreshTimer ? 'disabled' : ''}`} disabled={!saleActive && !refreshTimer ? true : false} variant="contained" color="primary" onClick={saleActive && !refreshTimer ? onMint : onRefresh}>{minting ? 'Minting...' : !saleActive && refreshTimer ? 'Refresh' : 'Mint'}</Button>
                     </div>
                     </FadeInContainer>
                     
@@ -217,7 +259,7 @@ const Hero = ({onAlert}) => {
                       </div>
                     </div>
                     <div>
-                      <Button className="custom-button primary small" variant="contained" color="primary" onClick={() => document.getElementById('discord-link').click()}>Join the List</Button>
+                      <Button className={`custom-button primary small`} variant="contained" color="primary" onClick={() => document.getElementById('discord-link').click()}>Join the List</Button>
                       <a id="discord-link" target="_blank" href="https://discord.com/channels/909901600775086141/909901601521684512"></a>
                     </div>
                   </FadeInContainer>                

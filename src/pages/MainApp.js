@@ -1,11 +1,11 @@
 import React from 'react';
 import NavBar from '../components/NavBar';
 
-const MainApp = (props) => {
+const MainApp = ({wallet,onAlert,onConnectWallet,children}) => {
     return (
         <div>
-            <NavBar onAlert={props.onAlert} />
-            {props.children}
+            <NavBar wallet={wallet} onAlert={onAlert} onConnectWallet={onConnectWallet} />
+            {children}
         </div>
     )
 }

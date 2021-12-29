@@ -1,6 +1,5 @@
 import React, {useEffect,useState} from 'react';
-import { FormatDropDate, FormatDropTimer, mintNFT, DateDifference } from './../utilities/util';
-import Button from '@mui/material/Button';
+import { FormatDropDate, FormatDropTimer, DateDifference } from './../utilities/util';
 import FadeInContainer from './FadeInContainer';
 const LAUNCH_DATE = '11/20/2021';
 const CountDown = ({launch_date = '', onAlert}) => {

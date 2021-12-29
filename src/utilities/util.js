@@ -2,7 +2,6 @@ import { ethers } from "ethers";
 
 require('dotenv').config();
 const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
-const PUBLIC_KEY = process.env.REACT_APP_PUBLIC_KEY;
 const PRIVATE_KEY = process.env.REACT_APP_PRIVATE_KEY;
 const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
@@ -26,14 +25,18 @@ export const FormatDropTimer = (date = new Date(), end_date = new Date()) => {
         const minuteDiff = Math.floor((end_date.getTime() - date.getTime()) / (1000 * 60)) % 60;
         const secondDiff = Math.floor((end_date.getTime() - date.getTime()) / 1000) % 60;
         return {days: dateDiff > 0 ? dateDiff : '00', hours: hourDiff > 0 ? hourDiff.toString().padStart(2,'0') : '00', 
-        minutes: minuteDiff > 0 ? minuteDiff.toString().padStart(2,'0') : '00', seconds: secondDiff > 0 ? secondDiff.toString().padStart(2,'0') : '00'}
+        minutes: minuteDiff > 0 ? minuteDiff.toString().padStart(2,'0') : '00', 
+        seconds: secondDiff > 0 ? secondDiff.toString().padStart(2,'0') : '00', color: dateDiff <= 0 && hourDiff <= 0 && minuteDiff <= 10 ? '#28d5cc' : null,
+        active: dateDiff <= 0 && hourDiff <= 0 && minuteDiff <= 0 && secondDiff <= 0 ? true : false}
     } catch (error) {
         console.error(error);
         return {
             days: 0,
             hours: 0,
             minutes: 0,
-            seconds: 0
+            seconds: 0,
+            color: null,
+            active: false
         };
     }
 }
@@ -116,7 +119,7 @@ export const ConnectWallet = async () => {
                 const address = await signer.getAddress();
                 const balance = await provider.getBalance(address);
                 const eth = ethers.utils.formatEther(balance);
-
+                
                 resolve({
                     status: 'success',
                     msg: 'Wallet connected',
@@ -164,9 +167,26 @@ export const connectWalletSync = async () => {
     }
 }
 
-export const tokensMinted = async () => {
-    const minted = await fomoContract.methods.getTokensMinted().call();
-    return minted;
+export const getTokensMinted = async (_address) => {
+    return new Promise(async(resolve,reject) => {
+        try{
+            const minted = await fomoContract.methods.getMinted(_address).call({
+                from: process.env.REACT_APP_F1_ADDRESS
+            });
+
+            resolve({
+                status: 'success',
+                msg: 'success',
+                data: minted
+            })
+        }catch(error) {
+            reject({
+                status: 'error',
+                msg: error
+            })
+        }
+        
+    })    
 }
 
 export const setSaleState = (active,sale_type) => {
@@ -200,7 +220,7 @@ export const setSaleState = (active,sale_type) => {
 export const getPresaleState = () => {
     return new Promise(async(resolve,reject) => {
         try{
-            const active = await fomoContract.methods.getPresale().call();
+            const active = await fomoContract.methods.presale_active().call();
             resolve({
                 status: true,
                 active: active
@@ -218,7 +238,7 @@ export const getPresaleState = () => {
 export const getPublicState = () => {
     return new Promise(async(resolve,reject) => {
         try{
-            const active = await fomoContract.methods.getPublicSale().call();
+            const active = await fomoContract.methods.active().call();
             resolve({
                 status: true,
                 active: active
@@ -284,7 +304,7 @@ export const mintNFT = async (sale_type, num_tokens) => {
                         const tx = {
                             from: address,
                             to: process.env.REACT_APP_CONTRACT_ADDRESS,
-                            value: web3.utils.toHex(web3.utils.toWei(String(SAPIEN_PRICE * num_tokens),'ether')),
+                            value: web3.utils.toHex(web3.utils.toWei(String((SAPIEN_PRICE * num_tokens).toFixed(1)),'ether')),
                             data: fomoContract.methods.mint(num_tokens).encodeABI(),
                         }
 

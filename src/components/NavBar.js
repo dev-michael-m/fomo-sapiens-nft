@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react';
+import React,{useState} from 'react';
 import Logo from '../assets/fomo-sapiens-logo.png';
 import '../stylesheet/NavBar.css';
 import IconButton from '@mui/material/IconButton';
@@ -9,54 +9,12 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import CloseIcon from '@mui/icons-material/Close';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import $ from 'jquery';
-import { ConnectWallet } from '../utilities/util';
-import { MaskAddress } from './../utilities/util';
 
 
-const NavBar = ({onAlert}) => {
+const NavBar = ({wallet,onAlert,onConnectWallet}) => {
 
     const [menu,setMenu] = useState(false);
-    const [active,setActive] = useState(false);
-    const [wallet,setWallet] = useState({
-        address: null,
-        provider: null,
-        snippet: null
-    })
     const [walletActive,setWalletActive] = useState(true);
-
-    useEffect(() => {
-        let mounted = true;
-
-        async function handleAccountsChanged(accounts){
-            console.log({accounts});
-            if(accounts.length === 0){
-                console.warn('user has not connected to metamask')
-            }else{
-                setWallet(prevState => ({
-                    ...prevState,
-                    address: accounts[0],
-                    snippet: MaskAddress(accounts[0])
-                }))
-            }
-        }
-
-        if(mounted){
-            if(window.ethereum.request({method: 'eth_requestAccounts'})){
-                handleConnectWallet('suppressed');
-            }else{
-                console.warn(`User has not connected their wallet to this DApp.`)
-            }
-
-
-            window.ethereum.on('accountsChanged', handleAccountsChanged);
-        }
-
-        return () => {
-            mounted = false;
-            window.ethereum.off('accountsChanged', handleAccountsChanged);
-        }
-        
-    },[])
 
     const handleDrawer = () => {
         setMenu(prevState => !prevState);
@@ -89,33 +47,6 @@ const NavBar = ({onAlert}) => {
         
     }
 
-    const handleConnectWallet = (suppress) => {
-        ConnectWallet().then(status => {
-            setWallet({
-                address: status.address,
-                snippet: status.address_snippet
-            });
-
-            if(!suppress){
-                onAlert(
-                    status.status,
-                    status.msg,
-                    true
-                )
-            }            
-        })
-        .catch(error => {
-            console.error(error);
-            if(!suppress){
-                onAlert(
-                    error.status,
-                    error.msg,
-                    true
-                )
-            }            
-        })
-      }
-
     return (
         <div id="nav-container" className="nav-container">
             <div id="inner-nav" className="inner-nav">
@@ -123,10 +54,10 @@ const NavBar = ({onAlert}) => {
                     {/* <h3 className="nav-header">FOMO SAPIENS</h3> */}
                     <img className='nav-logo' src={Logo} ></img>
                 </div>
-                <div style={{display: 'flex', marginRight: 10}}>
+                <div style={{display: 'flex'}}>
                     <div className="socials">
                         {walletActive && !wallet.address ? <div id="connect-wallet" style={{width: 122, marginRight: 10}}>
-                            <Button className="custom-button small-social social-button" style={{fontSize: 10}} onClick={handleConnectWallet}> Connect Wallet</Button>
+                            <Button className="custom-button small-social social-button" style={{fontSize: 10}} onClick={onConnectWallet}> Connect Wallet</Button>
                         </div> : walletActive && wallet.address ?
                         <div style={{width: 122,display: 'flex',alignItems: 'center', justifyContent: 'center', marginRight: 10}}>
                             <VerifiedIcon style={{color: '#ffffff', fontSize: 18, paddingRight: 6}} />
