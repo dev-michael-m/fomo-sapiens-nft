@@ -244,6 +244,27 @@
   .section-large {
     margin-bottom: 10%;
   }
+
+  .utility-section {
+    display: flex;
+    align-items: center;
+    margin: 148px 0px;
+  }
+
+  .utility-section-inverted {
+    display: flex;
+    align-items: center;
+    margin: 148px 0px;
+    flex-direction: row-reverse;
+  }
+
+  .utility-left {
+    width: 60%;
+  }
+
+  .utility-right {
+    width: 40%;
+  }
 }
 
 @media screen and (min-width: 1024px) and (max-width: 1440px) {

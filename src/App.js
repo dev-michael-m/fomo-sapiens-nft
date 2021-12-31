@@ -51,26 +51,26 @@ function App() {
       }
 
       if (mounted) {
-        const agent = window.navigator.userAgentData;
+        // const agent = window.navigator.userAgentData;
 
-        if (agent.platform != "IOS" && agent.mobile != false) {
-          window.ethereum
-            .request({ method: "eth_accounts" })
-            .then((accounts) => {
-              if (accounts.length) {
-                setWallet((prevState) => ({
-                  ...prevState,
-                  address: accounts[0],
-                  snippet: MaskAddress(accounts[0]),
-                }));
-              }
-            })
-            .catch((error) => {
-              console.warn(error);
-            });
+        // if (agent.platform != "IOS" && agent.mobile != false) {
+        //   window.ethereum
+        //     .request({ method: "eth_accounts" })
+        //     .then((accounts) => {
+        //       if (accounts.length) {
+        //         setWallet((prevState) => ({
+        //           ...prevState,
+        //           address: accounts[0],
+        //           snippet: MaskAddress(accounts[0]),
+        //         }));
+        //       }
+        //     })
+        //     .catch((error) => {
+        //       console.warn(error);
+        //     });
 
-          window.ethereum.on("accountsChanged", handleAccountsChanged);
-        }
+        //   window.ethereum.on("accountsChanged", handleAccountsChanged);
+        // }
       }else{
         console.warn('Web3 is not enabled on this platform.')
       }
