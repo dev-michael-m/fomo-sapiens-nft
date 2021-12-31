@@ -24,25 +24,27 @@ const IMGS = [
 ]
 
 const Carousel = () => {
-    const [active,setActive] = useState(0);
     const [activeStep,setActiveStep] = useState(0);
     const [slides,setSlides] = useState(3);
+    const [seed,setSeed] = useState(0);
 
     useEffect(() => {
-        const width = window.innerWidth;
-        if(width >= 1440){
-            setSlides(4);
+        let mounted = true;
+
+        if(mounted){
+            const width = window.innerWidth;
+            if(width >= 1440){
+                setSlides(4);
+            }
+
+            const rand_seed = Math.ceil(Math.random() * IMGS.length - 1);
+            setSeed(rand_seed);
         }
+
+        return () => {
+            mounted = false;
+        }        
     },[])
-
-    const handleClickTab = (event) => {
-        const id = event.target.id;
-        setActive(parseInt(id));
-    }
-
-    const onIndexChange = (index) => {
-        setActiveStep(index);
-    }
 
     const handleSlideChange = (event) => {
         setActiveStep(event.activeIndex);
@@ -52,7 +54,7 @@ const Carousel = () => {
         <div className='carousel-container'>
             <FadeInContainer animation="fade-in">
             <div className='carousel-header-img'>
-                <img className='carousel-head-img' style={{boxShadow: '0px 2px 10px black'}} src={Sapien18}></img>
+                <img className='carousel-head-img' style={{boxShadow: '0px 2px 10px black'}} src={IMGS[seed]}></img>
             </div>
             </FadeInContainer>
             <FadeInContainer>
@@ -68,7 +70,7 @@ const Carousel = () => {
                         disableOnInteraction: false
                     }}
                 >
-                    {IMGS.map((image,index) => (<SwiperSlide key={index}><img className='carousel-sub-img' src={image} width="106px"></img></SwiperSlide>))}
+                    {IMGS.map((image,index) => (<SwiperSlide key={index}><img style={(activeStep + 4) % IMGS.length == index ? {boxShadow: '0px 0px 16px black'} : null} className='carousel-sub-img' src={image} width="106px"></img></SwiperSlide>))}
                 </Swiper>
                 <MobileStepper
                     className="mobile-stepper"

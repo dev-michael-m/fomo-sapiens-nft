@@ -1,11 +1,8 @@
 import './App.css';
 import Hero from './components/Hero';
 import Footer from './pages/Footer';
-import Button from '@mui/material/Button';
 import MainApp from './pages/MainApp';
-import CountDown from './components/CountDown';
-import ApiIcon from '@mui/icons-material/Api';
-import { ConnectWallet, connectWalletSync, DateDifference, MaskAddress } from './utilities/util';
+import { ConnectWallet, MaskAddress } from './utilities/util';
 import RoadMap from './components/RoadMap';
 import FadeInContainer from './components/FadeInContainer';
 import { useEffect, useState } from 'react';
@@ -14,15 +11,13 @@ import AlertBar from './components/AlertBar';
 import FAQs from './components/FAQs';
 import Promo from './components/Promo';
 import Carousel from './components/Carousel';
-import Sapien20 from './assets/20.png';
-import AutoRenewIcon from '@mui/icons-material/Autorenew';
-import CoinsImg from './assets/money-stack.png';
-import PaidIcon from '@mui/icons-material/Paid';
 import GroupSapiens from './assets/group-nft.png';
 import SapienCoin from './assets/crypto-coin-web.png';
 import MultiCoins from './assets/crypto-coins-web.png';
-import MetamaskIcon from './assets/metamask-icon.png';
-import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import CustomModal from './components/Modal';
+import CoinbaseLogo from './assets/coinbase-wallet-icon.png';
+import MetaMaskLogo from './assets/metamask-icon.jpg';
+import WalletConnectLogo from './assets/wallet-connect-logo.png';
 
 function App() {
   
@@ -37,6 +32,8 @@ function App() {
     provider: null,
     snippet: null,
   });
+
+  const [modalOpen,setModalOpen] = useState(false);
 
     useEffect(() => {
       let mounted = true;
@@ -54,23 +51,30 @@ function App() {
       }
 
       if (mounted) {
-        window.ethereum
-          .request({ method: "eth_accounts" })
-          .then((accounts) => {
-            if (accounts.length) {
-              setWallet((prevState) => ({
-                ...prevState,
-                address: accounts[0],
-                snippet: MaskAddress(accounts[0]),
-              }));
-            }
-          })
-          .catch((error) => {
-            console.warn(error);
-          });
+        const agent = window.navigator.userAgentData;
 
-        window.ethereum.on("accountsChanged", handleAccountsChanged);
+        if (agent.platform != "IOS" && agent.mobile != false) {
+          window.ethereum
+            .request({ method: "eth_accounts" })
+            .then((accounts) => {
+              if (accounts.length) {
+                setWallet((prevState) => ({
+                  ...prevState,
+                  address: accounts[0],
+                  snippet: MaskAddress(accounts[0]),
+                }));
+              }
+            })
+            .catch((error) => {
+              console.warn(error);
+            });
+
+          window.ethereum.on("accountsChanged", handleAccountsChanged);
+        }
+      }else{
+        console.warn('Web3 is not enabled on this platform.')
       }
+        
 
       return () => {
         mounted = false;
@@ -78,24 +82,27 @@ function App() {
     }, []);
 
   const onConnectWallet = (suppress) => {
+    setModalOpen(true);
+  };
+
+  const onWalletClick = (event) => {
+    const selected = event.target.id;
     ConnectWallet()
       .then((status) => {
         setWallet({
           address: status.address,
           snippet: status.address_snippet,
         });
-
-        if (!suppress) {
-          onAlert(status.status, status.msg, true);
-        }
+        setModalOpen(false);
       })
       .catch((error) => {
         console.error(error);
-        if (!suppress) {
-          onAlert(error.status, error.msg, true);
-        }
       });
-  };
+  }
+
+  const onModalClose = () => {
+    setModalOpen(false);
+  }
 
   const onAlert = (severity, msg, visible) => {
     setAlert({
@@ -116,7 +123,18 @@ function App() {
     <div className="App">
         <MainApp wallet={wallet} onConnectWallet={onConnectWallet} onAlert={onAlert}>
           {alert.visible ? <AlertBar severity={alert.severity} visible={alert.visible} msg={alert.msg} onClose={onCloseAlert} /> : null}
-          
+          <CustomModal id="wallet-connect" visible={modalOpen} width='70%' onClose={onModalClose}>
+            <h3>Connect Wallet</h3>
+            <div id="metamask" onClick={onWalletClick}>
+                <img id="metamask" src={MetaMaskLogo} width="160px"></img>
+            </div>
+            <div id="coinbase" onClick={onWalletClick}>
+                <img id="coinbase" src={CoinbaseLogo} width="160px"></img>
+            </div>
+            <div style={{margin: 40}} id="walletconnect" onClick={onWalletClick}>
+                <img id="walletconnect" src={WalletConnectLogo} width="160px"></img>
+            </div>
+          </CustomModal>
           <div className="main-container parallax-container">
             <div className="inner-main">
               <Hero wallet={wallet} onAlert={onAlert} />

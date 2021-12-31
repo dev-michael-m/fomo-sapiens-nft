@@ -10,6 +10,7 @@ import OpenSeaIcon from '../assets/openseateal.png';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import CheckIcon from '@mui/icons-material/CheckCircleOutline';
 import TextField from '@mui/material/TextField';
 import { FormatDropTimer, getPresaleState, getPublicState, mintNFT, getTokensMinted } from './../utilities/util';
 import Promo from './Promo';
@@ -93,49 +94,52 @@ const Hero = ({wallet,onAlert}) => {
     }
 
     const onMint = async () => {
-        const amount_minted = await getTokensMinted(wallet.address);
-
-        if(amount_minted.status === 'success'){
-            if(amount_minted.data < MAX_MINT){
-                setMinting(true);
-                await mintNFT('public',tokens).then(res => {
-                    const txHash = res.data;
-        
-                    const progress = setInterval(() => {
-                        web3.eth.getTransactionReceipt(txHash).then(status => {
-                            if(!status){
-                                //console.log({status})
-                            }else if(status.status){
-                                // const tokenIds = status.logs.reduce((tokensMinted,log) => {
-                                //     tokensMinted.push(web3.utils.hexToNumber(log.topics[3]));
-                                //     return tokensMinted;
-                                // },[]);
-                                setTxn(status.transactionHash);
-                                setMinting(false);
-                                setModalOpen(true);
+        if(wallet.address){
+            const amount_minted = await getTokensMinted(wallet.address);
+            if(amount_minted.status === 'success'){
+                if(amount_minted.data < MAX_MINT){
+                    setMinting(true);
+                    await mintNFT('public',tokens).then(res => {
+                        const txHash = res.data;
+            
+                        const progress = setInterval(() => {
+                            web3.eth.getTransactionReceipt(txHash).then(status => {
+                                if(!status){
+                                    //console.log({status})
+                                }else if(status.status){
+                                    // const tokenIds = status.logs.reduce((tokensMinted,log) => {
+                                    //     tokensMinted.push(web3.utils.hexToNumber(log.topics[3]));
+                                    //     return tokensMinted;
+                                    // },[]);
+                                    setTxn(status.transactionHash);
+                                    setMinting(false);
+                                    setModalOpen(true);
+                                    clearInterval(progress);
+                                }
+                            }).catch(error => {
+                                console.error(error);
                                 clearInterval(progress);
-                            }
-                        }).catch(error => {
-                            console.error(error);
-                            clearInterval(progress);
-                            setMinting(false);
-                        })
-                    },1000)
-                }).catch(error => {
-                    console.error(error);
-                    onAlert(
-                        'error',
-                        error.msg.message,
-                        true
-                    )
-                    setMinting(false);
-                })
+                                setMinting(false);
+                            })
+                        },1000)
+                    }).catch(error => {
+                        console.error(error);
+                        onAlert(
+                            'error',
+                            error.msg.message,
+                            true
+                        )
+                        setMinting(false);
+                    })
+                }else{
+                    onAlert("warning",`You cannot mint more than ${MAX_MINT} sapiens!`, true);
+                }
             }else{
-                onAlert("warning",`You cannot mint more than ${MAX_MINT} sapiens!`, true);
-            }
+                onAlert("error", amount_minted.msg, true);
+            }       
         }else{
-            onAlert("error", amount_minted.msg, true);
-        }                
+            onAlert("warning", 'You must first connect your wallet before trying to mint.', true);
+        }     
     }
 
     const mintMinus = () => {
@@ -174,7 +178,10 @@ const Hero = ({wallet,onAlert}) => {
     return (
         <div className="hero-container">
             {txn ? <CustomModal id="mint-success" visible={modalOpen} onClose={onModalClose}>
-                <h1>Hi im a modal</h1>
+                <h1>Mint Successful!</h1>
+                <CheckIcon className='check-success' />
+                <p>You can find more details about your transaction by clicking <a href={`https://ropsten.etherscan.io/tx/${txn}`} target="_blank">here</a></p>
+                
             </CustomModal> : null}
             <div className='hero-inner'>
                 <FadeInContainer>
@@ -182,7 +189,7 @@ const Hero = ({wallet,onAlert}) => {
                         <img src={HeroImg} width="100%"></img>
                     </div> */}
                     <div style={{paddingTop: 100}}>
-                        <Promo styling="full" animated glow seed={imgSeed} />
+                        <Promo styling="full" animated="multi-direction" glow seed={imgSeed} />
                     </div>
                 </FadeInContainer>
                 <div className='countdown-container' id="countdown-container">

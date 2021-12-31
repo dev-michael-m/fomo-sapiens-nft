@@ -1,0 +1,25 @@
+.modal-body {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 4px;
+}
+
+.modal-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.check-success {
+    font-size: 80px !important;
+    color: #d2bb90;
+    padding: 26px;
+}
+
+.modal-inner p {
+    padding: 20px;
+}

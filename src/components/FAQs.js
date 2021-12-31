@@ -5,6 +5,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import FadeInContainer from './FadeInContainer';
+import '../stylesheet/FAQs.css';
 
 
 const FAQs = () => {
@@ -21,7 +22,7 @@ const FAQs = () => {
             </FadeInContainer>
             <div style={{marginTop: 60}}>
             <FadeInContainer animation="fade-in">
-            <Accordion style={{margin: 10, background: 'wheat', color: 'black',fontWeight: 600}} id="f0" expanded={expanded === 'f0'} onChange={onAccordionChange('f0')}>
+            <Accordion className={`accordian-container ${expanded === 'f0' ? 'accordian-selected' : ''}`} id="f0" expanded={expanded === 'f0'} onChange={onAccordionChange('f0')}>
                 <AccordionSummary expandIcon={expanded === 'f0' ? <CloseIcon style={{color: 'black'}} /> : <AddIcon style={{color: 'black'}} />}>
                     <p>What is FOMO SAPIENS?</p>
                 </AccordionSummary>
@@ -31,7 +32,7 @@ const FAQs = () => {
             </Accordion>
             </FadeInContainer>
             <FadeInContainer animation="fade-in">
-            <Accordion style={{margin: 10, background: 'wheat', color: 'black',fontWeight: 600}} id="f1" expanded={expanded === 'f1'} onChange={onAccordionChange('f1')}>
+            <Accordion className={`accordian-container ${expanded === 'f1' ? 'accordian-selected' : ''}`} id="f1" expanded={expanded === 'f1'} onChange={onAccordionChange('f1')}>
                 <AccordionSummary expandIcon={expanded === 'f1' ? <CloseIcon style={{color: 'black'}} /> : <AddIcon style={{color: 'black'}} />}>
                     <p>What chain is this project on?</p>
                 </AccordionSummary>
@@ -41,17 +42,17 @@ const FAQs = () => {
             </Accordion>
             </FadeInContainer>
             <FadeInContainer animation="fade-in">
-            <Accordion style={{margin: 10, background: 'wheat', color: 'black',fontWeight: 600}} id="f2" expanded={expanded === 'f2'} onChange={onAccordionChange('f2')}>
+            <Accordion className={`accordian-container ${expanded === 'f2' ? 'accordian-selected' : ''}`} id="f2" expanded={expanded === 'f2'} onChange={onAccordionChange('f2')}>
                 <AccordionSummary expandIcon={expanded === 'f2' ? <CloseIcon style={{color: 'black'}} /> : <AddIcon style={{color: 'black'}} />}>
                     <p>What is the cost to mint?</p>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <p style={{fontWeight: 'normal'}}>Due to the limited nature of this collection, each sapien will cost <b>0.1 ETH</b> to mint. This will help build a solid foundation for expanding our team and building endless value for our holders.</p>
+                    <p style={{fontWeight: 'normal'}}>Due to the limited nature of this collection, each sapien will cost <b>0.1 ETH + gas fees</b> to mint. This will help build a solid foundation for expanding our team and building endless value for our holders.</p>
                 </AccordionDetails>
             </Accordion>
             </FadeInContainer>
             <FadeInContainer animation="fade-in">
-            <Accordion style={{margin: 10, background: 'wheat', color: 'black',fontWeight: 600}} id="f3" expanded={expanded === 'f3'} onChange={onAccordionChange('f3')}>
+            <Accordion className={`accordian-container ${expanded === 'f3' ? 'accordian-selected' : ''}`} id="f3" expanded={expanded === 'f3'} onChange={onAccordionChange('f3')}>
                 <AccordionSummary expandIcon={expanded === 'f3' ? <CloseIcon style={{color: 'black'}} /> : <AddIcon style={{color: 'black'}} />}>
                     <p>How many sapiens will be available?</p>
                 </AccordionSummary>
@@ -61,7 +62,7 @@ const FAQs = () => {
             </Accordion>
             </FadeInContainer>
             <FadeInContainer animation="fade-in">
-            <Accordion style={{margin: 10, background: 'wheat', color: 'black',fontWeight: 600}} id="f4" expanded={expanded === 'f4'} onChange={onAccordionChange('f4')}>
+            <Accordion className={`accordian-container ${expanded === 'f4' ? 'accordian-selected' : ''}`} id="f4" expanded={expanded === 'f4'} onChange={onAccordionChange('f4')}>
                 <AccordionSummary expandIcon={expanded === 'f4' ? <CloseIcon style={{color: 'black'}} /> : <AddIcon style={{color: 'black'}} />}>
                     <p>Will my sapien have rarities and traits?</p>
                 </AccordionSummary>
@@ -71,7 +72,7 @@ const FAQs = () => {
             </Accordion>
             </FadeInContainer>
             <FadeInContainer animation="fade-in">
-            <Accordion style={{margin: 10, background: 'wheat', color: 'black',fontWeight: 600}} id="f5" expanded={expanded === 'f5'} onChange={onAccordionChange('f5')}>
+            <Accordion className={`accordian-container ${expanded === 'f5' ? 'accordian-selected' : ''}`} id="f5" expanded={expanded === 'f5'} onChange={onAccordionChange('f5')}>
                 <AccordionSummary expandIcon={expanded === 'f5' ? <CloseIcon style={{color: 'black'}} /> : <AddIcon style={{color: 'black'}} />}>
                     <p>Will I be able to stake my sapien?</p>
                 </AccordionSummary>
@@ -81,7 +82,7 @@ const FAQs = () => {
             </Accordion>
             </FadeInContainer>
             <FadeInContainer animation="fade-in">
-            <Accordion style={{margin: 10, background: 'wheat', color: 'black',fontWeight: 600}} id="f6" expanded={expanded === 'f6'} onChange={onAccordionChange('f6')}>
+            <Accordion className={`accordian-container ${expanded === 'f6' ? 'accordian-selected' : ''}`} id="f6" expanded={expanded === 'f6'} onChange={onAccordionChange('f6')}>
                 <AccordionSummary expandIcon={expanded === 'f6' ? <CloseIcon style={{color: 'black'}} /> : <AddIcon style={{color: 'black'}} />}>
                     <p>What is the commission on OpenSea?</p>
                 </AccordionSummary>

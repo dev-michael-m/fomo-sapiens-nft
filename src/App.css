@@ -37,6 +37,32 @@
   will-change: opacity, visibility;
 }
 
+.fade-in-left {
+  opacity: 0;
+  transform: translateX(-10vh);
+  visibility: hidden;
+  transition: opacity 1s ease-out, transform 0.5s ease-out;
+  will-change: opacity, visibility;
+}
+
+.fade-in-right {
+  opacity: 0;
+  transform: translateX(10vh);
+  visibility: hidden;
+  transition: opacity 1s ease-out, transform 0.5s ease-out;
+  transition-delay: 0.5s;
+  will-change: opacity, visibility;
+}
+
+.fade-in-bottom {
+  opacity: 0;
+  transform: translateY(10vh);
+  visibility: hidden;
+  transition: opacity 1s ease-out, transform 0.5s ease-out;
+  transition-delay: 1s;
+  will-change: opacity, visibility;
+}
+
 .fade-in-section-x {
   opacity: 0;
   transform: translateX(-10vh);
@@ -45,7 +71,7 @@
   will-change: opacity, visibility;
 }
 
-.fade-in-section.is-visible, .fade-in-section-x.is-visible, .ease-in-section.is-visible {
+.fade-in-section.is-visible, .fade-in-section-x.is-visible, .fade-in-bottom.is-visible, .fade-in-left.is-visible, .fade-in-right.is-visible, .ease-in-section.is-visible {
   opacity: 1;
   transform: none;
   visibility: visible;
@@ -93,14 +119,6 @@
   background-image: linear-gradient(to bottom right, wheat, rgb(255,255,255) 95%);
   color: rgb(0,0,0);
   padding: 26px;
-}
-
-.inner-main {
-
-}
-
-.body-container {
-  
 }
 
 .parallax-group {
@@ -160,8 +178,8 @@
   margin: 80px 0px;
 }
 
-.faq-container {
-
+.flex-grow {
+  flex: 1 1 33%;
 }
 
 .float {
@@ -214,10 +232,24 @@
   }
 }
 
+@media screen and (min-width: 1440px) {
+  .primary-section {
+    padding: 160px;
+  }
+
+  .faq-container {
+    padding: 100px;
+  }
+
+  .section-large {
+    margin-bottom: 10%;
+  }
+}
+
 @media screen and (min-width: 1024px) and (max-width: 1440px) {
 
   .section-large {
-    margin-bottom: 28%;
+    margin-bottom: 10%;
   }
 
   .primary-section {
@@ -286,7 +318,7 @@
   }
 }
 
-@media screen and (min-width: 925px) {
+@media screen and (min-width: 925px) and (max-width: 1024px) {
   .primary-section {
     padding: 100px;
   }
@@ -314,5 +346,17 @@
 
   .utility-right {
     width: 40%;
+  }
+}
+
+@media screen and (min-width: 615px) and (max-width: 925px) {
+  .flex-grow {
+    flex: 1 1 50%;
+  }
+}
+
+@media screen and (max-width: 615px) {
+  .flex-grow {
+    flex: 1 1 100%;
   }
 }

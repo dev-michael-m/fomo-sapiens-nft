@@ -57,7 +57,7 @@ const NavBar = ({wallet,onAlert,onConnectWallet}) => {
                 <div style={{display: 'flex'}}>
                     <div className="socials">
                         {walletActive && !wallet.address ? <div id="connect-wallet" style={{width: 122, marginRight: 10}}>
-                            <Button className="custom-button small-social social-button" style={{fontSize: 10}} onClick={onConnectWallet}> Connect Wallet</Button>
+                            <Button className="custom-button small-social connect-button" style={{fontSize: 10}} onClick={onConnectWallet}> Connect Wallet</Button>
                         </div> : walletActive && wallet.address ?
                         <div style={{width: 122,display: 'flex',alignItems: 'center', justifyContent: 'center', marginRight: 10}}>
                             <VerifiedIcon style={{color: '#ffffff', fontSize: 18, paddingRight: 6}} />

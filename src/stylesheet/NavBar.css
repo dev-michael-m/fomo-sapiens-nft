@@ -66,11 +66,11 @@
 }
 
 .social-button{
-    background-color: rgba(255,255,255,0.20) !important;
+    background-color: rgba(245,222,179,0.75) !important;
 }
 
-.down-arrow-button {
-    /* background-color: #f5deb3d9 !important; */
+.connect-button {
+    background-color: rgba(32,178,170,0.75) !important;
 }
 
 .right-nav-container {

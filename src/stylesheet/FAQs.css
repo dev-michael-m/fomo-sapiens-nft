@@ -1,0 +1,10 @@
+.accordian-container {
+    margin: 10px !important;
+    background: linear-gradient(to bottom, wheat 50%, tan) !important;
+    color: black;
+    font-weight: 600;
+}
+
+.accordian-selected {
+    box-shadow: 0px 0px 10px black !important;
+}
