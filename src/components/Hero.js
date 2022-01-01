@@ -12,24 +12,25 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import CheckIcon from '@mui/icons-material/CheckCircleOutline';
 import TextField from '@mui/material/TextField';
-import { FormatDropTimer, getPresaleState, getPublicState, mintNFT, getTokensMinted } from './../utilities/util';
+import { FormatDropTimer, getPresaleState, getPublicState, mintNFT, getTokensMinted, getSoldOut, getMaxMint } from './../utilities/util';
 import Promo from './Promo';
 import CustomModal from './Modal';
 
 require('dotenv').config();
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
-const MAX_MINT = process.env.REACT_APP_MAX_MINT;
 const web3 = createAlchemyWeb3(alchemyKey);
 
-const LAUNCH_DATE = '12/26/2021 23:35:00';
+const LAUNCH_DATE = '1/26/2022 23:35:00';
 
-const Hero = ({wallet,onAlert}) => {
+const Hero = ({soldOut,wallet,onAlert}) => {
     const [active,setActive] = useState(true);
     const [tokens,setTokens] = useState(3);
     const [refreshTimer,setRefreshTimer] = useState(false);
     const [timer,setTimer] = useState(FormatDropTimer(new Date(), new Date(LAUNCH_DATE)));
     const [saleActive,setSaleActive] = useState(false);
+    const [preSale,setPreSale] = useState(false);
+    const [pubSale,setPubSale] = useState(false);
     const [minting,setMinting] = useState(false);
     const [txn,setTxn] = useState(null);
     const [modalOpen,setModalOpen] = useState(false);
@@ -51,6 +52,8 @@ const Hero = ({wallet,onAlert}) => {
                 if(presale.status && publicSale.status){
                     if(presale.active || publicSale.active){
                         setSaleActive(true);
+                        setPreSale(presale.active);
+                        setPubSale(publicSale.active);
                         setRefreshTimer(false);
                     }
                 }
@@ -63,7 +66,7 @@ const Hero = ({wallet,onAlert}) => {
                     const current_timer = FormatDropTimer(new Date(), new Date(LAUNCH_DATE));
                     setTimer(current_timer);
 
-                    if(parseInt(current_timer.seconds) == 20){
+                    if(parseInt(current_timer.days) <= 0 && parseInt(current_timer.hours) <= 0 && parseInt(current_timer.minutes) <= 0 && parseInt(current_timer.seconds) == 20){
                         onAlert(
                             'info',
                             'Minting is about to commence!',
@@ -94,52 +97,60 @@ const Hero = ({wallet,onAlert}) => {
     }
 
     const onMint = async () => {
-        if(wallet.address){
-            const amount_minted = await getTokensMinted(wallet.address);
-            if(amount_minted.status === 'success'){
-                if(amount_minted.data < MAX_MINT){
-                    setMinting(true);
-                    await mintNFT('public',tokens).then(res => {
-                        const txHash = res.data;
-            
-                        const progress = setInterval(() => {
-                            web3.eth.getTransactionReceipt(txHash).then(status => {
-                                if(!status){
-                                    //console.log({status})
-                                }else if(status.status){
-                                    // const tokenIds = status.logs.reduce((tokensMinted,log) => {
-                                    //     tokensMinted.push(web3.utils.hexToNumber(log.topics[3]));
-                                    //     return tokensMinted;
-                                    // },[]);
-                                    setTxn(status.transactionHash);
-                                    setMinting(false);
-                                    setModalOpen(true);
+        const sold_out = await getSoldOut();
+
+        if(!sold_out.data){
+            if(wallet.address){
+                const amount_minted = await getTokensMinted(wallet.address);
+                const max_mintable = await getMaxMint();
+
+                if(amount_minted.status === 'success'){
+                    if(amount_minted.data < max_mintable.data){
+                        setMinting(true);
+                        await mintNFT(preSale ? 'presale' : pubSale ? 'public' : null,tokens).then(res => {
+                            const txHash = res.data;
+                
+                            const progress = setInterval(() => {
+                                web3.eth.getTransactionReceipt(txHash).then(status => {
+                                    if(!status){
+                                        //console.log({status})
+                                    }else if(status.status){
+                                        setTxn(status.transactionHash);
+                                        setMinting(false);
+                                        setModalOpen(true);
+                                        clearInterval(progress);
+                                    }
+                                }).catch(error => {
+                                    console.error(error);
                                     clearInterval(progress);
-                                }
-                            }).catch(error => {
-                                console.error(error);
-                                clearInterval(progress);
-                                setMinting(false);
-                            })
-                        },1000)
-                    }).catch(error => {
-                        console.error(error);
-                        onAlert(
-                            'error',
-                            error.msg.message,
-                            true
-                        )
-                        setMinting(false);
-                    })
+                                    setMinting(false);
+                                })
+                            },1000)
+                        }).catch(error => {
+                            console.error(error);
+                            onAlert(
+                                'error',
+                                error.msg.message,
+                                true
+                            )
+                            setMinting(false);
+                        })
+                    }else{
+                        onAlert("warning",`You cannot mint more than ${max_mintable.data} sapiens!`, true);
+                    }
                 }else{
-                    onAlert("warning",`You cannot mint more than ${MAX_MINT} sapiens!`, true);
-                }
+                    onAlert("error", amount_minted.msg, true);
+                }       
             }else{
-                onAlert("error", amount_minted.msg, true);
-            }       
+                onAlert("warning", 'You must first connect your wallet before trying to mint.', true);
+            }   
         }else{
-            onAlert("warning", 'You must first connect your wallet before trying to mint.', true);
-        }     
+            onAlert(
+                'error',
+                'All FOMO SAPIENS have been minted!',
+                true
+            )
+        } 
     }
 
     const mintMinus = () => {
@@ -222,7 +233,7 @@ const Hero = ({wallet,onAlert}) => {
                         <IconButton onClick={mintAdd}><AddIcon style={{color: 'white'}} /></IconButton>
                     </div>
                     <div style={{marginTop: 32}}>
-                        <Button className={`custom-button primary medium ${!saleActive && !refreshTimer ? 'disabled' : ''}`} disabled={!saleActive && !refreshTimer ? true : false} variant="contained" color="primary" onClick={saleActive && !refreshTimer ? onMint : onRefresh}>{minting ? 'Minting...' : !saleActive && refreshTimer ? 'Refresh' : 'Mint'}</Button>
+                        <Button className={`custom-button primary medium ${soldOut || !saleActive && !refreshTimer ? 'disabled' : ''}`} disabled={soldOut || !saleActive && !refreshTimer ? true : false} variant="contained" color="primary" onClick={saleActive && !refreshTimer ? onMint : onRefresh}>{soldOut ? 'Sold Out' : minting ? 'Minting...' : !saleActive && refreshTimer ? 'Refresh' : 'Mint'}</Button>
                     </div>
                     </FadeInContainer>
                     

@@ -7,14 +7,12 @@ const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 const web3 = createAlchemyWeb3(alchemyKey);
 const contractABI = require('../contract-abi.json');
-const SAPIEN_PRICE = process.env.REACT_APP_MINT_PRICE;
+
 const WHITELIST = [
     "0x103EcE5B498b9c425295F58148Aa5bdAc7575708",
     "0x182B80929672984a64d3d756588C7b3c217f0182",
     "0xF0036aA4B10d8712fDaa193a6036c01E3a12880c"
 ]
-
-const MAXSUPPLY = 14;
 
 export const fomoContract = new web3.eth.Contract(contractABI, CONTRACT_ADDRESS)
 
@@ -189,6 +187,27 @@ export const getTokensMinted = async (_address) => {
     })    
 }
 
+export const getSoldOut = async () => {
+    return new Promise(async(resolve,reject) => {
+        try {
+            const minted = await fomoContract.methods._tokenIds().call();
+            const max_supply = await fomoContract.methods.MAX_SUPPLY().call();
+            const total_giveaways = await fomoContract.methods.GIVEAWAYS().call();
+
+            resolve({
+                status: 'success',
+                msg: 'success',
+                data: parseInt(minted) < (parseInt(max_supply) - parseInt(total_giveaways)) ? false : true
+            })
+        } catch (error) {
+            reject({
+                status: 'error',
+                msg: error
+            })
+        }
+    })
+}
+
 export const setSaleState = (active,sale_type) => {
     return new Promise(async(resolve,reject) => {
         try{
@@ -271,6 +290,42 @@ const checkWhitelist = (signature, address) => {
     })
 }
 
+export const getMintPrice = () => {
+    return new Promise(async(resolve,reject) => {
+        try {
+            const mint_price = await fomoContract.methods.SALE_PRICE().call();
+            resolve({
+                status: 'success',
+                data: mint_price
+            })
+        } catch (error) {
+            console.error(`util.getMintPrice: ${error}`);
+            reject({
+                status: 'error',
+                msg: error
+            })
+        }
+    })
+}
+
+export const getMaxMint = () => {
+    return new Promise(async(resolve,reject) => {
+        try {
+            const max_mint = await fomoContract.methods.MAX_MINT().call();
+            resolve({
+                status: 'success',
+                data: max_mint
+            })
+        } catch (error) {
+            console.error(`util.getMintPrice: ${error}`);
+            reject({
+                status: 'error',
+                msg: error
+            })
+        }
+    })
+}
+
 export const mintNFT = async (sale_type, num_tokens) => {
     return new Promise(async(resolve,reject) => {
         try {
@@ -278,13 +333,17 @@ export const mintNFT = async (sale_type, num_tokens) => {
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const address = await signer.getAddress();
-                
+                const price = await fomoContract.methods.SALE_PRICE().call();
+                const mint_price = parseFloat(web3.utils.fromWei(price,'ether'));
+                console.log({mint_price});
+
                 if(sale_type === 'presale'){
                     const presale_active = await getPresaleState();
+                    const max_supply = await fomoContract.methods.MAX_SUPPLY().call();
 
                     if(presale_active && WHITELIST.includes(address)){
                         // second layer of verification to whitelist
-                        const message = web3.eth.abi.encodeParameters(["address","uint256"],[address,MAXSUPPLY]);
+                        const message = web3.eth.abi.encodeParameters(["address","uint256"],[address,max_supply]);
                         const {signature} = web3.eth.accounts.sign(message,PRIVATE_KEY);
                         const whitelisted = await checkWhitelist(signature,address);
                         console.log({whitelisted});
@@ -304,7 +363,7 @@ export const mintNFT = async (sale_type, num_tokens) => {
                         const tx = {
                             from: address,
                             to: process.env.REACT_APP_CONTRACT_ADDRESS,
-                            value: web3.utils.toHex(web3.utils.toWei(String((SAPIEN_PRICE * num_tokens).toFixed(1)),'ether')),
+                            value: web3.utils.toHex(web3.utils.toWei(String((mint_price * num_tokens).toFixed(1)),'ether')),
                             data: fomoContract.methods.mint(num_tokens).encodeABI(),
                         }
 

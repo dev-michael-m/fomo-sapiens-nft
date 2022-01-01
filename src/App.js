@@ -2,7 +2,7 @@ import './App.css';
 import Hero from './components/Hero';
 import Footer from './pages/Footer';
 import MainApp from './pages/MainApp';
-import { ConnectWallet, MaskAddress } from './utilities/util';
+import { ConnectWallet, getMintPrice, getSoldOut, MaskAddress } from './utilities/util';
 import RoadMap from './components/RoadMap';
 import FadeInContainer from './components/FadeInContainer';
 import { useEffect, useState } from 'react';
@@ -34,45 +34,20 @@ function App() {
   });
 
   const [modalOpen,setModalOpen] = useState(false);
+  const [soldOut,setSoldOut] = useState(false);
 
     useEffect(() => {
       let mounted = true;
 
-      async function handleAccountsChanged(accounts) {
-        if (accounts.length === 0) {
-          console.warn("user has not connected to metamask");
-        } else {
-          setWallet((prevState) => ({
-            ...prevState,
-            address: accounts[0],
-            snippet: MaskAddress(accounts[0]),
-          }));
-        }
-      }
-
       if (mounted) {
-        // const agent = window.navigator.userAgentData;
+        (async() => {
+          const sold_out = await getSoldOut();
+          console.log(sold_out.data);
 
-        // if (agent.platform != "IOS" && agent.mobile != false) {
-        //   window.ethereum
-        //     .request({ method: "eth_accounts" })
-        //     .then((accounts) => {
-        //       if (accounts.length) {
-        //         setWallet((prevState) => ({
-        //           ...prevState,
-        //           address: accounts[0],
-        //           snippet: MaskAddress(accounts[0]),
-        //         }));
-        //       }
-        //     })
-        //     .catch((error) => {
-        //       console.warn(error);
-        //     });
-
-        //   window.ethereum.on("accountsChanged", handleAccountsChanged);
-        // }
-      }else{
-        console.warn('Web3 is not enabled on this platform.')
+          if(sold_out.data){
+            setSoldOut(true);
+          }
+        })();
       }
         
 
@@ -85,8 +60,21 @@ function App() {
     setModalOpen(true);
   };
 
-  const onWalletClick = (event) => {
+  const onWalletClick = async (event) => {
     const selected = event.target.id;
+
+    async function handleAccountsChanged(accounts) {
+      if (accounts.length === 0) {
+        console.warn("user has not connected to metamask");
+      } else {
+        setWallet((prevState) => ({
+          ...prevState,
+          address: accounts[0],
+          snippet: MaskAddress(accounts[0]),
+        }));
+      }
+    }
+
     ConnectWallet()
       .then((status) => {
         setWallet({
@@ -98,6 +86,8 @@ function App() {
       .catch((error) => {
         console.error(error);
       });
+
+      window.ethereum.on("accountsChanged", handleAccountsChanged);
   }
 
   const onModalClose = () => {
@@ -137,7 +127,7 @@ function App() {
           </CustomModal>
           <div className="main-container parallax-container">
             <div className="inner-main">
-              <Hero wallet={wallet} onAlert={onAlert} />
+              <Hero soldOut={soldOut} wallet={wallet} onAlert={onAlert} />
               <div className="body-container">
                 <div className='section-medium'>
                   <Carousel />

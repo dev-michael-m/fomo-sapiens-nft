@@ -20,7 +20,7 @@ const Founders = () => {
                     <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '60px 0px'}}>
                         <Avatar src={Avatar2} style={{width: 120, height: 120}} />
                         <h3>Adamkruz</h3>
-                        <h5 style={{marginTop: 0}}>Marketing | Project Manager</h5>
+                        <h5 style={{marginTop: 0}}>Founder | Marketing | Project Manager</h5>
                         <div className='socials-founder'>
                             <IconButton ><TwitterIcon style={{color: 'rgb(0,0,0)', fontSize: 26}} /></IconButton>
                             <IconButton style={{width: 42}}><img style={{margin: '0px 10px',filter: 'invert(1)'}} src={DiscordIcon} width="26px"></img></IconButton>
@@ -36,7 +36,7 @@ const Founders = () => {
                             <h3>ChefColin.eth</h3>
                         </div>
                         <div>
-                            <h5 style={{marginTop: 0}}>Marketing | Design </h5>
+                            <h5 style={{marginTop: 0}}>Marketing | Co-Founder </h5>
                         </div>
                         <div className='socials-founder'>
                             <IconButton ><TwitterIcon style={{color: 'rgb(0,0,0)', fontSize: 26}} /></IconButton>
@@ -47,7 +47,7 @@ const Founders = () => {
                 <FadeInContainer className="flex-grow" styles="flex" animation="fade-in">
                     <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '60px 0px'}}>   
                         <Avatar src={Avatar1} style={{width: 120, height: 120}}/>
-                        <h3>FOMO Syndk8</h3>
+                        <h3>Syndk8</h3>
                         <h5 style={{marginTop: 0}}>Developer | Smart Contract | Website</h5>
                         <div className='socials-founder'>
                             <IconButton ><TwitterIcon style={{color: 'rgb(0,0,0)', fontSize: 26}} /></IconButton>
