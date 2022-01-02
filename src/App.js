@@ -42,12 +42,26 @@ function App() {
       if (mounted) {
         (async() => {
           const sold_out = await getSoldOut();
-          console.log(sold_out.data);
 
           if(sold_out.data){
             setSoldOut(true);
           }
         })();
+
+        const connected = sessionStorage.getItem('connected');
+
+        if(connected === 'true'){
+          ConnectWallet()
+          .then((status) => {
+            setWallet({
+              address: status.address,
+              snippet: status.address_snippet,
+            });
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+        }
       }
         
 
@@ -82,6 +96,7 @@ function App() {
           snippet: status.address_snippet,
         });
         setModalOpen(false);
+        window.sessionStorage.setItem('connected',true);
       })
       .catch((error) => {
         console.error(error);
@@ -113,7 +128,7 @@ function App() {
     <div className="App">
         <MainApp wallet={wallet} onConnectWallet={onConnectWallet} onAlert={onAlert}>
           {alert.visible ? <AlertBar severity={alert.severity} visible={alert.visible} msg={alert.msg} onClose={onCloseAlert} /> : null}
-          <CustomModal id="wallet-connect" visible={modalOpen} width='70%' onClose={onModalClose}>
+          <CustomModal id="wallet-connect" visible={modalOpen} width='332px' onClose={onModalClose}>
             <h3>Connect Wallet</h3>
             <div id="metamask" onClick={onWalletClick}>
                 <img id="metamask" src={MetaMaskLogo} width="160px"></img>

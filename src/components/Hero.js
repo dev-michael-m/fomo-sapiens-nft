@@ -103,7 +103,7 @@ const Hero = ({soldOut,wallet,onAlert}) => {
             if(wallet.address){
                 const amount_minted = await getTokensMinted(wallet.address);
                 const max_mintable = await getMaxMint();
-
+                
                 if(amount_minted.status === 'success'){
                     if(amount_minted.data < max_mintable.data){
                         setMinting(true);
@@ -130,7 +130,7 @@ const Hero = ({soldOut,wallet,onAlert}) => {
                             console.error(error);
                             onAlert(
                                 'error',
-                                error.msg.message,
+                                error.msg,
                                 true
                             )
                             setMinting(false);

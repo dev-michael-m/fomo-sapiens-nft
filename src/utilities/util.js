@@ -1,4 +1,8 @@
 import { ethers } from "ethers";
+import {collection, addDoc, getDocs, deleteDoc} from 'firebase/firestore';
+import db from './../firebase/config';
+
+const firebase_collection = collection(db,'whitelist');
 
 require('dotenv').config();
 const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
@@ -7,12 +11,6 @@ const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 const web3 = createAlchemyWeb3(alchemyKey);
 const contractABI = require('../contract-abi.json');
-
-const WHITELIST = [
-    "0x103EcE5B498b9c425295F58148Aa5bdAc7575708",
-    "0x182B80929672984a64d3d756588C7b3c217f0182",
-    "0xF0036aA4B10d8712fDaa193a6036c01E3a12880c"
-]
 
 export const fomoContract = new web3.eth.Contract(contractABI, CONTRACT_ADDRESS)
 
@@ -236,6 +234,46 @@ export const setSaleState = (active,sale_type) => {
     })        
 }
 
+export const pauseContract = (contractState) => {
+    return new Promise(async(resolve,reject) => {
+        try {
+            const status = await fomoContract.methods.setPaused(contractState).send({
+                from: process.env.REACT_APP_F1_ADDRESS
+            })
+
+            resolve({
+                status: 'success',
+                data: status
+            })
+        } catch (error) {
+            console.error(`util.pauseContract: ${error}`);
+            reject({
+                status: 'error',
+                msg: error
+            })
+        }
+    })
+}
+
+export const getPaused = () => {
+    return new Promise(async(resolve,reject) => {
+        try {
+            const paused = await fomoContract.methods.paused().call();
+
+            resolve({
+                status: 'success',
+                data: paused
+            })
+        } catch (error) {
+            console.error(`util.getPaused: ${error}`);
+            reject({
+                status: 'error',
+                msg: error
+            })
+        }
+    })
+}
+
 export const getPresaleState = () => {
     return new Promise(async(resolve,reject) => {
         try{
@@ -326,6 +364,60 @@ export const getMaxMint = () => {
     })
 }
 
+export const updateWhitelist = (type, address) => {
+    return new Promise(async(resolve,reject) => {
+        try {
+            const whitelisted = await getDocs(firebase_collection);
+
+            const exists = whitelisted.docs.find(doc => address.toUpperCase() == doc.data().address.toUpperCase());
+            
+            if(type === 'add'){
+                if(!exists){
+                    const snapshot = await addDoc(firebase_collection,{
+                        address: address
+                    })
+    
+                    if(snapshot.id){
+                        resolve({
+                            status: 'success',
+                            data: snapshot.id
+                        })
+                    }else {
+                        reject({
+                            status: 'error',
+                            msg: 'There was an issue adding this address to the whitelist.  Please notify the developer of this issue.'
+                        })
+                    }
+                }else{
+                    reject({
+                        status: 'warning',
+                        msg: 'This address already exists in the whitelist'
+                    })
+                }               
+            }else if(type === 'remove'){
+                if(exists){
+                    const snapshot = await deleteDoc(exists.ref);
+                    resolve({
+                        status: 'success',
+                        data: true
+                    })
+                }else{
+                    reject({
+                        status: 'warning',
+                        msg: 'Address doesn not exist in the whitelist'
+                    })
+                }
+            }
+        } catch (error) {
+            console.error(`util.updateWhitelist: ${error}`);
+            reject({
+                status: 'error',
+                msg: error
+            })
+        }
+    })
+}
+
 export const mintNFT = async (sale_type, num_tokens) => {
     return new Promise(async(resolve,reject) => {
         try {
@@ -335,24 +427,33 @@ export const mintNFT = async (sale_type, num_tokens) => {
                 const address = await signer.getAddress();
                 const price = await fomoContract.methods.SALE_PRICE().call();
                 const mint_price = parseFloat(web3.utils.fromWei(price,'ether'));
-                console.log({mint_price});
 
                 if(sale_type === 'presale'){
                     const presale_active = await getPresaleState();
                     const max_supply = await fomoContract.methods.MAX_SUPPLY().call();
+                    const wl = await getDocs(firebase_collection);
 
-                    if(presale_active && WHITELIST.includes(address)){
+                    const exists = wl.docs.find(doc => address.toUpperCase() == doc.data().address.toUpperCase());
+
+                    if(presale_active && exists){
                         // second layer of verification to whitelist
                         const message = web3.eth.abi.encodeParameters(["address","uint256"],[address,max_supply]);
                         const {signature} = web3.eth.accounts.sign(message,PRIVATE_KEY);
-                        const whitelisted = await checkWhitelist(signature,address);
-                        console.log({whitelisted});
-                        if(whitelisted.status){
-                            console.log('user is whitelisted and good to reserve')
-                        }else{
-                            console.error('user is not whitelisted to mint')
-                            reject({msg: `User is not verified to mint during whitelist.`, status: 'warning'})  
+                        //const whitelisted = await checkWhitelist(signature,address);
+                       
+                        const tx = {
+                            from: address,
+                            to: process.env.REACT_APP_CONTRACT_ADDRESS,
+                            value: web3.utils.toHex(web3.utils.toWei(String((mint_price * num_tokens).toFixed(1)),'ether')),
+                            data: fomoContract.methods.whitelistMint(signature,num_tokens).encodeABI(),
                         }
+
+                        const txHash = await window.ethereum.request({
+                            method: 'eth_sendTransaction',
+                            params: [tx]
+                        })
+
+                        resolve({data: txHash});
                     }else{
                       reject({msg: `You are not currently on the whitelist.`, status: 'warning'})  
                     }
@@ -390,7 +491,7 @@ export const mintNFT = async (sale_type, num_tokens) => {
             console.error(`util.mintNFT: ${error}`)
             reject({
                 status: 'error',
-                msg: error
+                msg: error.message
             })
         }
     })
