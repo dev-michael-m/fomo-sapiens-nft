@@ -15,6 +15,7 @@ import TextField from '@mui/material/TextField';
 import { FormatDropTimer, getPresaleState, getPublicState, mintNFT, getTokensMinted, getSoldOut, getMaxMint } from './../utilities/util';
 import Promo from './Promo';
 import CustomModal from './Modal';
+import CircularProgress from '@mui/material/CircularProgress';
 
 require('dotenv').config();
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
@@ -188,10 +189,10 @@ const Hero = ({soldOut,wallet,onAlert}) => {
 
     return (
         <div className="hero-container">
-            {txn ? <CustomModal id="mint-success" visible={modalOpen} onClose={onModalClose}>
-                <h1>Mint Successful!</h1>
+            {txn ? <CustomModal id="mint-success" width='352px' visible={modalOpen} onClose={onModalClose}>
+                <h1 style={{textAlign: 'center'}}>Mint Successful!</h1>
                 <CheckIcon className='check-success' />
-                <p>You can find more details about your transaction by clicking <a href={`https://ropsten.etherscan.io/tx/${txn}`} target="_blank">here</a></p>
+                <p>You can find more details about your transaction by clicking <a style={{color: '#d2bb90'}} href={`https://ropsten.etherscan.io/tx/${txn}`} target="_blank">here</a></p>
                 
             </CustomModal> : null}
             <div className='hero-inner'>
@@ -233,8 +234,11 @@ const Hero = ({soldOut,wallet,onAlert}) => {
                         <IconButton onClick={mintAdd}><AddIcon style={{color: 'white'}} /></IconButton>
                     </div>
                     <div style={{marginTop: 32}}>
-                        <Button className={`custom-button primary medium ${soldOut || !saleActive && !refreshTimer ? 'disabled' : ''}`} disabled={soldOut || !saleActive && !refreshTimer ? true : false} variant="contained" color="primary" onClick={saleActive && !refreshTimer ? onMint : onRefresh}>{soldOut ? 'Sold Out' : minting ? 'Minting...' : !saleActive && refreshTimer ? 'Refresh' : 'Mint'}</Button>
+                        <Button className={`custom-button primary medium ${soldOut || !saleActive && !refreshTimer ? 'disabled' : ''}`} disabled={soldOut || minting || !saleActive && !refreshTimer ? true : false} variant="contained" color="primary" onClick={saleActive && !refreshTimer ? onMint : onRefresh}>{soldOut ? 'Sold Out' : minting ? <CircularProgress style={{color: 'wheat'}} /> : !saleActive && refreshTimer ? 'Refresh' : 'Mint'}</Button>
                     </div>
+                    {soldOut ? <div>
+                        <a style={{fontSize: 14, margin: 10}} style={{color: 'wheat'}} href='#' target="_blank">Find us on OpenSea</a>
+                    </div> : null}
                     </FadeInContainer>
                     
                 </div>               

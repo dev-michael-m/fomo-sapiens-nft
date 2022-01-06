@@ -23,3 +23,12 @@
 .modal-inner p {
     padding: 20px;
 }
+
+.wallet-button {
+    color: black !important;
+    background: white !important;
+    width: 100% !important;
+    justify-content: space-between !important;
+    text-transform: none !important;
+    margin: 12px 0px !important;
+}

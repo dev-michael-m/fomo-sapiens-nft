@@ -11,13 +11,15 @@ import AlertBar from './components/AlertBar';
 import FAQs from './components/FAQs';
 import Promo from './components/Promo';
 import Carousel from './components/Carousel';
+import Button from '@mui/material/Button';
 import GroupSapiens from './assets/group-nft.png';
 import SapienCoin from './assets/crypto-coin-web.png';
 import MultiCoins from './assets/crypto-coins-web.png';
 import CustomModal from './components/Modal';
-import CoinbaseLogo from './assets/coinbase-wallet-icon.png';
+import Fade from '@mui/material/Fade';
+import CoinbaseLogo from './assets/coinbase-wallet-icon.jpg';
 import MetaMaskLogo from './assets/metamask-icon.jpg';
-import WalletConnectLogo from './assets/wallet-connect-logo.png';
+import WalletConnectLogo from './assets/wallet-connect-icon.jpg';
 
 function App() {
   
@@ -51,12 +53,14 @@ function App() {
         const connected = sessionStorage.getItem('connected');
 
         if(connected === 'true'){
+          
           ConnectWallet()
           .then((status) => {
             setWallet({
               address: status.address,
               snippet: status.address_snippet,
             });
+            window.ethereum.on("accountsChanged", handleAccountsChanged);
           })
           .catch((error) => {
             console.error(error);
@@ -70,13 +74,6 @@ function App() {
       };
     }, []);
 
-  const onConnectWallet = (suppress) => {
-    setModalOpen(true);
-  };
-
-  const onWalletClick = async (event) => {
-    const selected = event.target.id;
-
     async function handleAccountsChanged(accounts) {
       if (accounts.length === 0) {
         console.warn("user has not connected to metamask");
@@ -88,6 +85,13 @@ function App() {
         }));
       }
     }
+
+  const onConnectWallet = (suppress) => {
+    setModalOpen(true);
+  };
+
+  const onWalletClick = async (event) => {
+    const selected = event.target.id;
 
     ConnectWallet()
       .then((status) => {
@@ -129,16 +133,16 @@ function App() {
         <MainApp wallet={wallet} onConnectWallet={onConnectWallet} onAlert={onAlert}>
           {alert.visible ? <AlertBar severity={alert.severity} visible={alert.visible} msg={alert.msg} onClose={onCloseAlert} /> : null}
           <CustomModal id="wallet-connect" visible={modalOpen} width='332px' onClose={onModalClose}>
-            <h3>Connect Wallet</h3>
-            <div id="metamask" onClick={onWalletClick}>
-                <img id="metamask" src={MetaMaskLogo} width="160px"></img>
-            </div>
-            <div id="coinbase" onClick={onWalletClick}>
-                <img id="coinbase" src={CoinbaseLogo} width="160px"></img>
-            </div>
-            <div style={{margin: 40}} id="walletconnect" onClick={onWalletClick}>
-                <img id="walletconnect" src={WalletConnectLogo} width="160px"></img>
-            </div>
+              <h3>Connect Wallet</h3>
+              <Button className="wallet-button" id="metamask" variant='contained' onClick={onWalletClick} endIcon={
+                <img id="metamask" src={MetaMaskLogo} width="42px"></img>
+              }>MetaMask</Button>
+              <Button className="wallet-button" id="coinbase" variant='contained' onClick={onWalletClick} endIcon={
+                <img id="coinbase" src={CoinbaseLogo} width="42px"></img>
+              }>Coinbase Wallet</Button>
+              <Button className="wallet-button" id="walletconnect" variant='contained' onClick={onWalletClick} endIcon={
+                <img id="walletconnect" src={WalletConnectLogo} width="42px"></img>
+              }>WalletConnect</Button>           
           </CustomModal>
           <div className="main-container parallax-container">
             <div className="inner-main">
