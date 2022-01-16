@@ -17,6 +17,9 @@ const Footer = () => {
             <div className="footer-copyright">
                 <label>&copy; {new Date().getFullYear()} Fomo Sapiens. All Rights Reserved.</label>
             </div>
+            <div style={{fontSize: 10, color: 'rgba(255,255,255,0.52)'}}>
+                <label>Powered by Lythium.io</label>
+            </div>
         </div>
     )
 }
