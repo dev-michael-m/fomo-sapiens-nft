@@ -22,12 +22,12 @@ contract Sapien is ERC721S, Ownable{
         uint16 _tokenIds;
         uint16 max_supply;
         uint16 max_mint;
-        uint16 GIVEAWAYS;
-        uint256 SALE_PRICE;
-        string BASE_URL;
-        string FSNFT_PROVENANCE;
+        uint16 GIVEAWAYS;        
     }
 
+    uint256 SALE_PRICE = 0.1 ether;
+    string BASE_URL;
+    string FSNFT_PROVENANCE;
     uint256 private starting_block_num;    
     bytes32 public EXTENSION = ".json";
     mapping(address => uint256) private minted;
@@ -44,21 +44,18 @@ contract Sapien is ERC721S, Ownable{
         config.max_supply = 6000;
         config.max_mint = 3;
         config.GIVEAWAYS = 30;
-        config.SALE_PRICE = 0.1 ether;
     }
 
     function mint(uint16 quantity) public payable
     {
         uint16 ids = config._tokenIds;
 
-        require(!config.paused);
         require(config.active, "Sale is currently inactive");
         require(tx.origin == msg.sender, "Contracts are not allowed to mint");
-        require(msg.value == (config.SALE_PRICE * quantity), "Incorrect amount of ether");
-        require(ids < config.max_supply, "All Sapiens have been minted");
+        require(msg.value == (SALE_PRICE * quantity), "Incorrect amount of ether");
         require((ids + quantity) <= config.max_supply, "Purchase would exceed max supply of sapiens"); 
-        require(balanceOf(msg.sender) < config.max_mint, "You cannot mint more than 3 sapiens from the same address");
-        require((balanceOf(msg.sender) + quantity) <= config.max_mint, "You cannot mint more than 3 sapiens");
+        require((balanceOf(msg.sender) + quantity) <= config.max_mint, "You cannot mint more than 3 sapiens from the same address");
+        require(quantity <= config.max_mint, "You cannot mint more than 3 sapiens");
          
         _mint(msg.sender, quantity);
         config._tokenIds = ids + quantity;     
@@ -84,12 +81,12 @@ contract Sapien is ERC721S, Ownable{
     *   @param _signature - used to verify whitelisted address.
     */
     function whitelistMint(bytes calldata _signature, uint16 quantity) public payable {
-        require(!config.paused);
+        
         require(config.presale_active,"Presale is currently inactive");
         require(tx.origin == msg.sender,"Contracts are not allowed to mint");
         require(isWhitelisted(_signature, msg.sender),"Must be on whitelist to mint a sapien");
-        require(msg.value == (config.SALE_PRICE * quantity),"Incorrect amount of ether");
-        require((minted[msg.sender] + quantity) <= config.max_mint,"You cannot mint more than 3 Sapiens");
+        require(msg.value == (SALE_PRICE * quantity),"Incorrect amount of ether");
+        require(quantity <= config.max_mint,"You cannot mint more than 3 Sapiens");
         require(minted[msg.sender] < config.max_mint,"You can only mint up to 3 Sapiens from the same address");
         
         minted[msg.sender] += quantity;
@@ -103,7 +100,7 @@ contract Sapien is ERC721S, Ownable{
     *   @return tokenURI
     */
     function tokenURI(uint256 _tokenId) public view virtual override returns(string memory){
-        return !config.revealed ? config.BASE_URL : string(abi.encodePacked(config.BASE_URL, _tokenId.toString(), EXTENSION));
+        return !config.revealed ? BASE_URL : string(abi.encodePacked(BASE_URL, _tokenId.toString(), EXTENSION));
     }
     
     function setPublicSale() public onlyOwner {
@@ -121,7 +118,7 @@ contract Sapien is ERC721S, Ownable{
     function setProvenanceHash(string memory _provenance) public onlyOwner {
         require(starting_block_num == 0,"Provenance has already been set");
 
-        config.FSNFT_PROVENANCE = _provenance;
+        FSNFT_PROVENANCE = _provenance;
         starting_block_num = block.number;
     }
 
@@ -152,7 +149,7 @@ contract Sapien is ERC721S, Ownable{
     }
 
     function toggleReveal(string memory _url) public onlyOwner {
-        config.BASE_URL = _url;
+        BASE_URL = _url;
         config.revealed = !config.revealed;
     }
 
@@ -161,7 +158,7 @@ contract Sapien is ERC721S, Ownable{
     }
 
     function setBaseURL(string memory _url) public onlyOwner {
-        config.BASE_URL = _url;
+        BASE_URL = _url;
     }
 
     /**

@@ -34,16 +34,12 @@ contract ERC721S is Context, ERC165, IERC721, IERC721Metadata {
         address _approvals;
     }
 
-    struct ContractConfig {
-        string _name;
-        string _symbol;
-    }
+    string _name;
+    string _symbol;
 
     struct Balance {
         uint128 _balance;
     }
-
-    ContractConfig private _config;
 
     mapping(uint16 => Owner) private _owners;
 
@@ -57,8 +53,8 @@ contract ERC721S is Context, ERC165, IERC721, IERC721Metadata {
      * @dev Initializes the contract by setting a `name` and a `symbol` to the token collection.
      */
     constructor(string memory name_, string memory symbol_, uint256 max_supply_, uint256 max_mint_) {
-        _config._name = name_;
-        _config._symbol = symbol_;
+        _name = name_;
+        _symbol = symbol_;
         MAX_SUPPLY = max_supply_;
         MAX_MINT = max_mint_;
     }
@@ -115,14 +111,14 @@ contract ERC721S is Context, ERC165, IERC721, IERC721Metadata {
      * @dev See {IERC721Metadata-name}.
      */
     function name() public view virtual override returns (string memory) {
-        return _config._name;
+        return _name;
     }
 
     /**
      * @dev See {IERC721Metadata-symbol}.
      */
     function symbol() public view virtual override returns (string memory) {
-        return _config._symbol;
+        return _symbol;
     }
 
     /**
@@ -311,7 +307,6 @@ contract ERC721S is Context, ERC165, IERC721, IERC721Metadata {
     function _mint(address to, uint16 quantity) internal virtual {
         uint16 tokenId = getInitialSequence();
         require(to != address(0), "ERC721S: mint to the zero address");
-        require(!_exists(tokenId), "ERC721S: token already minted");
 
         _beforeTokenTransfer(address(0), to, tokenId, quantity);
 
