@@ -22,7 +22,7 @@ contract Sapien is ERC721S, Ownable{
         uint16 _tokenIds;
         uint16 max_supply;
         uint16 max_mint;
-        uint16 GIVEAWAYS;        
+        uint16 GIVEAWAYS;     
     }
 
     uint256 SALE_PRICE = 0.1 ether;
@@ -36,16 +36,20 @@ contract Sapien is ERC721S, Ownable{
     address DAO = 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2;
     address founder1 = 0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db;
     address founder2 = 0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB;
-    address founder3 = 0x617F2E2fD72FD9D5503197092aC168c91465E7f2;  
-
+    address founder3 = 0x617F2E2fD72FD9D5503197092aC168c91465E7f2;      
     
-    
-    constructor() ERC721S("FOMO SAPIENS NFT", "SAPIEN", 6000, 3) {
+    constructor() ERC721S("FOMO SAPIENS NFT", "SAPIEN", 6000, 5) {
         config.max_supply = 6000;
-        config.max_mint = 3;
+        config.max_mint = 5;
         config.GIVEAWAYS = 30;
     }
 
+    /*
+    *   @dev public mint method
+    *   @param - number of NFT's to mint
+    *   
+    *   Assumes quantity does not excede 2 ** 16 - 1
+    */
     function mint(uint16 quantity) public payable
     {
         uint16 ids = config._tokenIds;
@@ -64,7 +68,6 @@ contract Sapien is ERC721S, Ownable{
     /**
     *   @dev function to set aside tokens for giveaways.
     */
-    // this will cause an issue when minting for giveaways
     function devMint() public onlyOwner {
 
         uint256 num_batch = config.GIVEAWAYS / config.max_mint;
@@ -77,8 +80,11 @@ contract Sapien is ERC721S, Ownable{
     }
 
     /**
-    *   @dev function for members to reserve sapiens.  Address must be whitelisted to reserve.
+    *   @dev mint function for users who are whitelisted.  Address must be whitelisted.
     *   @param _signature - used to verify whitelisted address.
+    *   @param quantity - number of NFT's to mint
+    * 
+    *   Assumes quantity does not exceed 2 ** 16 - 1
     */
     function whitelistMint(bytes calldata _signature, uint16 quantity) public payable {
         
@@ -95,7 +101,7 @@ contract Sapien is ERC721S, Ownable{
     }
 
     /**
-    *   @dev function displays placeholder image if not revealed, otherwise displays token image.
+    *   @dev method used to display metadata
     *   @param _tokenId - minted tokenId
     *   @return tokenURI
     */
@@ -122,17 +128,28 @@ contract Sapien is ERC721S, Ownable{
         starting_block_num = block.number;
     }
 
+    /*
+    *   @dev method to get token based on starting index
+    *   
+    *   starting_idx must be set.
+    */
     function getInitialSequence() internal override view returns (uint16){
         return (config._tokenIds + config.starting_idx) % config.max_supply + 1;
     }
 
+    /*
+    *   @dev override method of {ERC721 _exists} optimized for batch mint with initial sequence.
+    *   
+    */
     function _exists(uint16 tokenId) internal view override returns (bool) {
+        uint16 start_idx = config.starting_idx;
+
         if(tokenId > 0 && tokenId <= config.max_supply){
-            if(tokenId < config.starting_idx){
-                return tokenId + config.max_supply - config.starting_idx <= config._tokenIds;
+            if(tokenId < start_idx){
+                return tokenId + config.max_supply - start_idx <= config._tokenIds;
             }
 
-            return tokenId - config.starting_idx <= config._tokenIds;
+            return tokenId - start_idx <= config._tokenIds;
         }
 
         return false;

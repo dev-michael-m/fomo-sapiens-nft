@@ -78,7 +78,7 @@ contract ERC721S is Context, ERC165, IERC721, IERC721Metadata {
     }
 
     /**
-     * @dev built to get the owner for a batch mint.
+     * @dev built to retrieve the owner for batch mint.
      *
      * Assumes number sequence begins at from [1-n].
      */
@@ -293,7 +293,7 @@ contract ERC721S is Context, ERC165, IERC721, IERC721Metadata {
     }
 
     /**
-     * @dev Mints `tokenId` and transfers it to `to`.
+     * @dev Mints `tokenId` and transfers it to `to`. Optimized for batch mint.
      *
      * WARNING: Usage of this method is discouraged, use {_safeMint} whenever possible
      *
@@ -303,6 +303,7 @@ contract ERC721S is Context, ERC165, IERC721, IERC721Metadata {
      * - `to` cannot be the zero address.
      *
      * Emits a {Transfer} event.
+     * quantity must not exceed 2 ** 16 - 1
      */
     function _mint(address to, uint16 quantity) internal virtual {
         uint16 tokenId = getInitialSequence();
@@ -324,13 +325,14 @@ contract ERC721S is Context, ERC165, IERC721, IERC721Metadata {
     }
 
     /**
-     * @dev Transfers `tokenId` from `from` to `to`.
+     * @dev Transfers `tokenId` from `from` to `to`. Optimized for batch mint.
      *  As opposed to {transferFrom}, this imposes no restrictions on msg.sender.
      *
      * Requirements:
      *
      * - `to` cannot be the zero address.
      * - `tokenId` token must be owned by `from`.
+     * - `tokenId` must not exceed 2 ** 16 - 1
      *
      * Emits a {Transfer} event.
      */
