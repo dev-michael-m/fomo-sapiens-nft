@@ -108,8 +108,9 @@ export const CheckAdmin = () => {
 
 export const ConnectWallet = async () => {
     return new Promise(async(resolve,reject) => {
-        if(window.ethereum.request({method: 'eth_requestAccounts'})){
-            try {
+        window.ethereum.request({method: 'eth_requestAccounts'})
+        .then(async(res) => {
+            try {                
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const address = await signer.getAddress();
@@ -130,18 +131,21 @@ export const ConnectWallet = async () => {
                     msg: 'Something went wrong. Try waiting a minute and try again.'
                 })                
             }
-        }else{
+        }).catch(err => {
+            console.error(err);
             reject({
                 status: 'warning',
                 msg: 'Wallet is not connected.  Please make sure to connect your wallet and try again.'
             })
-        }
+        })
     })    
 }
 
 export const connectWalletSync = async () => {
     if(window.ethereum.request({method: 'eth_requestAccounts'})){
         try {
+            //await window.ethereum.enable();
+
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             const address = await signer.getAddress();
@@ -188,84 +192,15 @@ export const getTokensMinted = async (_address) => {
 export const getSoldOut = async () => {
     return new Promise(async(resolve,reject) => {
         try {
-            const minted = await fomoContract.methods._tokenIds().call();
-            const max_supply = await fomoContract.methods.MAX_SUPPLY().call();
-            const total_giveaways = await fomoContract.methods.GIVEAWAYS().call();
+            const minted = await fomoContract.methods.totalSupply().call();
+            const max_supply = await fomoContract.methods.getMaxSupply().call();
 
             resolve({
                 status: 'success',
                 msg: 'success',
-                data: parseInt(minted) < (parseInt(max_supply) - parseInt(total_giveaways)) ? false : true
+                data: parseInt(minted) < parseInt(max_supply) ? false : true
             })
         } catch (error) {
-            reject({
-                status: 'error',
-                msg: error
-            })
-        }
-    })
-}
-
-export const setSaleState = (active,sale_type) => {
-    return new Promise(async(resolve,reject) => {
-        try{
-            if(window.ethereum.request({method: 'eth_requestAccounts'})){
-                const provider = new ethers.providers.Web3Provider(window.ethereum);
-                const signer = provider.getSigner();
-                const address = await signer.getAddress();
-
-                if(sale_type === 'presale'){
-                    const status = await fomoContract.methods.setPresale(active).send({
-                        from: address
-                    })
-                    resolve(status);
-                }else if(sale_type === 'public'){
-                    const status = await fomoContract.methods.setPublicSale(active).send({
-                        from: address
-                    })
-                    resolve(status);
-                }
-            }else{
-                reject({status: false})
-            }
-        } catch(error) {
-            reject({status: false})
-        }
-    })        
-}
-
-export const pauseContract = (contractState) => {
-    return new Promise(async(resolve,reject) => {
-        try {
-            const status = await fomoContract.methods.setPaused(contractState).send({
-                from: process.env.REACT_APP_F1_ADDRESS
-            })
-
-            resolve({
-                status: 'success',
-                data: status
-            })
-        } catch (error) {
-            console.error(`util.pauseContract: ${error}`);
-            reject({
-                status: 'error',
-                msg: error
-            })
-        }
-    })
-}
-
-export const getPaused = () => {
-    return new Promise(async(resolve,reject) => {
-        try {
-            const paused = await fomoContract.methods.paused().call();
-
-            resolve({
-                status: 'success',
-                data: paused
-            })
-        } catch (error) {
-            console.error(`util.getPaused: ${error}`);
             reject({
                 status: 'error',
                 msg: error
@@ -277,7 +212,7 @@ export const getPaused = () => {
 export const getPresaleState = () => {
     return new Promise(async(resolve,reject) => {
         try{
-            const active = await fomoContract.methods.presale_active().call();
+            const active = await fomoContract.methods.presaleActive().call();
             resolve({
                 status: true,
                 active: active
@@ -295,7 +230,7 @@ export const getPresaleState = () => {
 export const getPublicState = () => {
     return new Promise(async(resolve,reject) => {
         try{
-            const active = await fomoContract.methods.active().call();
+            const active = await fomoContract.methods.publicSaleActive().call();
             resolve({
                 status: true,
                 active: active
@@ -349,7 +284,7 @@ export const getMintPrice = () => {
 export const getMaxMint = () => {
     return new Promise(async(resolve,reject) => {
         try {
-            const max_mint = await fomoContract.methods.MAX_MINT().call();
+            const max_mint = await fomoContract.methods.getMaxMint().call();
             resolve({
                 status: 'success',
                 data: max_mint
@@ -430,7 +365,7 @@ export const mintNFT = async (sale_type, num_tokens) => {
 
                 if(sale_type === 'presale'){
                     const presale_active = await getPresaleState();
-                    const max_supply = await fomoContract.methods.MAX_SUPPLY().call();
+                    const max_supply = await fomoContract.methods.getMaxSupply().call();
                     const wl = await getDocs(firebase_collection);
 
                     const exists = wl.docs.find(doc => address.toUpperCase() == doc.data().address.toUpperCase());

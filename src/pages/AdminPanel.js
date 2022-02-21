@@ -5,44 +5,17 @@ import WarningIcon from '@mui/icons-material/Warning';
 import CircularProgress from '@mui/material/CircularProgress';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import {getPaused, getPresaleState,getPublicState,pauseContract,setSaleState, updateWhitelist} from '../utilities/util';
+import {updateWhitelist} from '../utilities/util';
 import '../stylesheet/Admin.css';
 import AlertBar from './../components/AlertBar';
 
 const AdminPanel = () => {
-    const [presale,setPresale] = useState(false);
-    const [publicSale,setPublicSale] = useState(false);
-    const [paused,setPaused] = useState(false);
-    const [loading,setLoading] = useState(true);
-    const [pendingPresale,setPendingPresale] = useState(false);
-    const [pendingPublic,setPendingPublic] = useState(false);
-    const [pendingPaused,setPendingPaused] = useState(false);
+    const [loading,setLoading] = useState(false);
     const [alert,setAlert] = useState({
         severity: 'success',
         msg: '',
         visible: false
       });
-
-    useEffect(() => {
-        let mounted = true;
-
-        if(mounted){
-            Promise.all([getPresaleState(),getPublicState(),getPaused()]).then(([pre,pub,paus]) => {
-                setPresale(pre.active);
-                setPublicSale(pub.active);
-                setPaused(paus.data);
-                setLoading(false);
-            }).catch(error => {
-                console.error(error);
-                setLoading(false);
-            })
-        }
-
-        return () => {
-            mounted = false;
-        }
-        // check state variables here
-    },[])
 
     const onAlert = (severity, msg, visible) => {
         setAlert({
@@ -59,38 +32,6 @@ const AdminPanel = () => {
         }))
       }
 
-    const handleSaleAction = (event) => {
-        const action = event.target.id;
-
-        switch (action) {
-            case 'presale':
-                setPendingPresale(true);
-                setSaleState(!presale,'presale').then(res => {
-                    if(res.status){
-                        setPendingPresale(false);
-                        setPresale(prevState => !prevState) 
-                    }
-                }).catch(error => {
-                    console.error(error);
-                    setPendingPresale(false);
-                })
-                               
-                break;
-            case 'public': 
-                setPendingPublic(true);
-                setSaleState(!publicSale,'public').then(res => {
-                    if(res.status){
-                        setPendingPublic(false);
-                        setPublicSale(prevState => !prevState);
-                    }
-                }).catch(error => {
-                    console.error(error);
-                    setPendingPublic(false);
-                })
-                
-                break;
-        }
-    }
 
     const onAddWhitelist = async () => {
         const address = document.getElementById('wl-address').value;
@@ -147,28 +88,6 @@ const AdminPanel = () => {
         
     }
 
-    const onTogglePause = () => {
-        const temp = !paused;
-        setPendingPaused(true);
-
-        pauseContract(temp).then(res => {
-            setPaused(temp);
-            setPendingPaused(false);
-            onAlert(
-                'success',
-                `Contract has been ${temp ? 'paused.' : 'set to active.'}`,
-                true
-            )
-        }).catch(error => {
-            setPendingPaused(false);
-            onAlert(
-                error.status,
-                error.msg,
-                true
-            )
-        })
-    }
-
     return (
         <div className="panel-main">
             {alert.visible ? <AlertBar severity={alert.severity} visible={alert.visible} msg={alert.msg} onClose={onCloseAlert} /> : null}
@@ -180,13 +99,6 @@ const AdminPanel = () => {
                     from this panel will take effect immediately, and may cost gas fees to execute.
                 </p>
                 {!loading ? <div className="sale-opts">
-                    <h3>Whitelist</h3>
-                    {/* <div>
-                        <FormControlLabel control={<Switch id="presale" checked={presale} onChange={handleSaleAction} />} label="Presale" />{pendingPresale && presale || pendingPresale && !presale ? <label style={{fontSize: 14,fontWeight: 'bold',color: 'orange'}}>pending...</label> : !pendingPresale && presale ? <label style={{fontSize: 14,fontWeight: 'bold',color: 'forestgreen'}}>active</label> : null}
-                    </div>
-                    <div>
-                        <FormControlLabel control={<Switch id="public" checked={publicSale} onChange={handleSaleAction} />} label="Public Sale" />{pendingPublic && publicSale || pendingPublic && !publicSale ? <label style={{fontSize: 14,fontWeight: 'bold',color: 'orange'}}>pending...</label> : !pendingPublic && publicSale ? <label style={{fontSize: 14,fontWeight: 'bold',color: 'forestgreen'}}>active</label> : null}
-                    </div> */}
                     <div style={{display: 'flex', width: '100%', justifyContent: 'space-between',margin: '20px 0px'}}>
                         <div style={{width: '60%'}}>
                             <TextField id="wl-address" type="text" placeholder='0x...' variant="standard"></TextField>

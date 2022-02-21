@@ -2,7 +2,7 @@ import './App.css';
 import Hero from './components/Hero';
 import Footer from './pages/Footer';
 import MainApp from './pages/MainApp';
-import { ConnectWallet, getMintPrice, getSoldOut, MaskAddress } from './utilities/util';
+import { ConnectWallet, getMintPrice, getSoldOut, MaskAddress, getPublicState, getPresaleState } from './utilities/util';
 import RoadMap from './components/RoadMap';
 import FadeInContainer from './components/FadeInContainer';
 import { useEffect, useState } from 'react';
@@ -37,16 +37,33 @@ function App() {
 
   const [modalOpen,setModalOpen] = useState(false);
   const [soldOut,setSoldOut] = useState(false);
+  const [saleActive,setSaleActive] = useState(false);
+  const [pubSale,setPubSale] = useState(false);
+  const [presale,setPresale] = useState(false);
 
     useEffect(() => {
       let mounted = true;
 
       if (mounted) {
         (async() => {
+          //await window.ethereum.enable();
           const sold_out = await getSoldOut();
 
           if(sold_out.data){
             setSoldOut(true);
+          }else{
+            const publicSale = await getPublicState();
+            const presale = await getPresaleState();
+  
+            if(publicSale.status && presale.status){
+              if(publicSale.active){
+                  setSaleActive(true);
+                  setPubSale(publicSale.active);
+              }else if(presale.active){
+                  setSaleActive(true);
+                  setPresale(presale.active);
+              }          
+            }
           }
         })();
 
@@ -146,7 +163,7 @@ function App() {
           </CustomModal>
           <div className="main-container parallax-container">
             <div className="inner-main">
-              <Hero soldOut={soldOut} wallet={wallet} onAlert={onAlert} />
+              <Hero soldOut={soldOut} preSale={presale} pubSale={pubSale} saleActive={saleActive} wallet={wallet} onAlert={onAlert} />
               <div className="body-container">
                 <div className='section-medium'>
                   <Carousel />

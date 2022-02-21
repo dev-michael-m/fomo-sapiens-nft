@@ -12,26 +12,21 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import CheckIcon from '@mui/icons-material/CheckCircleOutline';
 import TextField from '@mui/material/TextField';
-import { FormatDropTimer, getPresaleState, getPublicState, mintNFT, getTokensMinted, getSoldOut, getMaxMint } from './../utilities/util';
+import { FormatDropTimer, mintNFT, getSoldOut } from './../utilities/util';
 import Promo from './Promo';
 import CustomModal from './Modal';
 import CircularProgress from '@mui/material/CircularProgress';
+import { ethers } from "ethers";
 
 require('dotenv').config();
-const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
-const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
-const web3 = createAlchemyWeb3(alchemyKey);
 
-const LAUNCH_DATE = '1/26/2022 23:35:00';
+const LAUNCH_DATE = '2/26/2022 23:35:00';
 
-const Hero = ({soldOut,wallet,onAlert}) => {
+const Hero = ({soldOut,wallet,preSale,pubSale,saleActive,onAlert}) => {
     const [active,setActive] = useState(true);
     const [tokens,setTokens] = useState(3);
     const [refreshTimer,setRefreshTimer] = useState(false);
     const [timer,setTimer] = useState(FormatDropTimer(new Date(), new Date(LAUNCH_DATE)));
-    const [saleActive,setSaleActive] = useState(false);
-    const [preSale,setPreSale] = useState(false);
-    const [pubSale,setPubSale] = useState(false);
     const [minting,setMinting] = useState(false);
     const [txn,setTxn] = useState(null);
     const [modalOpen,setModalOpen] = useState(false);
@@ -46,19 +41,10 @@ const Hero = ({soldOut,wallet,onAlert}) => {
         let mounted = true;
 
         if(mounted){
-            (async () => {
-                const presale = await getPresaleState();
-                const publicSale = await getPublicState();
-                
-                if(presale.status && publicSale.status){
-                    if(presale.active || publicSale.active){
-                        setSaleActive(true);
-                        setPreSale(presale.active);
-                        setPubSale(publicSale.active);
-                        setRefreshTimer(false);
-                    }
-                }
-            })();
+            
+            if(preSale || pubSale){
+                setRefreshTimer(false);
+            }
 
             generateImageSeed();
 
@@ -102,46 +88,36 @@ const Hero = ({soldOut,wallet,onAlert}) => {
 
         if(!sold_out.data){
             if(wallet.address){
-                const amount_minted = await getTokensMinted(wallet.address);
-                const max_mintable = await getMaxMint();
-                
-                if(amount_minted.status === 'success'){
-                    if(amount_minted.data < max_mintable.data){
-                        setMinting(true);
-                        await mintNFT(preSale ? 'presale' : pubSale ? 'public' : null,tokens).then(res => {
-                            const txHash = res.data;
-                
-                            const progress = setInterval(() => {
-                                web3.eth.getTransactionReceipt(txHash).then(status => {
-                                    if(!status){
-                                        //console.log({status})
-                                    }else if(status.status){
-                                        setTxn(status.transactionHash);
-                                        setMinting(false);
-                                        setModalOpen(true);
-                                        clearInterval(progress);
-                                    }
-                                }).catch(error => {
-                                    console.error(error);
-                                    clearInterval(progress);
-                                    setMinting(false);
-                                })
-                            },1000)
+                setMinting(true);
+                await mintNFT(preSale ? 'presale' : pubSale ? 'public' : null,tokens).then(res => {
+                    const txHash = res.data;
+                    const provider = new ethers.providers.Web3Provider(window.ethereum);
+                    const progress = setInterval(() => {
+                        provider.getTransactionReceipt(txHash).then(status => {
+                            if(!status){
+                                //console.log({status})
+                            }else if(status.status){
+                                setTxn(status.transactionHash);
+                                setMinting(false);
+                                setModalOpen(true);
+                                clearInterval(progress);
+                            }
                         }).catch(error => {
                             console.error(error);
-                            onAlert(
-                                'error',
-                                error.msg,
-                                true
-                            )
+                            clearInterval(progress);
                             setMinting(false);
                         })
-                    }else{
-                        onAlert("warning",`You cannot mint more than ${max_mintable.data} sapiens!`, true);
-                    }
-                }else{
-                    onAlert("error", amount_minted.msg, true);
-                }       
+                    },1000)
+                }).catch(error => {
+                    console.error(error);
+                    onAlert(
+                        'error',
+                        error.msg,
+                        true
+                    )
+                    setMinting(false);
+                })
+                        
             }else{
                 onAlert("warning", 'You must first connect your wallet before trying to mint.', true);
             }   
