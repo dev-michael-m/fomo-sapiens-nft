@@ -13,25 +13,16 @@ import "./ERC721S.sol";
 contract TheOutpost is IERC721Receiver, Ownable {
     using EnumerableSet for EnumerableSet.UintSet;
 
-    struct Item {
-        uint128 _price;
-        uint128 max_supply;
-    }
-
     struct Sapien {
         uint256 multiplier;
-        uint256 poison_count;
-        uint256 counters;
+        uint256 counter;
+        uint16 evolution;
         bool initialized;
     }
 
-    Item public upgrade_fire;
-    Item public upgrade_gen2Tools;
-    Item public poison_vial;
-    Item public serum;
-    Item public fur_pelt;
-
-    uint128 public base_rate;
+    uint128 public base_rate = 100;
+    uint16 public MAX_EVOLUTION = 3;
+    uint256 public evolution_rate = 120;
     bool private paused;
     mapping(address => EnumerableSet.UintSet) private _deposits;
     mapping(address => mapping(uint256 => uint256)) public _depositTimestamps;
@@ -40,7 +31,6 @@ contract TheOutpost is IERC721Receiver, Ownable {
     ERC721S public nftAddress;
 
     constructor (ERC721S _nftAddress, IERC20 _tokenAddress) {
-        base_rate = 10;
         nftAddress = _nftAddress;
         tokenAddress = _tokenAddress;
     }
@@ -58,10 +48,10 @@ contract TheOutpost is IERC721Receiver, Ownable {
         require(msg.sender != address(this), "Invalid address");
 
         for(uint256 i = 0; i < tokenIds.length; i++){
-            nftAddress.safeTransferFrom(msg.sender,address(this),tokenIds[i],"");
+            
             _deposits[msg.sender].add(tokenIds[i]);
             _depositTimestamps[msg.sender][tokenIds[i]] = block.timestamp; // save timestamp for reward calc
-
+            nftAddress.safeTransferFrom(msg.sender,address(this),tokenIds[i],"");
             // initialize sapien multiplier if not set
             if(!_sapienStats[tokenIds[i]].initialized){
                 _sapienStats[tokenIds[i]].initialized = true;
@@ -90,7 +80,7 @@ contract TheOutpost is IERC721Receiver, Ownable {
         require(block.timestamp > depositTimestamp, "Invalid timestamp");
         require(_deposits[_account].contains(tokenId), "Calculating reward for an unstaked token");
 
-        return (base_rate * _sapienStats[tokenId].multiplier * (block.timestamp - depositTimestamp)/3600)/10;
+        return (base_rate * _sapienStats[tokenId].multiplier * (block.timestamp - depositTimestamp)/3600);
     }
 
     function withdraw(uint256[] calldata tokenIds) public payable {
@@ -105,6 +95,40 @@ contract TheOutpost is IERC721Receiver, Ownable {
             // transfer token back to original owner
             nftAddress.safeTransferFrom(address(this),msg.sender,tokenIds[i],"");
         }
+    }
+
+    // method to use an item that was purchased
+    function useItem(uint256 _item, uint256 _tokenId) public view {
+
+    }
+
+    // method to remove a degradeable item that was purchased
+    function destroyItem(uint256 _item, uint256 _tokenId) public view {
+
+    }
+
+    // method to evolve a single sapien token
+    function evolve(uint256 _tokenId) public {
+        uint16 _evolution = _sapienStats[_tokenId].evolution;
+        require(_deposits[msg.sender].contains(_tokenId), "Attempt to evolve an unstaked token");
+        require(_evolution < MAX_EVOLUTION, "You have hit the maximum evolution for this Sapien");
+        // require(tokenAddress.balanceOf(msg.sender) >= evolution price);
+
+        _sapienStats[_tokenId].evolution += 1;
+        _sapienStats[_tokenId].multiplier += (_evolution * evolution_rate);
+
+        // msg.sender needs to burn tokens equal to price
+    }
+
+    function getMultiplier(uint256 _tokenId) public view returns(uint256) {
+        return _sapienStats[_tokenId].multiplier;
+    }
+
+    // method to purchase an item from the outpost
+    function purchaseItem(uint256 _item) public view {
+        // require(tokenAddress.balanceOf(msg.sender) >= items price);
+        // msg.sender mints ERC1155 Item token
+        // msg.sender must burn tokens equal to item price
     }
 
     function togglePaused() public onlyOwner {
